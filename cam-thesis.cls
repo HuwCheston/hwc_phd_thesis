@@ -364,7 +364,7 @@ for the degree of Doctor of Philosophy%
 \setlength{\cam@logorightnudge}{-0.5\paperwidth+12mm}
 \newsavebox{\cam@logo}
 \begin{lrbox}{\cam@logo}
-\hspace*{\cam@logorightnudge}\includegraphics[width=73mm]{CollegeShields/CUni}
+% \hspace*{\cam@logorightnudge}\includegraphics[width=73mm]{CollegeShields/CUni}
 \end{lrbox}
 
 %% THESIS TITLE box
@@ -488,7 +488,7 @@ specified in the text. I further state that no substantial part of my dissertati
 already been submitted, or is being concurrently submitted, for any such degree, diploma
 or other qualification at the University of Cambridge or any other University or similar
 institution except as declared in the Preface and specified in the text.
-This dissertation does not exceed the prescribed limit of 60\,000 words.
+This dissertation does not exceed the prescribed limit of 80\,000 words.
 
 % Leaving some space for the signature:
 \vspace{15mm}

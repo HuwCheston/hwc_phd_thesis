@@ -1,0 +1,12 @@
+Instrument,Name,Method,Tracks,Duration (s),Annotations,Metadata
+Piano,WJD,Manual,6,582,"3,149 onsets","Beat, chord, section"
+,PiJAMA,Automatic,"2,777","804,960","7,108,460 MIDI notes",N/A
+,RWC-Jazz,Manual,5,"1,672",N/A*,"Beat, section"
+,JTD (ours),Automatic,"1,294","159,668","866,116 onsets, 2,174,833 MIDI notes",Beat
+Bass,WJD,Automatic,426,"49,010","5,000 beat-wise pitches","Beat, chord, section"
+,FiloBass,Automatic + manual,48,"17,880","53,646 MIDI notes","Downbeat, chord"
+,RWC-Jazz,Manual,5,"1,672",N/A*,"Beat, section"
+,JTD (ours),Automatic,"1,294","159,668","543,693 onsets",Beat
+Drums,WJD,Automatic + manual,67,"6,506","28,851 cymbal onsets","Beat, chord, section"
+,RWC-Jazz,Manual,5,"1,672",N/A*,"Beat, section"
+,JTD (ours),Automatic,"1,294","159,668","796,604 onsets",Beat
