@@ -526,6 +526,7 @@ This dissertation does not exceed the prescribed limit of 80\,000 words.
 % page of the TOC.
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \pagestyle{empty}
+\setcounter{tocdepth}{2}
 \tableofcontents{}
 
 \ifcam@glossary%

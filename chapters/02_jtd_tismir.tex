@@ -1,10 +1,10 @@
-\chapter{Introducing the Jazz Trio Database}
+\chapter{Introducing the Jazz Trio Database}\label{chap:jtd_tismir}
 
 \section{Introduction}
 
 Given its lack of notated scores and the freedoms afforded to its performers, improvised jazz is a musical genre that has often resisted computational analysis. Recent advances in automatic music transcription, however, have enabled the creation of several large-scale databases of annotated jazz recordings (e.g., \citealp{Pfleiderer2017, Foster2021}). This allows researchers to scale up the analysis of jazz improvisation to a degree that has not previously been possible.
 
-Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project was to develop a database that included annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronization.
+Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project was to develop a database that included annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronization. However, we also wished to include automatically extracted pitch and velocity data for instruments where this has seen some previous work (e.g., piano: see \citealp{Kong2021}).
 		
 To extract data from a mixed ensemble recording, we leveraged recent developments in audio source separation and timing annotation. Using deep learning, it has become possible to separate isolated sources from an audio mixture with massively increased fidelity compared to earlier approaches. The quality of separation still depends on the instrument, however, with vocals, bass, piano, and drums separation having seen the majority of work, while the separation of brass and stringed instruments remains at an earlier stage.
 		
@@ -80,7 +80,7 @@ The criteria used to decide whether an artist should be included in \GLS{JTD} wa
 
 We searched the Last.fm platform to obtain an overview of jazz listening habits. Last.fm is an online recommendation service that allows users to build profiles of their personal taste by tracking the music they listen to across many streaming platforms. We scraped the names of the top 250,000 performers and groups on Last.fm most frequently tagged by users with the genre “Jazz”, using their official API.\footnote{\href{https://www.last.fm/api}{\texttt{https://www.last.fm/api}}} We ordered by tag count, rather than by plays or favorites, as we wanted to find the most quintessentially “jazz” artists, rather than those who fused jazz with other styles. 
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_2}
   \caption{Total streams (“scrobbles”) of all recordings made by the top 20 “trio” artists most-frequently tagged as “Jazz” on Last.fm.}
@@ -117,7 +117,7 @@ For the recordings that met the inclusion criteria, we combined the metadata scr
 
 We elected only to include audio from piano solos as this is typically the only section in a performance where every musician would be expected to improvise. For instance, in the “head” (melodic statements that occur at the beginning and ending of “straight ahead” jazz performances), the material is pre-composed; while, in bass or drum solos, the accompanying musicians may choose not to play \citep{Monson1996}.
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_3}
   \caption{Duration of piano solo excerpts by all bandleaders: bar color indicates subset (either \GLS{JTD} or JTD-300).}
@@ -126,7 +126,7 @@ We elected only to include audio from piano solos as this is typically the only 
 
 Of the 4,659 recordings that were evaluated, 1,294 (27.8\%) were included in JTD. The combined duration of all piano solos in these recordings was 44.5 hours (Figure \ref{fig:jtd_solo_durations}). These recordings were made between 1947 and 2015, with a median recording year of 1972. The vast majority (93\%) had a time signature of four beats per measure.
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_4}
   \caption{The number of tracks featuring the 10 performers on each instrument with the most recordings in JTD.}
@@ -149,7 +149,7 @@ For each of these bandleaders, we sorted their tracks in \GLS{JTD} chronological
 
 Next, we sorted each track into one of 30 equally spaced bins; the left edge of the first bin coincided with the date of a bandleader’s earliest recording, and the right edge of the final bin with the day of their final (or most recent) recording. Tracks were ordered within each bin by the proximity of their recording date to the midpoint of that bin; if multiple recordings were made on the same day, they were arranged following the order in which they appeared on their original release. We then included the first track from each bin in JTD-300: in cases where a bin was empty, we added an additional track from the first bin, then the second bin, and so on, until 30 tracks were obtained for each bandleader.
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_5}
   \caption{Histogram grouping number of tracks by year of recording: bar color indicates subset.}
@@ -184,7 +184,7 @@ Another possibility was that the unmixed “vocal” source could also contain p
 
 \subsection{Data Extraction}
 
-Our data extraction pipeline consisted of three components: (1) an onset detection algorithm, applied to each separated audio source (except “vocal”), (2) a beat and downbeat tracking algorithm, applied to the raw audio mixture, and (3) an algorithm to match onsets with their nearest beat, in order to assign a metrical interpretation to each onset. Our implementations of (1) and (2) were from the Python \texttt{madmom} package \citep{Bock2016}.
+Our data extraction pipeline consisted of three components: (1) an onset detection algorithm, applied to each separated audio source (except “vocal”), (2) a beat and downbeat tracking algorithm, applied to the raw audio mixture, and (3) an algorithm to match onsets with their nearest beat, in order to assign a metrical interpretation to each onset. Our implementations of (1) and (2) were from the \texttt{madmom} (version \texttt{0.17.0}) Python package \citep{Bock2016}. The default setting of 100 frames per second was used in \texttt{madmom}, such that near-simultaneous events with a time difference of less than one frame (likely including, e.g., piano chords) would be treated as a single onset.
 
 \subsubsection{Onset Detection}\label{sec:jtd_onset_detection}
 
@@ -192,15 +192,31 @@ The \texttt{CNNOnsetDetector} function in \texttt{madmom} was used to detect ons
 
 \subsubsection{Beat Detection}\label{sec:jtd_beat_detection}
 
-The \texttt{DBNDownBeatTracker} function in \texttt{madmom} was used to detect the position of quarter note beats and downbeats in the audio mixture. This algorithm came first in the most recent \texttt{MIREX} beat tracking competition.\footnote{\href{https://nema.lis.illinois.edu/nema_out/mirex2019/results/abt/smc/}{\texttt{https://nema.lis.illinois.edu/nema\_out/mirex2019/results/abt/smc/}}} A recurrent neural network (\GLS{RNN}) is applied to frames from an audio spectrogram to distinguish between beats, downbeats, and non-beat classes; a dynamic Bayesian network then infers meter from the RNN observations (using the default rate of 100 frames per second). Meter changes cannot be detected by this algorithm, which led us to incorporate this into our inclusion criteria (see section \ref{sec:jtd_inclusion_criteria}).
+The \texttt{DBNDownBeatTracker} function in \texttt{madmom} was used to detect the position of quarter note beats and downbeats in the audio mixture. This algorithm came first in the most recent \texttt{MIREX} beat tracking competition.\footnote{\href{https://nema.lis.illinois.edu/nema_out/mirex2019/results/abt/smc/}{\texttt{https://nema.lis.illinois.edu/nema\_out/mirex2019/results/abt/smc/}}} A recurrent neural network (\GLS{RNN}) is applied to frames from an audio spectrogram to distinguish between beats, downbeats, and non-beat classes; a dynamic Bayesian network (\GLS{DBN}) then infers meter from the RNN observations (using the default rate of 100 frames per second). Meter changes cannot be detected by this algorithm, which led us to incorporate this into our inclusion criteria (see section \ref{sec:jtd_inclusion_criteria}).\footnote{\citet{Foscarin2024} have since proposed an end-to-end algorithm that does not require \GLS{DBN} post-processing of an activation function, which alleviates constraints on meter while potentially leading to greater overall precision. This was not available at the time \GLS{JTD} was compiled, however.}
 
-We applied this algorithm multiple times to a single track. First, the default parameters specified by the authors were used, with the tempo allowed to vary between 100 and 300 quarter note beats-per-minute (as specified in the inclusion criteria). This resulted in the timestamps changing tempo frequently, due to the lack of constraint in the parameter settings. We extracted the duration of successive timestamps and removed outliers according to the $1.5 * IQR$ rule. Finally, we re-ran the beat tracking algorithm, using the first and third quartile of the cleaned inter-beat interval array as the new minimum and maximum tempo. The total number of iterations this process ran for was optimized for the recordings in \GLS{JTD} (see section \ref{sec:jtd_validation}).
+We applied this algorithm multiple times to a single track. First, the default parameters specified by the authors were used, with the tempo allowed to vary between 100 and 300 quarter note beats-per-minute (as specified in the inclusion criteria). This resulted in the timestamps changing tempo frequently, due to the lack of constraint in the parameter settings. 
+
+To resolve this, we gradually reduced the range of permissible tempo values for the beat tracker over a number of iterations. First, we calculate the durations between successive beats as
+\begin{align}
+d_{i} = b_{i+1} - b_{i}, \ i = 1, 2, \dots, n-1, 
+\end{align}
+where $n$ is the total number of beats in the track. Then, we calculate the inter-quartile range of beat durations $IQR_d$ as
+\begin{align}
+IQR_d &= Q_3\left( \{d_1, d_2, \dots, d_{n-1}\} \right) - Q_1\left( \{d_1, d_2, \dots, d_{n-1}\} \right),
+\end{align}
+and use this to filter the initial durations $d$ where 
+\begin{align}
+d'_i &= \{ Q_1 - 1.5(IQR_d) \leq d_i \leq Q_3 + 1.5(IQR_d) \}, \ i = 1, 2, \dots, n-1.
+\end{align}
+Finally, we recalculate $Q_1$ and $Q_3$ using only values of $d'$ and set these as the new minimum and maximum tempo for the beat tracker in the next iteration of the process. The total number of iterations this process ran for was optimized for the recordings in \GLS{JTD} (see section \ref{sec:jtd_validation}).
 
 The downbeat classes estimated from the RNN were then combined with the detected beat positions and the time signature for the recording in order to assign measure numbers to every detected timestamp. 
 
 \subsubsection{Beat-Onset Matching}\label{sec:jtd_beat_onset_matching}
 
 The final stage of our detection pipeline involved matching every beat with the nearest onset detected in each instrumental source. The size of the window used to match any given onset to the nearest beat varied depending on the tempo of a track. Onsets played up to one thirty-second note before and one sixteenth note after any given timestamp were included within the window; whichever onset had the smallest absolute distance to the beat was understood to mark the pulse. If no onsets were contained within a window, then the musician was considered to not have marked the pulse at that timestamp. 
+
+Our rationale for using an asymmetric window came from previous research which has suggested that jazz soloists are more likely to “lag behind” and mark the beat later than their rhythm section, as opposed to earlier \citep{Butterfield2010}. Additionally, \citet{Corcoran2021} describe how notes played more than a thirty-second note earlier than a given beat act as a subdivision of the previous beat (i.e., a delayed, swung “eighth” note), as opposed to marking that beat itself. 
 
 \subsection{Validation}\label{sec:jtd_validation}
 
@@ -214,7 +230,7 @@ Two of the authors and one research assistant created the reference annotation s
 
 The performance of the pipeline was determined by considering the proportion of detected annotations that occurred within a 50 ms window of a ground truth annotation. For every track in the subsample, separate precision, recall, and $F$-measures were computed for each class: (1---3) the onsets within each unmixed instrumental source, and (4) the quarter note beats and (5) downbeats within the audio mixture. When $F = 1.0$, every onset or beat detected by the pipeline could be matched with a ground truth annotation, with no onsets or beats unmatched. 
 
-We applied the gradient-free, nonlinear optimization algorithm \texttt{subplex} \citep{Rowan1990} implemented in the \texttt{NLopt} Python library to set the parameters of the beat and onset detection algorithms separately for each audio source.\footnote{\href{https://github.com/stevengj/nlopt}{\texttt{https://github.com/stevengj/nlopt}}} In every case, the mean value of $F$ across the entire hand-annotated subsample was treated as the objective function to maximize. Note that, for the beat detection algorithm, only the $F$-measure obtained from evaluating the beat timestamps --- not the downbeats --- was considered during optimization.
+We applied the gradient-free, nonlinear optimization algorithm \texttt{subplex} \citep{Rowan1990} implemented in the \texttt{NLopt} (version \texttt{2.7.1}) Python package to set the parameters of the beat and onset detection algorithms separately for each audio source.\footnote{\href{https://github.com/stevengj/nlopt}{\texttt{https://github.com/stevengj/nlopt}}} In every case, the mean value of $F$ across the entire hand-annotated subsample was treated as the objective function to maximize. Note that, for the beat detection algorithm, only the $F$-measure obtained from evaluating the beat timestamps --- not the downbeats --- was considered during optimization.
 
 \begin{table}[h!]
 \centering
@@ -227,21 +243,21 @@ We applied the gradient-free, nonlinear optimization algorithm \texttt{subplex} 
 \textbf{Recall} & 0.93 (0.04) & 0.93 (0.07) & 0.94 (0.04) & 0.97 (0.05) & 0.63 (0.44) \\
 \bottomrule
 \end{tabular}
-\caption{Optimized results per instrument, showing F-measure, precision, and recall in the form mean (\emph{SD})}
+\caption{Optimized results per instrument, showing mean $F$-measure, precision, and recall. Brackets show \emph{SD}s.}
 \label{tab:jtd_optimization_results}
 \end{table}
 
 The values of $F$ obtained from the optimized parameter set are shown in Table \ref{tab:jtd_optimization_results}. The performance of the onset detection algorithm was broadly equivalent across instrument classes, with drums performing marginally better than bass and piano. In comparison with earlier results obtained from applying the same algorithm to equivalent multi-tracked audio datasets (“polyphonic pitched”, $mean(F) = 0.95$, “plucked strings”, $mean(F) = 0.90$, “solo drums”, $mean(F) = 0.93$, see note \ref{note:mirex_2018}), we obtained similar onset detection accuracy. This indicated to us that the source separation process was unlikely to have caused significant damage (in the form of artifacts, etc.) to the audio, to the point that onset detection algorithms trained on multi-tracked recordings could not also be applied to JTD.
 
-While the beat tracking results indicated good performance, downbeat tracking was noticeably worse. To understand why, we inspected all tracks where downbeat tracking $F = 0.0$, while beat tracking $F > 0.95$ (i.e., the downbeats were out-of-phase). We observed that, in the majority of these cases, metrically “strong” beats were being mistaken for other “strong” beats (i.e., beat 2 and beat 4, in 4/4), rather than “weak” beats, and vice versa. This suggests that our results may still have some value in the analysis of metrical structure, and we also observed that our results were in line with those obtained from applying the same algorithm to other metrically complex forms of music.\footnote{\href{https://www.music-ir.org/mirex/wiki/2016:Audio_Downbeat_Estimation_Results}{\texttt{https://www.music-ir.org/mirex/wiki/2016:Audio\_Downbeat\_Estimation\_Results}}} However, future revisions of \GLS{JTD} may leverage the modular design of our codebase to integrate more sophisticated downbeat tracking algorithms, as these become available.
+While the beat tracking results indicated good performance, downbeat tracking was noticeably worse. To understand why, we inspected all tracks where $F(downbeat) = 0.0$, while $F(beat) > 0.95$ (i.e., the downbeats were out-of-phase). We observed that, in the majority of these cases, metrically “strong” beats were being mistaken for other “strong” beats (i.e., beat 2 and beat 4, in 4/4), rather than “weak” beats, and vice versa. This suggests that our results may still have some value in the analysis of metrical structure, and we also observed that our results were in line with those obtained from applying the same algorithm to other metrically complex forms of music.\footnote{\href{https://www.music-ir.org/mirex/wiki/2016:Audio_Downbeat_Estimation_Results}{\texttt{https://www.music-ir.org/mirex/wiki/2016:Audio\_Downbeat\_Estimation\_Results}}} However, future revisions of \GLS{JTD} may leverage the modular design of our codebase to integrate more sophisticated downbeat tracking algorithms (e.g., \citealp{Foscarin2024}), as these become available.
 
 Finally, we looked at the temporal difference between equivalent automatic and ground truth annotations. The pipeline tended to annotate beats and onsets earlier than the human annotators did; the mean difference in beat location time (algorithm --- human) was $-4.82$ ms ($SD = 4.58$), and for onsets the mean difference was $-4.53$ ms ($SD = 3.42$). There were no substantial differences between onsets detected for different instrument classes here (piano, $-5.77$ ms, bass: $-4.29$ ms, drums: $-4.53$ ms). In context, this variation was likely perceptually sub-threshold, and should be negligible in most applications.
 
 \subsubsection{Alternative Methods}\label{sec:jtd_alternate_methods}
 
-Next, we compared several alternative onset detection methods, using the piano audio and corresponding ground truth annotations for evaluation. These methods were: (1) an automatic transcription model \citep{Kong2021}, which generates MIDI (incorporating both pitch and rhythmic information) from audio, (2) a naive audio signal processing approach, whereby onsets were identified as local maxima from a normalized spectral flux envelope, using the implementation from the \texttt{librosa} Python package \citep{McFee2015}, (3) the current approach, without the audio filtering described in section \ref{sec:jtd_audio_preprocessing}, and (4) the current approach, with a quantitatively “narrower” bandpass filter (attenuating frequencies outside the range of 110---1760 Hz i.e., $A_2$---$A_6$).
+Next, we compared several alternative onset detection methods, using the piano audio and corresponding ground truth annotations for evaluation. These methods were: (1) an automatic transcription model \citep{Kong2021}, which generates MIDI (incorporating both pitch and rhythmic information) from audio, (2) a naive audio signal processing approach, whereby onsets were identified as local maxima from a normalized spectral flux envelope, using the implementation from the \texttt{librosa} (version \texttt{0.8.1}) Python package \citep{McFee2015}, (3) the current approach, without the audio filtering described in section \ref{sec:jtd_audio_preprocessing}, and (4) the current approach, with a quantitatively “narrower” bandpass filter (attenuating frequencies outside the range of 110---1760 Hz i.e., $A_2$---$A_6$).
 
-Note that, as (1) generates multiple MIDI events for what would be regarded perceptually as a single onset (i.e., a chord), near-simultaneous MIDI events within a window of 50 ms were grouped together, with the onset of the earliest event taken as the onset of the whole group. The size of this window was optimized following the method described in \ref{sec:jtd_validation_results}, as were the individual parameter sets used to pick peaks from the activation functions returned separately from methods (2---4).
+Note that, as method (1) generates multiple MIDI events for what would be regarded perceptually as a single onset (i.e., a chord), near-simultaneous MIDI events within a window of 50 ms were grouped together, with the onset of the earliest event taken as the onset of the whole group. The size of this window was optimized following the method described in \ref{sec:jtd_validation_results}, as were the individual parameter sets used to pick peaks from the activation functions returned separately from methods (2---4). The default setting of 100 frames per second was used for method (1).
 
 \begin{table}[h!]
 \centering
@@ -264,6 +280,18 @@ The results obtained for method (1) were disappointing, especially when compared
 
 Regardless, these MIDI annotations are included in JTD, with the caveat that they may be of greater use in downstream tasks which do not require strict timing accuracy (e.g., in analyzing melodic or harmonic content). The total number of MIDI events was 2,174,833 ($\sim2.5$x the number of total piano onsets).
 
+\subsubsection{Bass Annotation}\label{sec:jtd_bass_detection}
+
+Considering the results in Table \ref{tab:jtd_optimization_results}, the somewhat higher standard deviation of bass onset detection results suggests that there may have been a subset of onset types that gave outlier results, diminishing the overall accuracy of the pipeline. While we could not investigate every possibility, we could check three hypotheses: whether bass annotation was negatively affected (1) by if a bass note was "raked", (2) by if both bass and drums played simultaneously, and (3) on specific beats of the bar.
+
+For hypothesis (1), we defined a "rake" as a technique in jazz bass where the finger is dragged from one string to the next lower string. We collected all groups of three bass onsets that were immediately preceded and then followed by a single onset that could be matched with the quarter-note pulse. Searching all tracks with ground truth annotations, we found 57 occurrences of this pattern, equivalent to 285 onsets. 
+
+For each track where this pattern occurred at least once, we computed the $F$-measure between all of the automatically detected “rake” patterns and ground truth onsets located within the span of each “rake” (allowing for a tolerance of 50 ms). From this analysis, $mean(F) = 0.91$ ($SD = 0.08$) --- i.e., close to the value in Table \ref{tab:jtd_optimization_results}. This suggests that whether a bass note was “raked” did not have a substantial impact on the accuracy of the detection pipeline.
+
+For hypothesis (2), we collected all automatically detected bass onsets that were matched with a timestamp from the beat tracker, provided that a drum onset could also be matched with that same timestamp ($N = 10,538$). The equivalent ground truth annotations were collected and, again, $mean(F)$ was computed only for these annotations. In this case, $mean(F) = 0.92\;(SD = 0.06)$) --- again, nearly identical to the value obtained using all annotations. This led us to conclude that accuracy of onset detection was not substantially lower when both bass and drums played together on the same beat.
+
+Finally, for hypothesis (3), we collected automatic and manual onset annotations matched with each individual beat of the ground truth metre annotations. $F$-scores then were computed for each individual beat (i.e., comparing all known beat 1s, all beat 2s, etc.) across every track. Here, $mean(F_{B1}) = 0.94\;(SD=0.07)$, $mean(F_{B2}) = 0.94\;(SD=0.12)$, $mean(F_{B3}) = 0.95\;(SD=0.06)$, and $mean(F_{B4}) = 0.95\;(SD=0.04)$. All results are again in line with Table \ref{tab:jtd_optimization_results}, which suggests that there was no evidence that outlying results occurred systematically on individual beats of the bar.
+
 \section{Analysis}
 
 Across JTD, there were 2,206,413 onsets (piano: 866,116, bass: 543,693, drums: 796,604) and 512,272 beat timestamps, 130,547 of which were labeled as downbeats. On average, a solo contained 669 piano onsets, 420 bass onsets, 616 drums onsets, 396 beats, and 101 downbeats. 87.4\% of beat timestamps could be matched to a drum onset, and 82.0\% matched to a bass onset; only 71.0\% of beats could be matched to a piano onset, which underlines that keeping time is not the primary aim of jazz soloists.
@@ -272,7 +300,7 @@ Across JTD, there were 2,206,413 onsets (piano: 866,116, bass: 543,693, drums: 7
 
 On average, the duration of a piano solo in \GLS{JTD} was 2 minutes and 3 seconds. Both the shortest and longest solos were by Bud Powell, with the shortest lasting only 22 seconds (“Salt Peanuts”, \citeyear{Powell1956}), and the longest 7 minutes, 17 seconds (“Reets And I”, \citeyear{Powell1962}).
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_6}
   \caption{Mean duration of solos by different \GLS{JTD} pianists. Error bars show standard errors.}
@@ -287,7 +315,7 @@ One possible explanation is that the open-ended formal designs (e.g., modal “v
 
 Rather than working directly with the timestamps estimated from the beat tracker, we instead defined the location of a “beat” as the mean of all onsets matched to a single timestamp (see section \ref{sec:jtd_beat_onset_matching}). Given our omission of tracks with, e.g. a predominant “two-beat” feel (where half notes could conceivably be understood to mark the “beat”) and with “straight” eighths (where these could be felt to mark the beat), these timestamps would be expected to correspond with quarter notes. In cases where fewer than two onsets were matched with a single timestamp (for instance, where at least two instruments played “off” that beat), it was set to missing. At least two instruments played “on” the beat for 88.7\% of detected beat timestamps within JTD.
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_7}
   \caption{Distribution of tempi (in quarter note beats-per-minute).}
@@ -300,23 +328,27 @@ As measures of tempo stability, for each track we obtained (1) the standard devi
 
 There was no correlation between signed tempo slope and unsigned tempo fluctuation, $r(1292) = -0.06, p = 0.06$; however, there was a positive correlation between unsigned slope (i.e., any global change in tempo, regardless of direction) and fluctuation, $r(1292) = 0.37, p < .001$. There were positive correlations between both mean tempo and signed tempo slope, $r(1292) = 0.25, p < .001$, mean tempo and unsigned slope, $r(1292) = 0.60, p < .001$, and mean tempo and fluctuation, $r(1292) = 0.24, p < .001$. This suggests that performances which had a faster pace tended to involve a greater magnitude of tempo change than those which were slower, and were also less stable overall.
 
-\subsection{Swing}
+\subsection{Swing}\label{sec:jtd_swing}
 
-In jazz, swing refers to the division of the pulse into alternating long and short intervals. Expressed in Western notation, the long interval is typically written as a quarter note triplet, and the short as an eighth note triplet. Empirically, swing can be measured by taking the ratio of these long and short durations --- the swing or “beat-upbeat ratio” (\GLS{BUR}), commonly expressed in binary logarithmic form in the literature. For notated “swung” eighths, the $BUR = 2:1$ ($log_2(BUR) = 1.0$); for “straight” eighths (i.e., the equal-equal subdivision of the beat), $BUR = 1:1$ ($log_2(BUR) = 0.0$).
+In jazz, swing refers to the division of the pulse into alternating long and short intervals. Expressed in Western notation, the long interval is typically written as a quarter note triplet, and the short as an eighth note triplet. Empirically, swing can be measured by taking the ratio of these long and short durations --- the swing or “beat-upbeat ratio” (\GLS{BUR}), commonly expressed in binary logarithmic form in the literature. This can be written simply as
+\begin{align}\label{eq:jtd_bur}
+log_2(BUR)=log_2\biggl(\frac{t_{a,b}-t_a}{t_b-t_{a,b}}\biggr),
+\end{align}
+where $t_a$ is the onset matched with beat $a$, $t_b$ is the onset matched with beat $b$, and $t_{a,b}$ is the single onset between $t_a$ and $t_b$. For notated “swung” eighths, $log_2(BUR) = 1.0$ ($BUR = 2:1$); vice-versa, for “straight” eighths (i.e., the equal-equal subdivision of the beat), $log_2(BUR) = 0.0$ ($BUR = 1:1$).
 
-We searched our database for all discrete groupings of three onsets where the first and last had marked the quarter note pulse. The total number of such groupings was 417,278. Following Corcoran \& Frieler’s \citeyearpar{Corcoran2021} analysis of the \GLS{WJD} (2021), we classified ratios above 4:1 ($log_2(BUR) = 2$) and below 1:4 ($log_2(BUR) = -2$) as outliers, which resulted in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset was 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
+We searched our database for all discrete groupings of three onsets where the first and last had marked the quarter note pulse. The total number of such groupings was 417,278. Following \citet{Corcoran2021} analysis of the \GLS{WJD} (2021), we classified ratios above 4:1 ($log_2(BUR) = 2$) and below 1:4 ($log_2(BUR) = -2$) as outliers, which resulted in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset was 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
 
-\subsubsection{Differences in Swing Between Instruments}
+\subsubsection{Differences in Swing Between Instruments}\label{sec:jtd_differences_in_swing_between_instruments}
 
-To evaluate the differences in swing ratio between the instruments in the trio, we smoothed the distribution of beat-upbeat ratios obtained for each instrument through kernel density estimation (calculating the bandwidth using Silverman's rule-of-thumb). Then, we applied the peak-picking algorithm (using the default parameters) from the \texttt{SciPy} Python library to obtain the local maxima of the smoothed curve. Confidence intervals for these peaks were generated by bootstrapping over the results from different bandleaders ($N = 10,000$ replicates).
+To evaluate the differences in swing ratio between the instruments in the trio, we smoothed the distribution of beat-upbeat ratios obtained for each instrument through kernel density estimation (calculating the bandwidth using Silverman's rule-of-thumb). Then, we applied the peak-picking algorithm (using the default parameters) from the \texttt{SciPy} (version \texttt{1.10.1}) Python library \citep{Virtanen2020} to obtain the local maxima of the smoothed curve. Confidence intervals for these peaks were generated by bootstrapping over the results from different bandleaders ($N = 10,000$ replicates).
 
 \begin{sidewaysfigure}[htbp]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_8}
-  \caption{Each panel shows the distribution of log2 beat-upbeat ratios between instruments across JTD, normalized such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
+  \caption{Each panel shows the distribution of $log_2(BUR)$s between instruments across JTD, normalized such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
 \label{fig:jtd_bur_distribution_by_instrument}
 \end{sidewaysfigure}
 
-For the piano, we found one peak in the density estimate, corresponding to $log_2(BUR)$ of 0.37 ($BUR = 1.44:1$, 95\% CI: $[0.15, 0.43]$). For the bass, we found two peaks, corresponding with $log_2(BURs)$ of 0.06 ($1.06:1$, $[0.03, 0.13]$) and 1.23 ($3.41:1$, $[1.15, 1.27]$). For the drums, we also found two peaks, at $log_2(BUR) = -0.91$ ($0.40:1$, $[-1.15, -0.70]$) and 1.18 ($3.25:1$, $[1.13, 1.23]$). These density estimates and the corresponding peaks are shown in Figure \ref{fig:jtd_bur_distribution_by_instrument}.
+For the piano, we found one peak in the density estimate, corresponding with $log_2(BUR)$ of 0.37 ($BUR = 1.44:1$, 95\% CI: $[0.15, 0.43]$). For the bass, we found two peaks, corresponding with $log_2(BURs)$ of 0.06 ($1.06:1$, $[0.03, 0.13]$) and 1.23 ($3.41:1$, $[1.15, 1.27]$). For the drums, we also found two peaks, at $log_2(BUR) = -0.91$ ($0.40:1$, $[-1.15, -0.70]$) and 1.18 ($3.25:1$, $[1.13, 1.23]$). These density estimates and the corresponding peaks are shown in Figure \ref{fig:jtd_bur_distribution_by_instrument}.
 
 This analysis suggested that (1) all instrument classes primarily targeted long-short divisions of the beat, with the percentage of total $log_2(BURs) > 0.0 = 88.6\%$ (piano: 81.9\%, bass: 89.1\%, drums: 93.4\%); (2) pianist beat-upbeat ratios were closer to notated “straight” than “swung” eighths, judging by the peak of their density estimate; (3) in contrast, the larger of the two peaks in the bass and drums density estimates suggested that both instruments tended towards higher beat-upbeat ratios than implied by notated swing eighths alone. 
 
@@ -328,10 +360,10 @@ We also noted that the mean beat-upbeat ratio for piano soloists in \GLS{JTD} ($
 
 Next, we considered the relationship between swing and the tempo of a performance. We fitted a linear mixed effects model, predicting a performer’s mean $log_2(BUR)$ using the mean tempo of the recording (standardized through $z$-transformation), their instrument, and the interaction between tempo and instrument as fixed effects (with piano as the reference category). Bandleader was used as a random effect (slopes and intercepts). An individual musician’s performance was excluded if 15 ratios could not be obtained, resulting in the exclusion of 471 individual performances out of 3,865 (piano: 30, bass: 401, drums: 40).
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_9}
-  \caption{Markers show mean $log_2(BUR)$ and tempo, solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
+  \caption{Markers show mean $log_2(BUR)$ and tempo for an individual recording and instrument, solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
 \label{fig:jtd_bur_vs_tempo}
 \end{figure}
 
@@ -345,11 +377,29 @@ We fitted the model described in section \ref{sec:jtd_effect_of_tempo_on_swing} 
 
 This suggested that the year a track was recorded had minimal impact on the levels of swing displayed by the musicians. These results should not be taken as indicative of global trends in swing timing, however, as the recordings in \GLS{JTD} are mostly representative of the “straight ahead” jazz style, as practiced throughout the last century. Prior analysis of the \GLS{WJD} has demonstrated tangible differences in swing between jazz styles \citep{Corcoran2021}.
 
+\subsubsection{Comparison with Existing Datasets}\label{sec:jtd_dataset_comparison}
+
+Finally, we wanted to compare the levels of "swing" demonstrated in \GLS{JTD} with existing open-source datasets of annotated jazz performances. We selected \GLS{WJD} for comparison to the \GLS{JTD} piano recordings and FiloBass for comparison to the \GLS{JTD} bass recordings. We scraped all tracks from both databases that met the tempo and style inclusion criteria for \GLS{JTD}.
+
+For \GLS{WJD}, this meant that we included tracks where \texttt{instrument == "piano"}, \texttt{rhythmfeel == "SWING"}, and $100 < \texttt{avgtempo} < 300$, using the metadata provided in the \texttt{solo\_info} table. Likewise, for FiloBass we included tracks that were tagged as \texttt{"Swing"}, had either a 3/4 or 4/4 time signature, and where the provided downbeat annotations suggested a tempo between 100 and 300 BPM. This left 6 out of 456 recordings in \GLS{WJD} and 44 out of 48 FiloBass tracks. There was no crossover in tracks between the three databases; however, some of the same performers did appear, including bassists Ron Carter and Ray Drummond.  
+
+\begin{sidewaysfigure}[htbp]
+  \includesvg[width=1.0\textwidth]{figures/jtd/figure_x1}
+  \caption{Each panel shows the distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass, following the format in Figure \ref{fig:jtd_bur_distribution_by_instrument}.}
+\label{fig:jtd_bur_distribution_by_dataset}
+\end{sidewaysfigure}
+
+We then matched onset annotations from both \GLS{WJD} and FiloBass with their nearest annotated quarter-note beats and extracted \GLS{BUR}s. Only downbeat annotations are provided for FiloBass, however, so we annotated the remaining beats between successive downbeat timestamps through linear interpolation according to the time signature of the recording. As outlined in section \ref{sec:jtd_swing}, we then discard \GLS{BUR}s outside the range of $-2 < log_2(BUR) < 2$. We extracted 707 \GLS{BUR}s for \GLS{WJD} and 3,218 for FiloBass. We show normalized kernel density and peak estimates for the $log_2(BUR)$ distributions in both datasets in Figure \ref{fig:jtd_bur_distribution_by_dataset}, following the process outlined in section \ref{sec:jtd_differences_in_swing_between_instruments}.
+
+With regards to the piano, the distribution of $log_2(BUR)$s in \GLS{WJD} is broadly equivalent to \GLS{JTD}, with one peak found at $log_2(BUR) = 0.05$ ($1.05:1$). This was considerably lower than the equivalent peak from \GLS{JTD} ($log_2(BUR) = 0.37, 1.44:1$). Inspecting this, we found that the mean tempo of the six piano recordings in \GLS{WJD} (275.63 BPM) was much higher than across \GLS{JTD} (193.92). As we have already shown in Figure \ref{fig:jtd_bur_vs_tempo}, higher tempi lead to demonstrably "straighter" \GLS{BUR} values.
+
+With regards to the bass, we found two peaks in the distribution of \GLS{BUR}s obtained from FiloBass, at $log_2(BUR) = -0.22$ ($0.80:1$) and $log_2(BUR) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure \ref{fig:jtd_bur_distribution_by_instrument}). However, we noted that the proportion of "straight" bass \GLS{BUR}s (where $log_2(BUR)\approx0$) was significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are "play-along" backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply the reduced number of recordings contained in FiloBass when compared with \GLS{JTD}.
+
 \subsection{Synchronization}
 
 Synchrony can be defined as the difference between onsets that demarcate the same musical event (e.g., a quarter note beat). While it can be expressed in “raw” units (milliseconds, frames), we expressed synchrony as a percentage of the duration of a single quarter note at the tempo of a track, which allows for comparison across performances made at different tempi. For example, a value of $+25\%$ would imply that one musician played a sixteenth note later than another. 
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_10}
   \caption{Diagram shows kernel density estimates for the relative position of beats by each instrument, indicated by color. Density estimates are scaled such that the maximum height of the curve for each instrument is 1.}
@@ -370,8 +420,12 @@ The size of this effect was relatively small, however, with less than a 256th no
 
 In this chapter, we have presented Jazz Trio Database (JTD), a new dataset of 44.5 hours of jazz piano trio recordings with automatically generated annotations. Appropriate recordings were identified by scraping user-based listening and discographic data, a source separation model was applied to isolate audio for piano, bass, and drums, and annotations were generated by applying various automatic transcription, onset detection, and beat tracking algorithms to the separated audio. Onsets detected by the pipeline achieved a mean $F$-measure of 0.94 when compared with ground truth annotations. 
 	
-We encourage the use of \GLS{JTD} in tasks including performer identification, expressive performance modeling, structure analysis (using the piano solo timestamps), and as a benchmark to compare automatic transcription algorithms. JTD-Brushes may also prove useful in developing e.g., beat tracking models that can cope with a broader variety of drumming styles and “soft” onsets. Comparison between accompanied and unaccompanied jazz piano playing may be another fruitful direction for research. The lower accuracy of the automated downbeat annotations compared to both onsets and beats could also inspire the development of downbeat trackers better suited for the jazz genre.
+We encourage the use of \GLS{JTD} in tasks including performer identification, expressive performance modeling, structure analysis (using the piano solo timestamps), and as a benchmark to compare audio signal processing algorithms. JTD-Brushes may also prove useful in developing e.g., beat tracking models that can cope with a broader variety of drumming styles and “soft” onsets. Comparison between accompanied and unaccompanied jazz piano playing may be another fruitful direction for research. The lower accuracy of the automated downbeat annotations compared to both onsets and beats could also inspire the development of downbeat trackers better suited for the jazz genre.
 
 We can foresee some limitations of our work. Our inclusion criteria were particularly strict, which necessitated identifying tracks manually. Automated tagging methods (e.g., distinguishing between a drummer’s use of brushes or sticks) could enable more efficient data collection. \GLS{JTD} also shows an imbalance towards male performers; exceptional inclusions could be made in future revisions to include prolific female musicians who did not appear in the Last.fm search results or jazz textbooks. Finally, we do not include MIDI transcriptions of the bass and drums as we do for the piano, but this offers an exciting opportunity for future work as models capable of performing these tasks continue to develop in sophistication.
 
 Many of the recordings contained in \GLS{JTD} are under copyright and cannot be released publicly. However, we have made both the mixed and unmixed (i.e., source-separated) \GLS{JTD} audio files downloadable upon request on a third-party archive.\footnote{\href{https://zenodo.org/records/13828030}{\texttt{https://zenodo.org/records/13828030}}} We have also made the annotations available for download, and provide source code to align these with the recordings. The design of this code is modular, enabling \GLS{JTD} to be updated easily as the state-of-the-art in the various tasks involved in the annotation pipeline improves.\footnote{\href{https://github.com/HuwCheston/Jazz-Trio-Database}{\texttt{https://github.com/HuwCheston/Jazz-Trio-Database}}} We have also developed a web app including a variety of interactive resources that enable \GLS{JTD} to be explored without having to download it.\footnote{\href{https://huwcheston.github.io/Jazz-Trio-Database/}{\texttt{https://huwcheston.github.io/Jazz-Trio-Database/}}}
+
+\subsection{Subsequent Developments}
+
+Since the initial release of \GLS{JTD}, a number of extensions to this work have been proposed by members of the community. One of the authors of the FiloBass dataset \citep{Riley2023} has applied their transcription pipeline to the source-separated recordings in \GLS{JTD}, with the potential to provide accurate, automatic transcriptions in MIDI format of the entire jazz trio.\footnote{An example of these transcriptions can be listened to at XXXX.} The authors of the beat tracker described in \citet{Foscarin2024} are also exploring the possibility of fine-tuning their model for the jazz genre using the ground-truth annotations provided in \GLS{JTD} (see section \ref{sec:jtd_ground_truth_annotations}), with the potential to further optimize the results seen in Table \ref{tab:jtd_optimization_results}. We are encouraged to see these applications of \GLS{JTD} by the community and are excited by the possibilities it can unlock for future computational research.
