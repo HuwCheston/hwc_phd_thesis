@@ -37,7 +37,9 @@
     backend=biber,natbib
 ]{biblatex}
 \addbibresource{thesis.bib}
-\usepackage{hyperref, booktabs, rotating, svg}
+\usepackage{hyperref, booktabs, rotating, svg, subfig}
+% Fixes https://github.com/mrpiggi/svg/issues/11#issuecomment-525175569
+\svgsetup{inkscapepath=svgsubdir}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Thesis meta-information

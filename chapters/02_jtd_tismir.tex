@@ -147,7 +147,21 @@ This class imbalance could prove problematic were predictive models to be traine
 
 For each of these bandleaders, we sorted their tracks in \GLS{JTD} chronologically by the date of recording. In cases where a full date could not be obtained from MusicBrainz, a track was estimated to have been made either midway through the month (in cases where both a month and year were given) or year (when only a year was given) it was recorded. In cases where multiple dates were given for one track (i.e., when an album was recorded over a period of time, without dates being assigned to individual tracks), we took the midpoint of these dates. If no dates were provided at all, the track was excluded from selection.
 
-Next, we sorted each track into one of 30 equally spaced bins; the left edge of the first bin coincided with the date of a bandleader’s earliest recording, and the right edge of the final bin with the day of their final (or most recent) recording. Tracks were ordered within each bin by the proximity of their recording date to the midpoint of that bin; if multiple recordings were made on the same day, they were arranged following the order in which they appeared on their original release. We then included the first track from each bin in JTD-300: in cases where a bin was empty, we added an additional track from the first bin, then the second bin, and so on, until 30 tracks were obtained for each bandleader.
+\begin{figure}[]
+  \centering
+  \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_1}
+  \caption{Corpus construction. Each horizontal bar shows the duration of the recording career for each of the ten pianists included in JTD-300; markers indicate the date of recordings that appear in JTD-300, randomly jittered horizontally and vertically for visual clarity.}
+\label{fig:rsos_jtd300}
+\end{figure}
+
+\begin{figure}[]
+  \centering
+  \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_s1}
+  \caption{Recording durations. Each column shows the total duration of the recordings by each bandleader in JTD-300, with the green proportion corresponding with those tracks that are included within each subset (shown also as a percentage along the columns).}
+\label{fig:rsos_bandleader_proportions}
+\end{figure}
+
+Next, we sorted each track into one of 30 equally spaced bins; the left edge of the first bin coincided with the date of a bandleader’s earliest recording, and the right edge of the final bin with the day of their final (or most recent) recording. Tracks were ordered within each bin by the proximity of their recording date to the midpoint of that bin; if multiple recordings were made on the same day, they were arranged following the order in which they appeared on their original release. We then included the first track from each bin in JTD-300: in cases where a bin was empty, we added an additional track from the first bin, then the second bin, and so on, until 30 tracks were obtained for each bandleader (Figure \ref{fig:rsos_jtd300}). We show the proportion of recordings by each bandleader contained in JTD-300 within Figure \ref{fig:rsos_bandleader_proportions}.
 
 \begin{figure}[t!]
   \centering
@@ -156,7 +170,7 @@ Next, we sorted each track into one of 30 equally spaced bins; the left edge of 
 \label{fig:jtd_tracks_by_year}
 \end{figure}
 
-The combined duration of the audio in JTD-300 was 11.75 hours (26.4\% of the duration of JTD). As with JTD, these recordings were made between 1947 and 2015, with a median recording year of 1977.5. The distribution of recording years included in JTD-300 was comparable with \GLS{JTD} (Figure \ref{fig:jtd_tracks_by_year}). 95\% of JTD-300 recordings had a time signature of four beats per measure. We envisage that JTD-300 will most likely be of use in performer identification tasks or analyses of chronological trends in improvisation practice. Tasks that do not require balanced class sizes may be better accomplished using the full JTD.
+The combined duration of the audio in JTD-300 was 11.75 hours (26.4\% of the duration of JTD). As with JTD, these recordings were made between 1947 and 2015, with a median recording year of 1977.5. The distribution of recording years included in JTD-300 was comparable with \GLS{JTD} (Figure \ref{fig:jtd_tracks_by_year}). 95\% of JTD-300 recordings had a time signature of four beats per measure. We envisage that JTD-300 will most likely be of use in performer identification tasks or analyses of chronological trends in improvisation practice (here, see Chapter \ref{chap:rhythm_rsos}). Tasks that do not require balanced class sizes may be better accomplished using the full JTD.
 
 \section{Annotation}
 
@@ -358,7 +372,7 @@ We also noted that the mean beat-upbeat ratio for piano soloists in \GLS{JTD} ($
 
 \subsubsection{Effect of Tempo on Swing}\label{sec:jtd_effect_of_tempo_on_swing}
 
-Next, we considered the relationship between swing and the tempo of a performance. We fitted a linear mixed effects model, predicting a performer’s mean $log_2(BUR)$ using the mean tempo of the recording (standardized through $z$-transformation), their instrument, and the interaction between tempo and instrument as fixed effects (with piano as the reference category). Bandleader was used as a random effect (slopes and intercepts). An individual musician’s performance was excluded if 15 ratios could not be obtained, resulting in the exclusion of 471 individual performances out of 3,865 (piano: 30, bass: 401, drums: 40).
+Next, we considered the relationship between swing and the tempo of a performance. We fitted a linear mixed effects model using the implementation in the \texttt{statsmodels} (version \texttt{0.13.1}) Python library \citep{Seabold2010}, predicting a performer’s mean $log_2(BUR)$ using the mean tempo of the recording (standardized through $z$-transformation), their instrument, and the interaction between tempo and instrument as fixed effects (with piano as the reference category). Bandleader was used as a random effect (slopes and intercepts). An individual musician’s performance was excluded if 15 ratios could not be obtained, resulting in the exclusion of 471 individual performances out of 3,865 (piano: 30, bass: 401, drums: 40).
 
 \begin{figure}[t!]
   \centering
@@ -395,7 +409,7 @@ With regards to the piano, the distribution of $log_2(BUR)$s in \GLS{WJD} is bro
 
 With regards to the bass, we found two peaks in the distribution of \GLS{BUR}s obtained from FiloBass, at $log_2(BUR) = -0.22$ ($0.80:1$) and $log_2(BUR) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure \ref{fig:jtd_bur_distribution_by_instrument}). However, we noted that the proportion of "straight" bass \GLS{BUR}s (where $log_2(BUR)\approx0$) was significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are "play-along" backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply the reduced number of recordings contained in FiloBass when compared with \GLS{JTD}.
 
-\subsection{Synchronization}
+\subsection{Synchronization}\label{sec:jtd_synchrony}
 
 Synchrony can be defined as the difference between onsets that demarcate the same musical event (e.g., a quarter note beat). While it can be expressed in “raw” units (milliseconds, frames), we expressed synchrony as a percentage of the duration of a single quarter note at the tempo of a track, which allows for comparison across performances made at different tempi. For example, a value of $+25\%$ would imply that one musician played a sixteenth note later than another. 
 
