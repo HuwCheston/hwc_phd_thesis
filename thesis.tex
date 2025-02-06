@@ -1,15 +1,5 @@
 %%%%%
-%%
-%% Sample document ``thesis.tex''
-%%
-%% Version: v0.2
-%% Authors: Jean Martina, Rok Strnisa, Matej Urbas
-%% Date: 30/07/2008
-%%
-%% Copyright (c) 2008-2011, Rok Strniša, Jean Martina, Matej Urbas
-%% License: Simplified BSD License
-%% License file: ./License
-%% Original License URL: http://www.freebsd.org/copyright/freebsd-license.html
+%% HCheston PhD Thesis, University of Cambridge, Centre for Music & Science
 %%%%%
 
 % Available documentclass options:
@@ -23,27 +13,41 @@
 %   backrefs    - add back references in the Bibliography section
 %
 % For more info see `README.md`
-\documentclass[withindex,glossary]{cam-thesis}
+\documentclass[glossary]{cam-thesis}
 
-% Citations using numbers
 \usepackage[
-    style=authoryear,
-    sorting=nty,
-    maxcitenames=1,
-    autolang=hyphen,
-    usetranslator=true,
-    giveninits=true,
-    maxbibnames=2,
-    backend=biber,natbib
+    % style=authoryear,
+    % sorting=nty,
+    % maxcitenames=1,
+    % autolang=hyphen,
+    % usetranslator=true,
+    % giveninits=true,
+    % maxbibnames=2,
+    % backend=biber,natbib
+    style=apa,
+    sortcites=true,
+    backend=biber,natbib,
+    labeldate=year
 ]{biblatex}
+
+% Use sentence case and italicise correctly in bibliography
+\DeclareFieldFormat[article, inbook, incollection, inproceedings, thesis, report]{title}{\MakeSentenceCase{#1}}
+% \DeclareFieldFormat[book, booklet, manual, periodical]{title}{\MakeTitlecase{\textit{#1}}}
+% \DeclareFieldFormat{booktitle}{\MakeTitlecase{\textit{#1}}}
+% \DeclareFieldFormat{journaltitle}{\MakeTitlecase{\textit{#1}}}
+
 \addbibresource{thesis.bib}
-\usepackage{hyperref, booktabs, rotating, svg, subfig}
+
+% Adding packages
+\usepackage{booktabs, rotating, svg, subfig, amsmath, placeins, url}
+% \usepackage[breaklinks=true]{hyperref}
+
+% Ensure only the year is displayed in citations & references
+\AtEveryBibitem{\clearfield{month}\clearfield{day}\clearfield{date}}
+\AtEveryCitekey{\clearfield{month}\clearfield{day}\clearfield{date}}
+
 % Fixes https://github.com/mrpiggi/svg/issues/11#issuecomment-525175569
 \svgsetup{inkscapepath=svgsubdir}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Thesis meta-information
-%%
 
 %% The title of the thesis:
 \title{Computational Modelling of \\
@@ -59,7 +63,7 @@ Jazz Improvisation}
 \collegeshield{figures/college_shield}
 
 %% Submission date [optional]:
-% \submissiondate{November, 2042}
+\submissiondate{June, 2025}
 
 %% You can redefine the submission notice [optional]:
 % \submissionnotice{A badass thesis submitted on time for the Degree of PhD}
@@ -69,7 +73,7 @@ Jazz Improvisation}
 
 %% PDF meta-info:
 \subjectline{Music Information Retrieval}
-\keywords{one two three}
+\keywords{music information retrieval, machine learning, jazz improvisation, explainable artificial intelligence, corpus analysis}
 
 
 
@@ -77,9 +81,8 @@ Jazz Improvisation}
 %% Abstract:
 %%
 \abstract{%
-  My abstract ...
+    Improvisation is part of many musical traditions, with jazz perhaps one of the most diverse to have emerged in the past century. Through improvisation, jazz musicians manipulate many aspects of the music they play, including the harmony, melody, and rhythm of an underlying composition. These widespread freedoms render the computational modelling of jazz improvisation a challenging task within Music Information Retrieval research, both due to a lack of available data and a difficulty in generating models that can capture the complexity of this music while remaining interpretable. Here we detail computational studies of three core dimensions of jazz improvisation: musical style, rhythm, and ensemble interaction. Through these studies we examine long-standing issues in Music Information Retrieval and the wider digital humanities, including automatic performer identification and model interpretation. The goal of this research is not only to advance the state-of-the-art in symbolic music modelling, but generate human-friendly explanations of supervised learning models that allow us to learn more about the ways in which a highly complex form of art is produced. This thesis is accompanied by a novel, open source dataset of hundreds of hours of jazz audio recordings annotated by an automated signal processing pipeline and numerous interactive web applications, which we hope will support future computational research into the nature and practice of musical improvisation --- both in jazz, and beyond.
 }
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,6 +129,10 @@ Jazz Improvisation}
     name=RNN,
     description={Recurrent Neural Network}
 }
+\newglossaryentry{CRNN}{
+    name=CRNN,
+    description={Convolutional Recurrent Neural Network}
+}
 \newglossaryentry{BUR}{
     name=BUR,
     description={Beat-Upbeat Ratio}
@@ -154,8 +161,22 @@ Jazz Improvisation}
     name=LZ77,
     description={Lempel-Ziv 77}
 }
-
-
+\newglossaryentry{LIME}{
+    name=LIME,
+    description={Locally-Interpretable Model Explanations}
+}
+\newglossaryentry{TF-IDF}{
+    name=TF-IDF,
+    description={Term Frequency–Inverse Document Frequency}
+}
+\newglossaryentry{DTL}{
+    name=DTL,
+    description={Dig That Lick}
+}
+\newglossaryentry{OR}{
+    name=OR,
+    description={Odds Ratio}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Contents:
@@ -177,7 +198,7 @@ Jazz Improvisation}
 \input{chapters/03_xai_rsi}
 \input{chapters/04_rhythm_rsos}
 \input{chapters/05_network_mperc}
-
+\input{chapters/06_discussion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography:
@@ -201,8 +222,8 @@ Jazz Improvisation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Index:
+%% No index
 %%
-\printthesisindex
+% \printthesisindex
 
 \end{document}

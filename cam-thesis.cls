@@ -133,7 +133,8 @@
         pdfpagelabels=true,
         colorlinks=false,
         pdfborder={0 0 0},
-        pdfusetitle=true
+        pdfusetitle=true,
+        breaklinks=true,
     ]{hyperref}
 \fi
 \RequirePackage[all]{hypcap}        % Fixes links to floats (must be included after hyperref).
