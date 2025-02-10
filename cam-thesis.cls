@@ -536,6 +536,9 @@ This dissertation does not exceed the prescribed limit of 80\,000 words.
 \setcounter{tocdepth}{2}
 \tableofcontents{}
 
+\listoffigures
+\listoftables
+
 \ifcam@glossary%
     \cam@printthesisglossary
 \fi
