@@ -18,7 +18,7 @@ In this chapter, we describe several related datasets, discuss the curation of J
 
 \begin{sidewaystable}[t!]
 \centering
-\caption{Comparison of existing datasets for each instrument in the jazz piano trio. *Note that RWC-Jazz has not been made available free and open source, meaning that it is not possible to provide full detail here.}
+\caption[Comparison of existing datasets for each instrument in the jazz piano trio.]{Comparison of existing datasets for each instrument in the jazz piano trio. *Note that RWC-Jazz has not been made available free and open source, meaning that it is not possible to provide full detail here.}
 \label{tab:jtd_existing_datasets}
 \begin{tabular}{l c c c c c c}
 \toprule
@@ -66,7 +66,7 @@ Five of the 50 recordings contained in the RWC-Jazz database \citep{Goto2002} fe
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/jtd/figure_1.png}
-  \caption{Diagram shows the process for constructing JTD. Arrow block symbols indicate stages where tracks/artists may be removed.}
+  \caption[Process followed for constructing JTD.]{Process followed for constructing JTD. Arrow block symbols indicate stages where tracks/artists may be removed.}
 \label{fig:jtd_construction}
 \end{figure}
 
@@ -83,7 +83,7 @@ We searched the Last.fm platform to obtain an overview of jazz listening habits.
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_2}
-  \caption{Total streams (``scrobbles'') of all recordings made by the top 20 ``trio'' artists most-frequently tagged as ``Jazz'' on Last.fm.}
+  \caption[Total streams (``scrobbles'') of all recordings made by the top 20 ``trio'' artists most-frequently tagged as ``Jazz'' on Last.fm.]{Total streams (``scrobbles'') of all recordings made by the top 20 ``trio'' artists most-frequently tagged as ``Jazz'' on Last.fm.}
 \label{fig:jtd_total_streams}
 \end{figure}
 
@@ -120,7 +120,7 @@ We elected only to include audio from piano solos as this is typically the only 
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_3}
-  \caption{Duration of piano solo excerpts by all bandleaders: bar color indicates subset (either \GLS{JTD} or JTD-300).}
+  \caption[Duration of piano solo excerpts by all bandleaders.]{Duration of piano solo excerpts by all bandleaders. Bar colour indicates subset (either \GLS{JTD} or JTD-300).}
 \label{fig:jtd_solo_durations}
 \end{figure}
 
@@ -129,7 +129,7 @@ Of the 4,659 recordings that were evaluated, 1,294 (27.8\%) were included in JTD
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_4}
-  \caption{The number of tracks featuring the 10 performers on each instrument with the most recordings in JTD.}
+  \caption[Number of tracks featuring the 10 performers on each instrument with the most recordings in \GLS{JTD}.]{Number of tracks featuring the 10 performers on each instrument with the most recordings in \GLS{JTD}.}
 \label{fig:jtd_tracks_by_performer}
 \end{figure}
 
@@ -150,14 +150,14 @@ For each of these bandleaders, we sorted their tracks in \GLS{JTD} chronological
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_1}
-  \caption{Corpus construction. Each horizontal bar shows the duration of the recording career for each of the ten pianists included in JTD-300; markers indicate the date of recordings that appear in JTD-300, randomly jittered horizontally and vertically for visual clarity.}
+  \caption[Duration of the recording career for each of the ten pianists included in \GLS{JTD-300}]{Duration of the recording career for each of the ten pianists included in \GLS{JTD-300}. Markers indicate the date of recordings that appear in \GLS{JTD-300}, randomly jittered horizontally and vertically for visual clarity.}
 \label{fig:rsos_jtd300}
 \end{figure}
 
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_s1}
-  \caption{Recording durations in JTD-300. Each column shows the total duration of the recordings by every bandleader with recordings in JTD-300, with the green proportion corresponding with those tracks that are included within each subset (shown also as a percentage along the columns).}
+  \caption[Durations of recordings in \GLS{JTD-300}.]{Durations of recordings in \GLS{JTD-300}. Each column shows the total duration of the recordings by every bandleader with recordings in \GLS{JTD-300}, with the green proportion corresponding with those tracks that are included within each subset (shown also as a percentage along the columns).}
 \label{fig:rsos_bandleader_proportions}
 \end{figure}
 
@@ -166,7 +166,7 @@ Next, we sorted each track into one of 30 equally spaced bins; the left edge of 
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_5}
-  \caption{Histogram grouping number of tracks by year of recording: bar color indicates subset.}
+  \caption[Histogram grouping number of tracks in \GLS{JTD} by year of recording.]{Histogram grouping number of tracks in \GLS{JTD} by year of recording. Bar colour indicates subset (\GLS{JTD} or \GLS{JTD-300}.}
 \label{fig:jtd_tracks_by_year}
 \end{figure}
 
@@ -248,7 +248,7 @@ We applied the gradient-free, nonlinear optimization algorithm \texttt{subplex} 
 
 \begin{table}[h!]
 \centering
-\caption{Optimized results per instrument, showing mean $F$-measure, precision, and recall. Brackets show \emph{SD}s.}
+\caption[Optimized results for onset detection per instrument]{Optimized results for onset detection per instrument, showing mean $F$-measure, precision, and recall. Brackets show \emph{SD}s.}
 \label{tab:jtd_optimization_results}
 \begin{tabular}{l c c c c c c}
 \toprule
@@ -274,7 +274,7 @@ Next, we compared several alternative onset detection methods, using the piano a
 Note that, as method (1) generates multiple MIDI events for what would be regarded perceptually as a single onset (i.e., a chord), near-simultaneous MIDI events within a window of 50 ms were grouped together, with the onset of the earliest event taken as the onset of the whole group. The size of this window was optimized following the method described in \ref{sec:jtd_validation_results}, as were the individual parameter sets used to pick peaks from the activation functions returned separately from methods (2--4). The default setting of 100 frames per second was used for method (1).
 
 \begin{table}[h!]
-\caption{Results per method, piano only}
+\caption[Onset detection results per method, piano only]{Onset detection results per method, piano only}
 \label{tab:jtd_methods_comparison}
 \centering
 \begin{tabular}{l c c c c}
@@ -317,7 +317,7 @@ On average, the duration of a piano solo in \GLS{JTD} was 2 minutes and 3 second
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_6}
-  \caption{Mean duration of solos by different \GLS{JTD} pianists. Error bars show standard errors.}
+  \caption[Mean duration of solos by different \GLS{JTD} pianists.]{Mean duration of solos by different \GLS{JTD} pianists. Error bars show standard errors.}
 \label{fig:jtd_mean_track_duration_by_pianist}
 \end{figure}
 
@@ -332,7 +332,7 @@ Rather than working directly with the timestamps estimated from the beat tracker
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_7}
-  \caption{Distribution of tempi (in quarter note beats-per-minute).}
+  \caption[Distribution of tempi in \GLS{JTD}.]{Distribution of tempi in \GLS{JTD}, shown in quarter note beats-per-minute).}
 \label{fig:jtd_mean_tempo}
 \end{figure}
 
@@ -372,7 +372,7 @@ To evaluate the differences in swing ratio between the instruments in the trio, 
 
 \begin{sidewaysfigure}[htbp]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_8}
-  \caption{Each panel shows the distribution of $log_2(BUR)$s between instruments across JTD, normalized such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
+  \caption[Distribution of $log_2(BUR)$s between instruments across \GLS{JTD}]{Distribution of $log_2(BUR)$s between instruments across \GLS{JTD}, normalized such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
 \label{fig:jtd_bur_distribution_by_instrument}
 \end{sidewaysfigure}
 
@@ -391,7 +391,7 @@ Next, we considered the relationship between swing and the tempo of a performanc
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_9}
-  \caption{Markers show mean $log_2(BUR)$ and tempo for an individual recording and instrument, solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
+  \caption[Mean $log_2(BUR)$ and tempo for an individual recording and instrument in \GLS{JTD}.]{Mean $log_2(BUR)$ and tempo for an individual recording and instrument in \GLS{JTD}. Solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
 \label{fig:jtd_bur_vs_tempo}
 \end{figure}
 
@@ -413,7 +413,7 @@ For \GLS{WJD}, this meant that we included tracks where \texttt{instrument == "p
 
 \begin{sidewaysfigure}[htbp]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_x1}
-  \caption{Each panel shows the distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass, following the format in Figure \ref{fig:jtd_bur_distribution_by_instrument}.}
+  \caption[Distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass]{Distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass, following the format in Figure \ref{fig:jtd_bur_distribution_by_instrument}.}
 \label{fig:jtd_bur_distribution_by_dataset}
 \end{sidewaysfigure}
 
@@ -430,7 +430,7 @@ Synchrony can be defined as the difference between onsets that demarcate the sam
 \begin{figure}[t!]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_10}
-  \caption{Diagram shows kernel density estimates for the relative position of beats by each instrument, indicated by color. Density estimates are scaled such that the maximum height of the curve for each instrument is 1.}
+  \caption[Kernel density estimates for the relative position of beats by each instrument in \GLS{JTD}]{Kernel density estimates for the relative position of beats by each instrument in \GLS{JTD}, indicated by colour. Density estimates are scaled such that the maximum height of the curve for each instrument is 1.}
 \label{fig:jtd_propeller_plot}
 \end{figure}
 

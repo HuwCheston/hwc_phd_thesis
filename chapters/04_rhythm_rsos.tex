@@ -33,7 +33,7 @@ We used the onset and beat data from \GLS{JTD} (see sections \ref{sec:jtd_onset_
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/rsos_rhythm/figure_2.png}
-  \caption{Feature extraction process. Each panel shows the procedure used to extract features relating to one of five categories: (a) ``swing'', (b) ``complexity'', (c) ``feel'' (piano $\rightarrow$ bass only), (d) ``interaction'', and (e) ``tempo''. In all but (b), coloured circles represent onsets and gray rectangles the window around which these were matched to tracked beats (see section \ref{sec:jtd_beat_onset_matching}). In (b), gray rectangles represent the sliding four-measure window to which the \GLS{LZ77} algorithm was applied. Time progresses from left to right in every panel.}
+  \caption[Rhythm feature extraction process.]{Rhythm feature extraction process. Each panel shows the procedure used to extract features relating to one of five categories: (a) ``swing'', (b) ``complexity'', (c) ``feel'' (piano $\rightarrow$ bass only), (d) ``interaction'', and (e) ``tempo''. In all but (b), coloured circles represent onsets and gray rectangles the window around which these were matched to tracked beats (see section \ref{sec:jtd_beat_onset_matching}). In (b), gray rectangles represent the sliding four-measure window to which the \GLS{LZ77} algorithm was applied. Time progresses from left to right in every panel.}
 \label{fig:rsos_featureset}
 \end{figure}
 
@@ -62,7 +62,7 @@ Standard information-theoretic measures of complexity such as \GLS{LZ77} are onl
 \begin{figure}[t!]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_s2}
-  \caption{Binned inter-onset interval counts. The height of each bar shows the total number of inter-onset intervals for the piano contained within each of the bins used in discrete rhythmic complexity calculations. The musical notation equivalent for each bin is given along the top of the plot. Note that $x$-axis fraction values correspond to the duration of a bin within a standard measure of four quarter notes.}
+  \caption[Binned inter-onset interval counts.]{Binned inter-onset interval counts. The height of each bar shows the total number of inter-onset intervals for the piano contained within each of the bins used in discrete rhythmic complexity calculations. The musical notation equivalent for each bin is given along the top of the plot. Note that $x$-axis fraction values correspond to the duration of a bin within a standard measure of four quarter notes.}
 \label{fig:rsos_binned_iois}
 \end{figure}
 
@@ -104,7 +104,7 @@ The mean values extracted for each feature were: 195.00 ($SD = 50.02$) BPM for p
 
 \begin{table}[ht]
 \centering
-\caption{Bag-of-features. A summary of the high-level categories and low-level individual features used to train the model.}
+\caption[Bag of rhythmic features.]{Bag of rhythmic features. A summary of the high-level categories and low-level individual features used to train the model.}
 \label{tab:rsos_feature_desc}
 \begin{tabular}{l c l}
 \toprule
@@ -138,7 +138,7 @@ In Table \ref{tab:rsos_feature_desc}, we summarise both the high-level categorie
 \begin{figure}[t!]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_3}
-  \caption{Pairwise correlations between features. The strength of the correlation (Pearson's $r$) between two features is shown by the color of the cell at the intersection of $x$- and $y$-axis variables: darker colors indicate stronger correlations. Text annotations are provided only where $|r| > 0.5$.}
+  \caption[Pairwise correlations between rhythmic features.]{Pairwise correlations between rhythmic features. The strength of the correlation (Pearson's $r$) between two features is shown by the colour of the cell at the intersection of $x$- and $y$-axis variables: darker colours indicate stronger correlations. Text annotations are provided only where $|r| > 0.5$.}
 \label{fig:rsos_feature_correlations}
 \end{figure}
 
@@ -152,7 +152,7 @@ We fitted a random forest (\GLS{RF}) classification model to predict the identit
 
 \begin{sidewaystable}[]
 \centering
-\caption{Classification model, optimised parameters. These parameters resulted from the hyperparameter optimisation of the \GLS{RF} classification model, over a two-dimensional space with $N = 10,000$ iterations. All other parameters were set to their defaults: refer to the documentation of the \texttt{sklearn.ensemble.RandomForestClassifier} class (version \texttt{1.3.0}) for further information.}
+\caption[Performer identification model using rhythmic features, optimised parameters.]{Performer identification model using rhythmic features, optimised parameters. These parameters resulted from the hyperparameter optimisation of the \GLS{RF} classification model, over a two-dimensional space with $N = 10,000$ iterations. All other parameters were set to their defaults: refer to the documentation of the \texttt{sklearn.ensemble.RandomForestClassifier} class (version \texttt{1.3.0}) for further information.}
 \label{tab:rsos_rf_optimization}
 \begin{tabular}{l l c}
 \toprule
@@ -172,7 +172,7 @@ Following a randomised search over a two-dimensional parameter space ($N = 10,00
 \begin{figure}[t!]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_4}
-  \caption{Confusion matrix and clustering dendrogram. The heatmap shows the probability that, when given a recording, the \GLS{RF} model will identify a particular pianist. The proportion of hits is shown along the diagonal; all other values are misses. Lighter and darker colors indicate lower and higher predictive probability, respectively. The dendrogram above the heatmap shows the results of the hierarchical clustering analysis; pianists joined at lower $y$-axis values are estimated to be more similar than those joined at higher values. The dashed horizontal line indicates where the dendrogram was cut.}
+  \caption[Confusion matrix and clustering dendrogram.]{Confusion matrix and clustering dendrogram. The heatmap shows the probability that, when given a recording, the \GLS{RF} model will identify a particular pianist. The proportion of hits is shown along the diagonal; all other values are misses. Lighter and darker colours indicate lower and higher predictive probability, respectively. The dendrogram above the heatmap shows the results of the hierarchical clustering analysis; pianists joined at lower $y$-axis values are estimated to be more similar than those joined at higher values. The dashed horizontal line indicates where the dendrogram was cut.}
 \label{fig:rsos_confusion_matrix}
 \end{figure}
 
@@ -189,7 +189,7 @@ There are several reasons for this. Firstly, the particularities of Jarrett's st
 \begin{figure}[t!]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/rsos_rhythm/figure_5.png}
-  \caption{Variable importance scores. (a) shows the importance of all features in the \GLS{RF}. (b) shows the importance of all feature categories. The $x$-axis shows the drop in classification accuracy of the test data when values of the feature or feature group were permuted, averaged over all repetitions of the process. Error bars represent 95\% confidence intervals.}
+  \caption[Variable importance scores for rhythm features.]{Variable importance scores for rhythm features. (a) shows the importance of all features in the \GLS{RF}. (b) shows the importance of all feature categories. The $x$-axis shows the drop in classification accuracy of the test data when values of the feature or feature group were permuted, averaged over all repetitions of the process. Error bars represent 95\% confidence intervals.}
 \label{fig:rsos_feature_importance}
 \end{figure}
 
@@ -198,7 +198,7 @@ Next, we turned our attention to the relative importance of the features used by
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.9\textwidth]{figures/rsos_rhythm/figure_6}
-  \caption{Pianist relative position to accompaniment. The kernel density estimates show the relative position of the pianist to an accompanying instrument (bass, left; drums, right), with positive values indicating that a pianist played after the accompaniment. Markers show the mean position, error bars $\pm 1 \ SD$. Pianists are arranged according to mean asynchrony with drums, in descending order.}
+  \caption[Pianist relative position to accompaniment.]{Pianist relative position to accompaniment. The kernel density estimates show the relative position of the pianist to an accompanying instrument (bass, left; drums, right), with positive values indicating that a pianist played after the accompaniment. Markers show the mean position, error bars $\pm 1 \ SD$. Pianists are arranged according to mean asynchrony with drums, in descending order.}
 \label{fig:rsos_pianist_asynchrony}
 \end{figure}
  
@@ -213,7 +213,7 @@ Although these large asynchronies could have been a conscious decision, biograph
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_7}
-  \caption{Pianist density and compression scores. Distributions of the density (left) and compression (right) of all onsets within a sliding window of four measures, across all pianists. Markers show mean values, error bars $\pm 1 \ SD$. Pianists arranged according to mean onset density, in descending order.}
+  \caption[Pianist density and compression scores.]{Pianist density and compression scores. Distributions of the density (left) and compression (right) of all onsets within a sliding window of four measures, across all pianists. Markers show mean values, error bars $\pm 1 \ SD$. Pianists arranged according to mean onset density, in descending order.}
 \label{fig:rsos_pianist_density}
 \end{figure}
 
@@ -226,7 +226,7 @@ Interestingly, the fourth most important feature used by the model --- the perce
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_8}
-  \caption{Pianist beat-upbeat ratio distributions. Distribution of $log_2(BUR)$s obtained for each pianist. Markers show mean $log_2(BUR)$, error bars $\pm 1 \ SD$. Pianists arranged according to mean beat-upbeat ratio, in descending order.}
+  \caption[Pianist beat-upbeat ratio distributions.]{Pianist beat-upbeat ratio distributions. Distribution of $log_2(BUR)$s obtained for each pianist. Markers show mean $log_2(BUR)$, error bars $\pm 1 \ SD$. Pianists arranged according to mean beat-upbeat ratio, in descending order.}
 \label{fig:rsos_pianist_bur}
 \end{figure}
 
@@ -235,7 +235,7 @@ The fifth most important feature used in the model was the pianist's mean beat-u
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_9}
-  \caption{Modeled coupling networks. Individual plots show the average coupling for ensembles led by each pianist. The direction and degree of the coupling is given by the color and thickness of the arrows respectively, insofar as an arrow from the pianist to the bassist indicates how much the bassist adjusted to the pianist. Values above each arrow show the mean coupling coefficient. Values of $N$ indicate the number of models obtained for that performer or role, with $\text{max}(N) = 30$.}
+  \caption[Modeled coupling networks.]{Modeled coupling networks. Individual plots show the average coupling for ensembles led by each pianist. The direction and degree of the coupling is given by the colour and thickness of the arrows respectively, insofar as an arrow from the pianist to the bassist indicates how much the bassist adjusted to the pianist. Values above each arrow show the mean coupling coefficient. Values of $N$ indicate the number of models obtained for that performer or role, with $\text{max}(N) = 30$.}
 \label{fig:rsos_pianist_networks}
 \end{figure}
 
@@ -254,7 +254,7 @@ We show the dendrogram created from this analysis above the heatmap in Figure \r
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.75\textwidth]{figures/rsos_rhythm/figure_s3}
-  \caption{Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist in Figure \ref{fig:rsos_confusion_matrix}. The solid line shows the performance of the regression model, and the dotted line the baseline model (i.e. random guesses).}
+  \caption[Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist]{Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist in Figure \ref{fig:rsos_confusion_matrix}. The solid line shows the performance of the regression model, and the dotted line the baseline model (i.e. random guesses).}
 \label{fig:rsos_roc_curve}
 \end{figure}
 
@@ -263,7 +263,7 @@ Next, we wanted to consider the relationship between different aspects of musica
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_10}
-  \caption{Odds ratios. This forest plot shows results from a binary \GLS{LR} model predicting the cluster assigned to a pianist, with cluster 2 (right-most on dendrogram, Figure \ref{fig:rsos_confusion_matrix}) used as the outcome group.  Markers represent the standardised \GLS{OR} and whiskers 95\% confidence intervals. A numerical increase in features with $OR > 1$ should be interpreted as higher odds that the pianist came from the outcome cluster 2 (and, vice-versa, an increase in features with $OR < 1$ should be interpreted as lower odds). Significant associations are shown with asterisks: $^{***} \  p < .001, \ ^{**} \ p < .01, \ ^{*} \ p < .05.$}
+  \caption[Odds ratios for rhythmic features.]{Odds ratios for rhythmic features. This forest plot shows results from a binary \GLS{LR} model predicting the cluster assigned to a pianist, with cluster 2 (right-most on dendrogram, Figure \ref{fig:rsos_confusion_matrix}) used as the outcome group.  Markers represent the standardised \GLS{OR} and whiskers 95\% confidence intervals. A numerical increase in features with $OR > 1$ should be interpreted as higher odds that the pianist came from the outcome cluster 2 (and, vice-versa, an increase in features with $OR < 1$ should be interpreted as lower odds). Significant associations are shown with asterisks: $^{***} \  p < .001, \ ^{**} \ p < .01, \ ^{*} \ p < .05.$}
 \label{fig:rsos_odds_ratios}
 \end{figure}
 
@@ -276,7 +276,7 @@ Finally, we considered whether the rhythmic style of each pianist changed over t
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_s4}
-  \caption{Permutation test results. The bell curve on both plots shows a null distribution obtained by training the model on random splits of 270 recordings taken from the database ($N = 10,000$ replicates), and measuring the accuracy of identifying the performer in the remaining 30 recordings. The shaded areas show the percentage of accuracy measurements from this distribution lower than the accuracy of predicting only the earliest (left) or final (right) three recordings from each of the 10 pianists, after training on all other recordings.}
+  \caption[Permutation test results for performer identification model trained on rhythmic features.]{Permutation test results for performer identification model trained on rhythmic features. The bell curve on both plots shows a null distribution obtained by training the model on random splits of 270 recordings taken from the database ($N = 10,000$ replicates), and measuring the accuracy of identifying the performer in the remaining 30 recordings. The shaded areas show the percentage of accuracy measurements from this distribution lower than the accuracy of predicting only the earliest (left) or final (right) three recordings from each of the 10 pianists, after training on all other recordings.}
 \label{fig:rsos_permutation_hists}
 \end{figure}
 
@@ -287,7 +287,7 @@ For an alternative test of the possibility that a pianist's rhythmic style might
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_11}
-  \caption{Marginal plots. Each panel shows the relationship between the most important features from the ``Feel'', ``Complexity'', ``Tempo'', and ``Swing'' categories ($y$-axis) and the ``career progress'' variable ($x$-axis). Values of the ``time'' predictor were set to their mean when predicting $y$. The random effects included in the models are not shown. Error bars show 95\% confidence intervals, obtained through bootstrapping ($N = 10,000$ samples).}
+  \caption[Marginal plots for rhythmic features.]{Marginal plots for rhythmic features. Each panel shows the relationship between the most important features from the ``Feel'', ``Complexity'', ``Tempo'', and ``Swing'' categories ($y$-axis) and the ``career progress'' variable ($x$-axis). Values of the ``time'' predictor were set to their mean when predicting $y$. The random effects included in the models are not shown. Error bars show 95\% confidence intervals, obtained through bootstrapping ($N = 10,000$ samples).}
 \label{fig:rsos_marginal_plots}
 \end{figure}
 

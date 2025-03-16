@@ -31,7 +31,7 @@ The transcriptions for both datasets were created by applying the automatic musi
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_1}
-  \caption{Dataset. The upper row of panels show (a) the number of recordings by each pianist and (b) the total duration of their recordings, stratified by source database. Pianists are sorted in descending order by total duration, with the shaded area indicating when this is greater than 80 minutes. (c) shows the distribution of recording durations across tracks in both databases, with dashed lines representing the median recording duration. (d) shows the number of 30-second clips in each split of the dataset used to train the neural networks.}
+  \caption[Dataset used for music performer identification.]{Dataset used for music performer identification. The upper row of panels show (a) the number of recordings by each pianist and (b) the total duration of their recordings, stratified by source database. Pianists are sorted in descending order by total duration, with the shaded area indicating when this is greater than 80 minutes. (c) shows the distribution of recording durations across tracks in both databases, with dashed lines representing the median recording duration. (d) shows the number of 30-second clips in each split of the dataset used to train the neural networks.}
 \label{fig:rsi_dataset}
 \end{figure}
 
@@ -54,7 +54,7 @@ While these models could be trained on a wide variety of predictive features, we
 \begin{figure}[h!]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_s1}
-  \caption{Melody extraction results. The top panel shows ten seconds of a MIDI transcription and the bottom panel shows the same transcription after applying the implementation of the ``Skyline'' algorithm \citep{Uitdenbogerd1998} used in this work. When the same transcription was processed using the model described by \citet{Chou2024}, no notes were detected as being part of the melody.}
+  \caption[Melody extraction results.]{Melody extraction results. The top panel shows ten seconds of a MIDI transcription and the bottom panel shows the same transcription after applying the implementation of the ``Skyline'' algorithm \citep{Uitdenbogerd1998} used in this work. When the same transcription was processed using the model described by \citet{Chou2024}, no notes were detected as being part of the melody.}
 \label{fig:rsi_sm_melody_extraction_results}
 \end{figure}
 
@@ -67,7 +67,7 @@ Before applying the algorithm, we quantise a transcription by ``snapping'' note 
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_s2}
-  \caption{\GLS{LR} accuracy with different values of $n$. The left panel shows changes in accuracy when the maximum value of $n$ used to extract melody and harmony features increases, from 3 to 8 inclusive. The right panel shows equivalent changes when the minimum value of $n$ increases. All accuracy scores are the results of optimising hyperparameters separately using random sampling for each value of $n$ (see section \ref{sec:rsi_handcrafted_training} in the full text) and are obtained for the validation split of the dataset.}
+  \caption[\GLS{LR} accuracy with different values of $n$.]{\GLS{LR} accuracy with different values of $n$. The left panel shows changes in accuracy when the maximum value of $n$ used to extract melody and harmony features increases, from 3 to 8 inclusive. The right panel shows equivalent changes when the minimum value of $n$ increases. All accuracy scores are the results of optimising hyperparameters separately using random sampling for each value of $n$ (see section \ref{sec:rsi_handcrafted_training} in the full text) and are obtained for the validation split of the dataset.}
 \label{fig:rsi_sm_lr_extraction_at_n}
 \end{figure}
 
@@ -80,7 +80,7 @@ We obtain counts for a total of 484,039 features (430,841 melodic, 53,198 harmon
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_2}
-  \caption{Feature counts. Each panel shows the counts of the twenty most frequently occurring (a) melody and (b) harmony features across all recordings and splits of the dataset. The $x$-axis values can be interpreted as the number of semitones from an initial starting note, such that the feature $(0, -1, -2, -3)$ becomes pitches $(\text{C}, \text{B}, \text{B}\flat, \text{A})$ or $(\text{G}, \text{G}\flat, \text{F}, \text{E})$, etc.}
+  \caption[Feature counts for handcrafted models.]{Feature counts for handcrafted models. Each panel shows the counts of the twenty most frequently occurring (a) melody and (b) harmony features across all recordings and splits of the dataset. The $x$-axis values can be interpreted as the number of semitones from an initial starting note, such that the feature $(0, -1, -2, -3)$ becomes pitches $(\text{C}, \text{B}, \text{B}\flat, \text{A})$ or $(\text{G}, \text{G}\flat, \text{F}, \text{E})$, etc.}
 \label{fig:rsi_feature_counts}
 \end{figure}
 
@@ -90,7 +90,7 @@ We show counts for the twenty harmony and melody features that occur most freque
 
 \begin{table}[h]
     \centering
-    \caption{Optimised parameters (RF). These parameters resulted from the randomised search used to select parameters for the random forest classifier. Note that, when values for a parameter are sampled from either a uniform distribution $\mathcal{U}$ or logarithmic distribution $\mathcal{L}$ (with base 10), these are given in the range (start, stop).}
+    \caption[Optimised parameters for \GLS{RF} performer identification model.]{Optimised parameters for \GLS{RF} performer identification model. These parameters resulted from the randomised search used to select parameters for the random forest classifier. Note that, when values for a parameter are sampled from either a uniform distribution $\mathcal{U}$ or logarithmic distribution $\mathcal{L}$ (with base 10), these are given in the range (start, stop).}
     \label{tab:rsi_sm_rf_optimised_parameters}
     \begin{tabular}{l c p{4cm} c}
         \toprule
@@ -108,7 +108,7 @@ We show counts for the twenty harmony and melody features that occur most freque
 
 \begin{table}[h]
     \centering
-    \caption{Optimised parameters (SVM).}
+    \caption[Optimised parameters for \GLS{SVM} performer identification model.]{Optimised parameters for \GLS{SVM} performer identification model.}
     \label{tab:rsi_sm_svm_optimised_parameters}
     \begin{tabular}{l c p{4cm} c}
         \toprule
@@ -122,7 +122,7 @@ We show counts for the twenty harmony and melody features that occur most freque
 
 \begin{table}[h]
     \centering
-    \caption{Optimised parameters (LR).}
+    \caption[Optimised parameters for \GLS{LR} performer identification model.]{Optimised parameters for \GLS{LR} performer identification model.}
     \label{tab:rsi_sm_lr_optimised_parameters}
     \begin{tabular}{l c p{4cm} c}
         \toprule
@@ -143,7 +143,7 @@ The process used to train each of the three models is the same. We generate a tw
 
 \begin{table}[h]
     \centering
-    \caption{Results for models trained using handcrafted features on held-out test data. Note that scores for the SVM at higher than top-1 accuracy cannot be provided due to limitations in the \texttt{scikit-learn} implementation of this model.}
+    \caption[Results for models trained using handcrafted features on held-out test data.]{Results for models trained using handcrafted features on held-out test data. Note that scores for the \GLS{SVM} at higher than top-1 accuracy cannot be provided due to limitations in the \texttt{scikit-learn} implementation of this model.}
     \label{tab:rsi_sm_handcrafted_results}
     \begin{tabular}{l c c c c}
         \toprule
@@ -163,7 +163,7 @@ We show the accuracy of the three models in Table \ref{tab:rsi_sm_handcrafted_re
 \begin{figure}[h!]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_s3}
-  \caption{Feature importance by domain and model type. Each bar shows the loss in test accuracy from permuting all melody or harmony features (left panel) and bootstrapped subsamples of 2,000 features (right panel), stratified by model type. Error bars show standard deviations ($N = 1,000$ iterations).}
+  \caption[Feature importance by domain and model type.]{Feature importance by domain and model type. Each bar shows the loss in test accuracy from permuting all melody or harmony features (left panel) and bootstrapped subsamples of 2,000 features (right panel), stratified by model type. Error bars show standard deviations ($N = 1,000$ iterations).}
 \label{fig:rsi_sm_feature_importance_by_handcrafted_model_type}
 \end{figure}
 
@@ -178,7 +178,7 @@ Related to this analysis is whether there are differences in improvisation style
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_3}
-  \caption{Relationships between databases. Each panel shows correlation coefficients obtained between the weights of every performer for models fitted using (a) melody and (b) harmony features. Performers are sorted in descending order of magnitude according to the correlations in panel (a). Asterisks show the significance of the observed coefficients ($^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$, with Bonferroni correction applied), calculated using permutation testing ($N = 1,000$ iterations).}
+  \caption[Relationships between databases.]{Relationships between databases. Each panel shows correlation coefficients obtained between the weights of every performer for models fitted using (a) melody and (b) harmony features. Performers are sorted in descending order of magnitude according to the correlations in panel (a). Asterisks show the significance of the observed coefficients ($^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$, with Bonferroni correction applied), calculated using permutation testing ($N = 1,000$ iterations).}
 \label{fig:rsi_dataset_correlations}
 \end{figure}
 
@@ -193,7 +193,7 @@ While this analysis is interesting in terms of demonstrating the importance of h
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_4}
-  \caption{Predictive melody features. Both panels show feature weights obtained for the top and bottom five melody $n$-grams associated with classifications of (a) Bill Evans and (b) Oscar Peterson. Error bars show $SD$, calculated by bootstrapping the dataset used to fit the model ($N = 1,000$ iterations). Pitch class interval sets for each feature are on the left side of each panel; the corresponding musical notation is given on the right, transposed such that the first note is C, with a mean pitch height of approximately $G_4$. The pitch spelling for each feature is estimated using the algorithm described by \citet{Meredith2006}}
+  \caption[Most predictive melody features.]{Most predictive melody features. Both panels show feature weights obtained for the top and bottom five melody $n$-grams associated with classifications of (a) Bill Evans and (b) Oscar Peterson. Error bars show $SD$, calculated by bootstrapping the dataset used to fit the model ($N = 1,000$ iterations). Pitch class interval sets for each feature are on the left side of each panel; the corresponding musical notation is given on the right, transposed such that the first note is C, with a mean pitch height of approximately $G_4$. The pitch spelling for each feature is estimated using the algorithm described by \citet{Meredith2006}}
 \label{fig:rsi_predictive_melody_features}
 \end{figure}
 
@@ -210,15 +210,15 @@ We provide similar plots showing the harmonic features associated with each perf
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_5}
-  \caption{Feature counts decomposed with PCA. The $x$- and $y$-axis show the loading of features and class averages onto (a) principal components 1 and 2 and (b) components 3 and 4. To select the features to plot, we divide the two-dimensional representation into eight ``slices'' and plot the top-5 features within each slice by their absolute magnitude. We include the top-5 classes, ordered by the absolute magnitude of their association with either principal component. Values are scaled linearly between the range $(-1, 1)$.}
+  \caption[Feature counts decomposed with \GLS{PCA}.]{Feature counts decomposed with \GLS{PCA}. The $x$- and $y$-axis show the loading of features and class averages onto (a) principal components 1 and 2 and (b) components 3 and 4. To select the features to plot, we divide the two-dimensional representation into eight ``slices'' and plot the top-5 features within each slice by their absolute magnitude. We include the top-5 classes, ordered by the absolute magnitude of their association with either principal component. Values are scaled linearly between the range $(-1, 1)$.}
 \label{fig:rsi_pca_feature_counts}
 \end{figure}
 
-A final way to explore the musical patterns that particular pianists are associated with is to decompose the observed feature counts into a lower-dimensional space using principal component analysis (PCA). We obtain 5,838 melody features when $n = 4$, which we standardise using $z$-scoring. We then apply PCA and compute the loading of each feature onto these components. Finally, we can project the class labels onto the same low-dimensional space by averaging the feature counts obtained from every track by a performer and taking the dot product with the eigenvectors of the component matrix. In Figure \ref{fig:rsi_pca_feature_counts}, we plot a subset of the features and performer classes that load most strongly onto the first four principal components.
+A final way to explore the musical patterns that particular pianists are associated with is to decompose the observed feature counts into a lower-dimensional space using principal component analysis (\GLS{PCA}). We obtain 5,838 melody features when $n = 4$, which we standardise using $z$-scoring. We then apply \GLS{PCA} and compute the loading of each feature onto these components. Finally, we can project the class labels onto the same low-dimensional space by averaging the feature counts obtained from every track by a performer and taking the dot product with the eigenvectors of the component matrix. In Figure \ref{fig:rsi_pca_feature_counts}, we plot a subset of the features and performer classes that load most strongly onto the first four principal components.
 
 Features that load positively on principal component 1 typically consist of small scalar patterns spanning less than a fourth such as $(0, -2, -3, -5)$, while features that load negatively cover a larger distance, including $(0, -4, -8, 4)$ and $(0, -5, -6, -7)$. Kenny Barron maps positively onto this feature, while Bill Evans maps negatively --- perhaps due to his proclivity for arpeggios (see Figure \ref{fig:rsi_predictive_melody_features}a and above). Features that load positively on component 2 consist of the same interval played multiple times in either an ``up-down-up'' or ``down-up-down'' fashion, including $(0, 4, 0, 4)$ and $(0, -5, 0, -5)$. Brad Mehldau maps positively onto this feature: one possible explanation might be that, as the majority of Mehldau's recordings in our dataset are unaccompanied (see Figure \ref{fig:rsi_dataset}b), these patterns function as ostinato figurations that would otherwise be played by a bassist.
 
-Many of the features that load positively onto component 3 appear to target a minor seventh ($\pm 10$) interval, such as $(0, -8, -10, -8)$ and $(0, 9, 10, 2)$. Vice-versa, the features that load negatively onto this feature (and positively onto component 4) instead outline a major seventh ($\pm 11$) interval, including $(0, 11, 4, 0)$, $(0, 4, 11, 4)$, and $(0, -7, -11, 0)$. McCoy Tyner and Keith Jarrett both map positively onto component 3, while Kenny Barron maps onto component 4. Finally, we note that the lower-dimensional space obtained through PCA appears to embody a degree of invariance to melodic inversion, with features that outline the same intervallic patterns such as $(0, -5, -9, -5)$ and $(0, 5, 9, 5)$ typically mapped to similar coordinates regardless of direction.
+Many of the features that load positively onto component 3 appear to target a minor seventh ($\pm 10$) interval, such as $(0, -8, -10, -8)$ and $(0, 9, 10, 2)$. Vice-versa, the features that load negatively onto this feature (and positively onto component 4) instead outline a major seventh ($\pm 11$) interval, including $(0, 11, 4, 0)$, $(0, 4, 11, 4)$, and $(0, -7, -11, 0)$. McCoy Tyner and Keith Jarrett both map positively onto component 3, while Kenny Barron maps onto component 4. Finally, we note that the lower-dimensional space obtained through \GLS{PCA} appears to embody a degree of invariance to melodic inversion, with features that outline the same intervallic patterns such as $(0, -5, -9, -5)$ and $(0, 5, 9, 5)$ typically mapped to similar coordinates regardless of direction.
 
 \section{Representation Learning Approach}\label{sec:rsi_representation_learning_approach}
 
@@ -262,7 +262,7 @@ We train two versions of both models, with and without data augmentation. All mo
 
 \begin{table}[h]
     \centering
-    \caption{Results for representation learning models. Clip accuracy is the accuracy of ``raw'' predictions made from each input clip. Track accuracy is the accuracy of predictions obtained from averaging the estimated class probabilities across all clips from the same initial recording (see section \ref{sec:rsi_dataset})}
+    \caption[Results for representation learning models.]{Results for representation learning models. Clip accuracy is the accuracy of ``raw'' predictions made from each input clip. Track accuracy is the accuracy of predictions obtained from averaging the estimated class probabilities across all clips from the same initial recording (see section \ref{sec:rsi_dataset})}
     \label{tab:rsi_sm_representation_learning_results}
     \begin{tabular}{l c c c}
         \toprule
@@ -286,7 +286,7 @@ One possible approach to generating explanations from our models is to explore t
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_6}
-  \caption{\GLS{LIME} piano rolls. Both panels show a single clip from a performance by (a) Bill Evans and (b) Oscar Peterson. Highlighted in blue are the five areas of the piano roll that contribute the most towards predicting the target label. The asterisk in (a) indicates the descending arpeggio $(0, -4, -7, -11)$ pattern identified in Figure \ref{fig:rsi_predictive_melody_features}}
+  \caption[Piano rolls annotated with \GLS{LIME}.]{Piano rolls annotated with \GLS{LIME}. Both panels show a single clip from a performance by (a) Bill Evans and (b) Oscar Peterson. Highlighted in blue are the five areas of the piano roll that contribute the most towards predicting the target label. The asterisk in (a) indicates the descending arpeggio $(0, -4, -7, -11)$ pattern identified in Figure \ref{fig:rsi_predictive_melody_features}}
 \label{fig:rsi_lime_plots_main}
 \end{figure}
 
@@ -323,7 +323,7 @@ Our proposed architecture uses four convolutional sub-networks to generate an $x
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_7}
-  \caption{Proposed architecture. An input transcription is represented using four piano rolls, each relating to a musical domain. Each roll is processed with a separate sub-network, the embeddings are then pooled, and class probabilities are generated. The architecture of an 18-layer ResNet is shown here; different architectures are tested in our experiments (see Table \ref{tab:rsi_factorised_input_experiment_results}). Optional components are represented with dashed lines.}
+  \caption[Proposed multi-input performer identification model architecture.]{Proposed multi-input performer identification model architecture. An input transcription is represented using four piano rolls, each relating to a musical domain. Each roll is processed with a separate sub-network, the embeddings are then pooled, and class probabilities are generated. The architecture of an 18-layer ResNet is shown here; different architectures are tested in our experiments (see Table \ref{tab:rsi_factorised_input_experiment_results}). Optional components are represented with dashed lines.}
 \label{fig:rsi_proposed_architecture}
 \end{figure}
 
@@ -338,7 +338,7 @@ We train the model for 100 epochs with a batch size of 20, using thirty-second c
 \subsubsection{Evaluation}\label{sec:rsi_factorised_evaluation}
 
 \begin{sidewaystable}[]
-    \caption{Experiment results for models trained with factorised input representations. Note that, when the number of attention heads is 0, self-attention is not used.}
+    \caption[Experiment results for models trained with multiple input representations.]{Experiment results for models trained with multiple input representations. Note that, when the number of attention heads is 0, self-attention is not used.}
     \label{tab:rsi_factorised_input_experiment_results}
     \centering
         \begin{tabular}{l c c c c c c}
@@ -382,7 +382,7 @@ Compared with the other models described here, our proposed architecture using f
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_8}
-  \caption{Factorised model evaluation. (a) shows the loss in accuracy compared with the full model when masking a single sub-network. (b) shows the accuracy of predictions made using only a single sub-network. The dotted lines in (b) show the accuracy from predicting the majority class and the accuracy of the ``full'' model (using all four sub-networks).}
+  \caption[Multi-input performer identification model, input masking.]{Multi-input performer identification model, input masking. (a) shows the loss in accuracy compared with the full model when masking a single sub-network. (b) shows the accuracy of predictions made using only a single sub-network. The dotted lines in (b) show the accuracy from predicting the majority class and the accuracy of the ``full'' model (using all four sub-networks).}
 \label{fig:rsi_factorised_evaluation}
 \end{figure}
 
@@ -391,7 +391,7 @@ There are at least two ways to evaluate these high-level, factorised musical dom
 \begin{figure}[h!]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_s43}
-  \caption{Factorised model evaluation. The ``lollipop'' plot shows the accuracy obtained from predicting using all combinations of sub-networks, with the colored ``heads'' of each lollipop indicating the particular networks used to make the predictions. The dotted ``baseline'' score is the accuracy obtained from a model that simply predicts the majority class for every recording.}
+  \caption[Multi-input performer identification model evaluation.]{Multi-input performer identification model evaluation. The ``lollipop'' plot shows the accuracy obtained from predicting using all combinations of sub-networks, with the coloured ``heads'' of each lollipop indicating the particular networks used to make the predictions. The dotted ``baseline'' score is the accuracy obtained from a model that simply predicts the majority class for every recording.}
 \label{fig:rsi_sm_factorised_lollipop}
 \end{figure}
 
@@ -404,14 +404,14 @@ The importance of melodic content for distinguishing between different improvisi
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_9}
-  \caption{Class accuracy per musical domain. Each facet shows the percentage of recordings in the held-out test split classified correctly for each pianist when predicting using only a single sub-network.}
+  \caption[Multi-input model, class accuracy per musical domain.]{Multi-input model, class accuracy per musical domain. Each facet shows the percentage of recordings in the held-out test split classified correctly for each pianist when predicting using only a single sub-network.}
 \label{fig:rsi_class_accuracy_per_domain}
 \end{figure}
 
 \begin{figure}[]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_s44.png}
-  \caption{Class accuracy across musical dimensions. Each facet contains a heatmap showing the probability that, when given a recording and the output from a sub-network, the model will identify a particular pianist. The proportion of hits is shown for each facet along the diagonal; all other values are misses. Lighter and darker colours indicate lower and higher predictive probability, respectively.}
+  \caption[Multi-input model, class accuracy across musical domains.]{Multi-input model, class accuracy across musical domains. Each facet contains a heatmap showing the probability that, when given a recording and the output from a sub-network, the model will identify a particular pianist. The proportion of hits is shown for each facet along the diagonal; all other values are misses. Lighter and darker colours indicate lower and higher predictive probability, respectively.}
 \label{fig:rsi_sm_factorised_heatmap}
 \end{figure}
 
@@ -428,7 +428,7 @@ However, we also note that the performers distinguished most accurately using th
 \begin{figure}[h!]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_s45.png}
-  \caption{CAV examples. The musical notation shows an example exercise taken from the ``Modal Fourthy Voicings'' chapter in \citet[p. 52]{Haerle1994}.}
+  \caption[Concept activation vector examples.]{Concept activation vector examples. The musical notation shows an example exercise taken from the ``Modal Fourthy Voicings'' chapter in \citet[p. 52]{Haerle1994}.}
 \label{fig:rsi_sm_haerle_example}
 \end{figure}
 
@@ -443,7 +443,7 @@ Next, we train binary logistic regressions to separate the activations for one c
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_10}
-  \caption{Concept sensitivity. The heatmap shows the mean sign-count scores obtained for each performer ($y$-axis), arranged in order of birth year, to every harmonic concept ($x$-axis), arranged in chapter order from \citet{Haerle1994}. Darker green colours indicate a positive influence of a concept on the classification of a performer; darker purples show negative influence. Asterisks show the significance of the sign-count scores ($^* \ p < .05$).}
+  \caption[Concept sensitivity heatmap, showing the mean sign-count scores obtained for each performer.]{Concept sensitivity heatmap, showing the mean sign-count scores obtained for each performer ($y$-axis), arranged in order of birth year, to every harmonic concept ($x$-axis), arranged in chapter order from \citet{Haerle1994}. Darker green colours indicate a positive influence of a concept on the classification of a performer; darker purples show negative influence. Asterisks show the significance of the sign-count scores ($^* \ p < .05$).}
 \label{fig:rsi_cav_sign_counts}
 \end{figure}
 
@@ -452,7 +452,7 @@ For every concept, we compute $N$ sign-count ratios for each performer by fixing
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_11}
-  \caption{Pairwise correlations between concepts. The colour of each cell shows the strength of the linear relationships (Pearson's $r$) between sign-count ratios obtained between harmonic concepts along the $x$- and $y$-axis. Darker reds and blues indicate stronger positive and negative associations, respectively. Sign-count ratios are collected for all performers ($N = 20$) and across all iterations ($N = 10$) of the testing process, such that the total number of values considered for each concept in every correlation is 200.}
+  \caption[Pairwise correlations between musical concepts.]{Pairwise correlations between musical concepts. The colour of each cell shows the strength of the linear relationships (Pearson's $r$) between sign-count ratios obtained between harmonic concepts along the $x$- and $y$-axis. Darker reds and blues indicate stronger positive and negative associations, respectively. Sign-count ratios are collected for all performers ($N = 20$) and across all iterations ($N = 10$) of the testing process, such that the total number of values considered for each concept in every correlation is 200.}
 \label{fig:rsi_cav_correlations}
 \end{figure}
 
@@ -461,7 +461,7 @@ We conduct two control analyses to validate that our analyses align with the des
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/rsi_xai/figure_s46.png}
-  \caption{``Tivoli'' (1991) transcription. The musical notation shows a transcription of the final 30 seconds from an unaccompanied performance by McCoy Tyner (taken from the album ``Soliloquy'', original composition by Dexter Gordon). Transcription created by the author.}
+  \caption[McCoy Tyner,``Tivoli'' (1991) transcription.]{McCoy Tyner,``Tivoli'' (1991) transcription. The musical notation shows a transcription of the final 30 seconds from an unaccompanied performance by McCoy Tyner (taken from the album ``Soliloquy'', original composition by Dexter Gordon). Transcription created by the author.}
 \label{fig:rsi_sm_tivoli_transcription}
 \end{figure}
 \FloatBarrier\clearpage
@@ -469,7 +469,7 @@ We conduct two control analyses to validate that our analyses align with the des
 \begin{figure}[]
   \centering
   \includesvg[width=1\textwidth]{figures/rsi_xai/figure_12}
-  \caption{Masked concept sensitivity. Each panel contains a MIDI piano roll with a heatmap overlaid to show the sensitivity of particular sections of a performance by McCoy Tyner to the (a) ``Modal Fourthy Voicings'' and (b) ``Block Chords'' concepts. Intuitively, darker coloured sections can be considered to contribute more to the sensitivity of the clip to the concept than lighter coloured sections. Musical notation is provided in Figure \ref{fig:rsi_sm_tivoli_transcription}}
+  \caption[Masked musical concept sensitivity in ``Tivoli''.]{Masked musical concept sensitivity in ``Tivoli''. Each panel contains a MIDI piano roll with a heatmap overlaid to show the sensitivity of particular sections of a performance by McCoy Tyner to the (a) ``Modal Fourthy Voicings'' and (b) ``Block Chords'' concepts. Intuitively, darker coloured sections can be considered to contribute more to the sensitivity of the clip to the concept than lighter coloured sections. Musical notation is provided in Figure \ref{fig:rsi_sm_tivoli_transcription}}
 \label{fig:rsi_tivoli_cav}
 \end{figure}
 

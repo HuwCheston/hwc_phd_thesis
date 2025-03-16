@@ -33,7 +33,7 @@ The experiment was approved by the Ethics Review Subcommittee at the Faculty of 
 \begin{figure}[]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/mp_network/figure_1.png}
-  \caption{Testbed configuration. The top row of panels shows (a) the procedure used to measure network latency over Zoom Meetings and (b) the resulting 90-second latency and jitter time-series profile. The bottom row shows (c) a diagram of the testbed layout and (d) how this looked within the experiment room, for pianist and drummer.}
+  \caption[Configuration for network latency testbed.]{Configuration for network latency testbed. The top row of panels shows (a) the procedure used to measure network latency over Zoom Meetings and (b) the resulting 90-second latency and jitter time-series profile. The bottom row shows (c) a diagram of the testbed layout and (d) how this looked within the experiment room, for pianist and drummer.}
 \label{fig:mp_testbed_configuration}
 \end{figure}
 
@@ -42,7 +42,7 @@ We designed a novel testbed for the experiment, shown in Figure \ref{fig:mp_test
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s1}
-  \caption{Additional network latency tests. Each column of plots shows the variable latency time experienced during a 90-second teleconferencing call on Zoom Meetings, created following the procedures used in Figure \ref{fig:mp_testbed_configuration}a. The left-most column shows the network latency measurements used in the present study, given also in Figure \ref{fig:mp_testbed_configuration}b. The remaining columns show results from identical tests in three different locations. In each column of plots, the $y$-axis shows the latency time between initial metronome beat and echo, normalised such that the minimum delay time is 0 ms; the $x$-axis shows either the duration of the call (line plot), or the density function (histogram).}
+  \caption[Additional network latency tests.]{Additional network latency tests. Each column of plots shows the variable latency time experienced during a 90-second teleconferencing call on Zoom Meetings, created following the procedures used in Figure \ref{fig:mp_testbed_configuration}a. The left-most column shows the network latency measurements used in the present study, given also in Figure \ref{fig:mp_testbed_configuration}b. The remaining columns show results from identical tests in three different locations. In each column of plots, the $y$-axis shows the latency time between initial metronome beat and echo, normalised such that the minimum delay time is 0 ms; the $x$-axis shows either the duration of the call (line plot), or the density function (histogram).}
 \label{fig:mp_additional_network_tests}
 \end{figure}
 
@@ -71,7 +71,7 @@ d'^N_1=\biggl(J\biggl(d_i-\text{min}(d^N_1)\biggr)+L\biggr)^N_1
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_2}
-  \caption{Experimental conditions. The thirteen conditions tested in the experiment were derived from the transformation of the measurements in Figure \ref{fig:mp_testbed_configuration}b. The rows indicate minimum latency values between 0 and 180 ms, with jitter scaling shown by the colour of each line. The left column shows the raw latency timings over the 90-second duration of each performance. The right column displays the standard deviation of latency values obtained over a sliding window of four seconds, which we later use in the partial correlation analysis of timing variance shown in Figure \ref{fig:mp_partial_correlations}}
+  \caption[Experimental conditions for network latency study.]{Experimental conditions for network latency study. The thirteen conditions tested in the experiment were derived from the transformation of the measurements in Figure \ref{fig:mp_testbed_configuration}b. The rows indicate minimum latency values between 0 and 180 ms, with jitter scaling shown by the colour of each line. The left column shows the raw latency timings over the 90-second duration of each performance. The right column displays the standard deviation of latency values obtained over a sliding window of four seconds, which we later use in the partial correlation analysis of timing variance shown in Figure \ref{fig:mp_partial_correlations}}
 \label{fig:mp_experimental_conditions}
 \end{figure}
 
@@ -84,7 +84,7 @@ Before each performance began, participants heard sixteen quarter-note pulses fr
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s2c}
-  \caption{MIDI note distribution. Both ``instruments'' show the frequency of MIDI note placement across all performances in the dataset; the darker the colour, the more often that particular drum or piano note was played. Values are scaled so that the most frequently played note has a normalised value of 1. Note that the rims of the snare, rack, and floor toms were tracked independently of the centre of these drums, and are coloured accordingly. Additionally, the ride cymbal is separated into bell (centre) and bow (edge), and the hi-hat into cymbal (struck with the stick) and pedal (operated with the foot). Only the four octaves of the piano keyboard that were used most frequently are shown here.}
+  \caption[MIDI note distribution.]{MIDI note distribution. Both ``instruments'' show the frequency of MIDI note placement across all performances in the dataset; the darker the colour, the more often that particular drum or piano note was played. Values are scaled so that the most frequently played note has a normalised value of 1. Note that the rims of the snare, rack, and floor toms were tracked independently of the centre of these drums, and are coloured accordingly. Additionally, the ride cymbal is separated into bell (centre) and bow (edge), and the hi-hat into cymbal (struck with the stick) and pedal (operated with the foot). Only the four octaves of the piano keyboard that were used most frequently are shown here.}
 \label{fig:mp_instrument_heatmaps}
 \end{figure}
 
@@ -97,7 +97,7 @@ Each performance lasted for 90 seconds before participants were instructed to st
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s3}
-  \caption{Test-retest reliability, performance questionnaire. Each bar shows the inter-rater (i.e. between both the pianist and drummer in a duo) and test-retest (i.e. between matched scores for each condition across both sessions of the experiment) reliability of the scalar questions presented to performers in the experiment. The $x$-axis shows each question, with values of Pearson's $r$ on the $y$-axis. Bar colouring corresponds to duo numbers. Asterisks above a bar indicate the significance of the correlation coefficient, $^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$.}
+  \caption[Test-retest reliability from performance questionnaire.]{Test-retest reliability from performance questionnaire. Each bar shows the inter-rater (i.e. between both the pianist and drummer in a duo) and test-retest (i.e. between matched scores for each condition across both sessions of the experiment) reliability of the scalar questions presented to performers in the experiment. The $x$-axis shows each question, with values of Pearson's $r$ on the $y$-axis. Bar colouring corresponds to duo numbers. Asterisks above a bar indicate the significance of the correlation coefficient, $^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$.}
 \label{fig:mp_performer_questionnaire_test_retest}
 \end{figure}
 
@@ -112,14 +112,14 @@ A pre-screening listening task that asked participants to discern differences in
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s4b}
-  \caption{Listener demographic information. Each bar plot shows the proportion of responses to every demographic question presented to each participant in the listening evaluation test.}
+  \caption[Demographic information from subjective listening test.]{Demographic information from subjective listening test. Each bar plot shows the proportion of responses to every demographic question presented to each participant in the listening evaluation test.}
 \label{fig:mp_listener_demographics}
 \end{figure}
 
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s4c}
-  \caption{Distribution of results in subjective listening evaluation. Each plot shows 95\% confidence intervals obtained from bootstrapping (with $N = 10,000$ replicates) over the listener-reported success scores ($x$-axis) obtained from the perceptual study for each condition ($y$-axis).}
+  \caption[Distribution of results from subjective listening test.]{Distribution of results from subjective listening test. Each plot shows 95\% confidence intervals obtained from bootstrapping (with $N = 10,000$ replicates) over the listener-reported success scores ($x$-axis) obtained from the perceptual study for each condition ($y$-axis).}
 \label{fig:mp_listener_results_distribution}
 \end{figure}
 
@@ -134,7 +134,7 @@ For each of the 130 performances in the dataset, we extracted the position of th
 \begin{figure}[]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/mp_network/figure_3.png}
-  \caption{Beat extraction procedure. (a) shows notation from a hypothetical performance where linear interpolation would have been applied. The note annotated with an exclamation point in the upper stave has been ``pushed'' before its expected position as the first beat of the next bar. The lower stave shows the performance after interpolation, with this note aligned midway between the quarter notes immediately before and after it (the inter-beat interval between which is given by $y$). (b) shows the total number of beats contributed by each participant to the final dataset, after filtering and nearest-neighbour matching. The hatched segment of each bar shows the proportion of beats by that performer that required interpolation, with the exact number of beats given above the bar.}
+  \caption[Beat extraction procedure.]{Beat extraction procedure. (a) shows notation from a hypothetical performance where linear interpolation would have been applied. The note annotated with an exclamation point in the upper stave has been ``pushed'' before its expected position as the first beat of the next bar. The lower stave shows the performance after interpolation, with this note aligned midway between the quarter notes immediately before and after it (the inter-beat interval between which is given by $y$). (b) shows the total number of beats contributed by each participant to the final dataset, after filtering and nearest-neighbour matching. The hatched segment of each bar shows the proportion of beats by that performer that required interpolation, with the exact number of beats given above the bar.}
 \label{fig:mp_beat_extraction_procedure}
 \end{figure}
 
@@ -179,14 +179,14 @@ All statistical analyses and models reported in this chapter were implemented us
 \begin{figure}[]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/mp_network/figure_4.png}
-  \caption{Baseline results. Number lines showing baseline values obtained for tempo slope, asynchrony, timing irregularity, performer- and listener-reported success, averaged for both repeats of the control condition by a duo. Note that performer-reported success values are randomly displaced horizontally for increased visual clarity and to prevent over-plotting.}
+  \caption[Results from baseline (no latency) performances.]{Results from baseline (no latency) performances. Number lines showing baseline values obtained for tempo slope, asynchrony, timing irregularity, performer- and listener-reported success, averaged for both repeats of the control condition by a duo. Note that performer-reported success values are randomly displaced horizontally for increased visual clarity and to prevent over-plotting.}
 \label{fig:mp_baseline_results}
 \end{figure}
 
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s5}
-  \caption{Performance tempo maps. Time is shown on the $x$-axis and tempo (in quarter-note beats per minute) on the $y$-axis for all 130 performances in the dataset, separated by ensemble (rows) and testbed configuration (columns). The gray dotted line in each plot shows the reference tempo (120 quarter notes per minute, four quarter notes per measure) provided to participants over headphones before each performance. The blue lines correspond with performances from the first session of the experiment, and the orange lines show performances from the second session. For visual clarity, each line shows a moving average of the performance tempo, obtained across a window of 8 seconds duration (four measures at the reference tempo).}
+  \caption[Performance tempo maps from network latency experiment.]{Performance tempo maps from network latency experiment. Time is shown on the $x$-axis and tempo (in quarter-note beats per minute) on the $y$-axis for all 130 performances in the dataset, separated by ensemble (rows) and testbed configuration (columns). The gray dotted line in each plot shows the reference tempo (120 quarter notes per minute, four quarter notes per measure) provided to participants over headphones before each performance. The blue lines correspond with performances from the first session of the experiment, and the orange lines show performances from the second session. For visual clarity, each line shows a moving average of the performance tempo, obtained across a window of 8 seconds duration (four measures at the reference tempo).}
 \label{fig:mp_performance_tempo_maps}
 \end{figure}
 
@@ -205,7 +205,7 @@ The baseline mean listener-reported success score was 7.1 ($SD = 0.6$, $\text{ra
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_5}
-  \caption{Univariate and bivariate distributions. The histograms on each diagonal show the distribution of the variable plotted in that column/row. The scatter plots below the diagonal show the pair of variables obtained at the intersection of every column and row, with markers representing the score obtained by each duo for all thirteen conditions, averaged across instruments and sessions of the experiment. The straight red lines show a linear regression model fit between both variables, with error bars denoting 95\% confidence intervals generated via bootstrapping ($N = 10,000$ replicates). Likewise, values above the diagonal denote the coefficient of Pearson's $r$ calculated between the corresponding variable pair, with the font size also indicating the strength of the correlation. Asterisks indicate the significance of the correlation coefficient, $^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$. Values for the tempo slope variable are given in their absolute (unsigned) form.}
+  \caption[Univariate and bivariate distributions.]{Univariate and bivariate distributions. The histograms on each diagonal show the distribution of the variable plotted in that column/row. The scatter plots below the diagonal show the pair of variables obtained at the intersection of every column and row, with markers representing the score obtained by each duo for all thirteen conditions, averaged across instruments and sessions of the experiment. The straight red lines show a linear regression model fit between both variables, with error bars denoting 95\% confidence intervals generated via bootstrapping ($N = 10,000$ replicates). Likewise, values above the diagonal denote the coefficient of Pearson's $r$ calculated between the corresponding variable pair, with the font size also indicating the strength of the correlation. Asterisks indicate the significance of the correlation coefficient, $^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$. Values for the tempo slope variable are given in their absolute (unsigned) form.}
 \label{fig:mp_univariate_bivariate_distributions}
 \end{figure}
 
@@ -216,7 +216,7 @@ We observe here that the three objective metrics derived from the extracted quar
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_6}
-  \caption{Objective features affecting success evaluations. The panels show standardised regression coefficients ($\beta$) for a mixed-effects model predicting success ratings from musicians and naive listeners respectively. Error bars represent 95\% confidence intervals computed by bootstrapping with ($N = 10,000$ replicates). Where an error bar does not cross 0, the effect of that predictor is statistically significant. }
+  \caption[Objective features affecting success evaluations.]{Objective features affecting success evaluations. The panels show standardised regression coefficients ($\beta$) for a mixed-effects model predicting success ratings from musicians and naive listeners respectively. Error bars represent 95\% confidence intervals computed by bootstrapping with ($N = 10,000$ replicates). Where an error bar does not cross 0, the effect of that predictor is statistically significant. }
 \label{fig:mp_objective_features_affecting_success}
 \end{figure}
 
@@ -231,7 +231,7 @@ To evaluate the effect of testbed configuration on the performance of each group
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s6a}
-  \caption{Reliability of performance success metrics. Each panel shows the test-retest reliability for every performance success metric by comparing values obtained from the first session of the experiment with those from the second. The straight black line corresponds with a simple linear regression, with confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Integer values corresponding to performer-rated success scores are jittered horizontally and vertically to reduce over-plotting.}
+  \caption[Reliability of performance success metrics.]{Reliability of performance success metrics. Each panel shows the test-retest reliability for every performance success metric by comparing values obtained from the first session of the experiment with those from the second. The straight black line corresponds with a simple linear regression, with confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Integer values corresponding to performer-rated success scores are jittered horizontally and vertically to reduce over-plotting.}
 \label{fig:mp_performance_success_reliability}
 \end{figure}
 
@@ -240,7 +240,7 @@ We accounted for our repeated-measures design by averaging the results obtained 
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s6b}
-  \caption{Bias of performance success metrics. Each plot compares the difference in means for every performance success metric across experimental sessions. The $x$-axis shows the difference in means between sessions, such that a positive value corresponds to larger scores obtained in the second set of the conditions than the first. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates); where a bar does not cross the dotted line, the difference in means between sessions for that combination of performers and metric is significant.}
+  \caption[Bias of performance success metrics.]{Bias of performance success metrics. Each plot compares the difference in means for every performance success metric across experimental sessions. The $x$-axis shows the difference in means between sessions, such that a positive value corresponds to larger scores obtained in the second set of the conditions than the first. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates); where a bar does not cross the dotted line, the difference in means between sessions for that combination of performers and metric is significant.}
 \label{fig:mp_performance_success_bias}
 \end{figure}
 
@@ -251,14 +251,14 @@ The average $R_{adj}^2$ value for our models was .529 when predicting tempo slop
 \begin{figure}[]
   \centering
   \includesvg[width=0.9\textwidth]{figures/mp_network/figure_7}
-  \caption{Effects of testbed configuration on performance success variables. The bars show regression coefficients from models predicting one of the five performance success variables, with results split by duo. The reference category for each model corresponds to the performance during the control condition (i.e., with no latency or jitter); if values were obtained separately for each instrument for a given variable, the reference category also corresponds to the drummer's performance. Crosses indicate where a particular predictor variable was omitted from that model. Error bars represent 95\% confidence intervals computed by the model; where an error bar does not cross 0, the effect of that category is statistically significant.}
+  \caption[Effects of network testbed configuration on performance success variables.]{Effects of network testbed configuration on performance success variables. The bars show regression coefficients from models predicting one of the five performance success variables, with results split by duo. The reference category for each model corresponds to the performance during the control condition (i.e., with no latency or jitter); if values were obtained separately for each instrument for a given variable, the reference category also corresponds to the drummer's performance. Crosses indicate where a particular predictor variable was omitted from that model. Error bars represent 95\% confidence intervals computed by the model; where an error bar does not cross 0, the effect of that category is statistically significant.}
 \label{fig:mp_testbed_configuration_on_success}
 \end{figure}
 
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s7}
-  \caption{Inferential statistics computed across all duos. The points show the mean value obtained for a given performance success metric averaged over all performances made using a particular latency or jitter condition. Error bars show 95\% confidence intervals, obtained via bootstrapping over duos ($N = 10,000$ replicates). Where two error bars do not cross, the difference between two latency or jitter values is statistically significant.}
+  \caption[Inferential statistics computed across all duos.]{Inferential statistics computed across all duos. The points show the mean value obtained for a given performance success metric averaged over all performances made using a particular latency or jitter condition. Error bars show 95\% confidence intervals, obtained via bootstrapping over duos ($N = 10,000$ replicates). Where two error bars do not cross, the difference between two latency or jitter values is statistically significant.}
 \label{fig:mp_inferential_statistics_across_duos}
 \end{figure}
 
@@ -283,7 +283,7 @@ While a spike in network latency time caused by jitter inevitably causes large a
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s8}
-  \caption{Model comparisons using ``backward'' feature elimination. This plot shows averages from five linear regression models predicting one of five performance success metrics, using the data from each duo individually. The $x$-axis shows the combination of predictor variables contained within each model. The $y$-axis corresponds with the amount of variance explained by the model predictors, using the average $R_{adj}^2$. Error bars in both plots show 95\% confidence intervals obtained via bootstrapping over all $R_{adj}^2$ values ($N = 10,000$ replicates).}
+  \caption[Model comparisons using ``backward'' feature elimination.]{Model comparisons using ``backward'' feature elimination. This plot shows averages from five linear regression models predicting one of five performance success metrics, using the data from each duo individually. The $x$-axis shows the combination of predictor variables contained within each model. The $y$-axis corresponds with the amount of variance explained by the model predictors, using the average $R_{adj}^2$. Error bars in both plots show 95\% confidence intervals obtained via bootstrapping over all $R_{adj}^2$ values ($N = 10,000$ replicates).}
 \label{fig:mp_model_comparisons}
 \end{figure}
 
@@ -294,7 +294,7 @@ A complementary way to quantify the effect of jitter is to analyse whether momen
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s9}
-  \caption{Partial correlation plots. Each column of plots corresponds to one of the three jitter scales tested in the experiment. The $x$-axis shows the degree of lag in seconds that was applied to rolling measurements of the standard deviation of the latency time series used in the performance (see Figure \ref{fig:mp_experimental_conditions}, right column) and to prior inter-beat interval variance. The $y$-axis shows values of the coefficient $r$ averaged across all performances in the dataset, irrespective of duo or instrument. Error bars show 95\% confidence intervals of $r$ obtained by bootstrapping ($N = 10,000$ replicates).}
+  \caption[Partial correlation plots.]{Partial correlation plots. Each column of plots corresponds to one of the three jitter scales tested in the experiment. The $x$-axis shows the degree of lag in seconds that was applied to rolling measurements of the standard deviation of the latency time series used in the performance (see Figure \ref{fig:mp_experimental_conditions}, right column) and to prior inter-beat interval variance. The $y$-axis shows values of the coefficient $r$ averaged across all performances in the dataset, irrespective of duo or instrument. Error bars show 95\% confidence intervals of $r$ obtained by bootstrapping ($N = 10,000$ replicates).}
 \label{fig:mp_partial_correlations}
 \end{figure}
 
@@ -321,7 +321,7 @@ We model the coordination in a networked ensemble using a process of linear phas
 \begin{figure}[]
   \centering
   \includegraphics[width=1.0\textwidth]{figures/mp_network/figure_8.png}
-  \caption{Measured coupling between the musicians in each duo. (a) is a schematic diagram of the linear phase correction model. Quarter-note beats are given by coloured circles: the circles with dashed borders show the position of beats after latency has been applied, representing when they would have actually been heard by a performer. The vertical gray rectangles indicate the metric grid of quarter notes, while horizontal and diagonal black lines show the inter-beat interval between quarter notes, either from one performer or between performers. The braces indicate the difference between successive inter-beat intervals played by the same musician. (b) depicts the mean coupling coefficient obtained for each participant. (c) shows the mean coupling strength and asymmetry across each duo. Error bars in both (b) and (c) show 95\% confidence intervals of the mean obtained via bootstrapping ($N = 10,000$ replicates). (d) groups the duos by their respective coordination strategy, with the direction and degree of the coupling in each duo given by the colour and thickness of the arrows respectively. Values above each arrow show the mean coupling coefficient, with parentheses indicating standard deviations. Duos are ordered, left-to-right, by average coupling asymmetry across all conditions.}
+  \caption[Measured coupling between the musicians in each duo.]{Measured coupling between the musicians in each duo. (a) is a schematic diagram of the linear phase correction model. Quarter-note beats are given by coloured circles: the circles with dashed borders show the position of beats after latency has been applied, representing when they would have actually been heard by a performer. The vertical gray rectangles indicate the metric grid of quarter notes, while horizontal and diagonal black lines show the inter-beat interval between quarter notes, either from one performer or between performers. The braces indicate the difference between successive inter-beat intervals played by the same musician. (b) depicts the mean coupling coefficient obtained for each participant. (c) shows the mean coupling strength and asymmetry across each duo. Error bars in both (b) and (c) show 95\% confidence intervals of the mean obtained via bootstrapping ($N = 10,000$ replicates). (d) groups the duos by their respective coordination strategy, with the direction and degree of the coupling in each duo given by the colour and thickness of the arrows respectively. Values above each arrow show the mean coupling coefficient, with parentheses indicating standard deviations. Duos are ordered, left-to-right, by average coupling asymmetry across all conditions.}
 \label{fig:mp_coupling_model}
 \end{figure}
 
@@ -384,7 +384,7 @@ where $\alpha_{i,i}^m T'^{i,i}_{k-m}$ is the influence of previous differenced i
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s10c}
-  \caption{Higher-order model results. Each panel shows evaluation metrics obtained for models with different orders, with $M = 0$ equivalent to the model used in the analysis here. Error bars show 95\% confidence intervals obtained by bootstrapping across duos ($N = 10,000$ replicates)}
+  \caption[Higher-order model results.]{Higher-order model results. Each panel shows evaluation metrics obtained for models with different orders, with $M = 0$ equivalent to the model used in the analysis here. Error bars show 95\% confidence intervals obtained by bootstrapping across duos ($N = 10,000$ replicates)}
 \label{fig:mp_higher_order_evaluation}
 \end{figure}
 
@@ -397,7 +397,7 @@ Our fourth and final control analysis involved the generation of simulated music
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s10d}
-  \caption{Control simulation results. Both panels compare (respectively) tempo slope coefficients and ensemble asynchrony values obtained from the performances in our dataset ($y$-axis) with simulations based on the ensemble coupling present within them ($x$-axis).}
+  \caption[Control simulation results.]{Control simulation results. Both panels compare (respectively) tempo slope coefficients and ensemble asynchrony values obtained from the performances in our dataset ($y$-axis) with simulations based on the ensemble coupling present within them ($x$-axis).}
 \label{fig:mp_control_simulation_results}
 \end{figure}
 
@@ -410,7 +410,7 @@ In summary, our control analyses indicated that our model had adequately capture
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s11a}
-  \caption{Distribution of observed coupling responses. Each panel shows the distribution of the different coefficients obtained for every term in the model, with colour indicating instrument.}
+  \caption[Distribution of observed coupling responses.]{Distribution of observed coupling responses. Each panel shows the distribution of the different coefficients obtained for every term in the model, with colour indicating instrument.}
 \label{fig:mp_coupling_responses_distribution}
 \end{figure}
 
@@ -419,7 +419,7 @@ Figure \ref{fig:mp_coupling_responses_distribution} plots distributions and kern
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s11c}
-  \caption{Difference in mean performer coupling coefficients. Each panel shows mean differences in self- and partner-coupling between both musicians within the same duo. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Where a bar does not cross the dotted line, the difference in means between those performers is significant.}
+  \caption[Difference in mean performer coupling coefficients.]{Difference in mean performer coupling coefficients. Each panel shows mean differences in self- and partner-coupling between both musicians within the same duo. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Where a bar does not cross the dotted line, the difference in means between those performers is significant.}
 \label{fig:mp_coupling_mean_differences}
 \end{figure}
 
@@ -432,7 +432,7 @@ With regards to these differences in coupling between instruments, we refer to t
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s11d}
-  \caption{Pairwise differences in coupling between duos. Each line shows mean differences in coupling strength and asymmetry between different pairs of duos. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Where a bar does not cross the dotted line, the difference in means between those duos is significant.}
+  \caption[Pairwise differences in coupling between duos.]{Pairwise differences in coupling between duos. Each line shows mean differences in coupling strength and asymmetry between different pairs of duos. Error bars show 95\% confidence intervals obtained via bootstrapping ($N = 10,000$ replicates). Where a bar does not cross the dotted line, the difference in means between those duos is significant.}
 \label{fig:mp_duo_coupling_mean_differences}
 \end{figure}
 
@@ -470,7 +470,7 @@ We compared the following simulations across each of the thirteen conditions tes
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_9}
-  \caption{Simulation results. The bar plots compare tempo slope, timing irregularity, and asynchrony across simulated coordination strategies: each point shows the median value obtained from 500 individual simulations for one condition in the experiment, with the height of each bar representing the overall mean for that strategy across all conditions. Condition type is given by marker size, shape, and colour, with red square markers showing results from control simulations, with no latency applied.}
+  \caption[Simulation results, comparing tempo slope, timing irregularity, and asynchrony across simulated coordination strategies.]{Simulation results, comparing tempo slope, timing irregularity, and asynchrony across simulated coordination strategies. Each point shows the median value obtained from 500 individual simulations for one condition in the experiment, with the height of each bar representing the overall mean for that strategy across all conditions. Condition type is given by marker size, shape, and colour, with red square markers showing results from control simulations, with no latency applied.}
 \label{fig:mp_simulation_results_barplot}
 \end{figure}
 
@@ -485,7 +485,7 @@ Ultimately, in a networked performance environment, our simulations indicate tha
 \begin{figure}[]
   \centering
   \includesvg[width=1.0\textwidth]{figures/mp_network/figure_s12}
-  \caption{Simulation results. Each plot depicts simulated asynchrony values and tempo slope coefficients obtained from a single condition. Rows correspond to latency and columns to jitter: duo number and coordination strategy are delineated by the style and colour of the marker.}
+  \caption[Simulation results, depicting simulated asynchrony values and tempo slope coefficients obtained from a single condition.]{Simulation results, depicting simulated asynchrony values and tempo slope coefficients obtained from a single condition. Rows correspond to latency and columns to jitter: duo number and coordination strategy are delineated by the style and colour of the marker.}
 \label{fig:mp_simulation_results}
 \end{figure}
 
