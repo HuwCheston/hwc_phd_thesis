@@ -338,23 +338,23 @@ Rather than working directly with the timestamps estimated from the beat tracker
 
 The mean tempo $\bar{y}$ of a recording in beats-per-minute was calculated as 
 \begin{align}\label{eq:mean_tempo}
-\bar{y} = \dfrac{\sum_{i=1}^N\frac{60}{x_i - x_{i-1}}}{N-1}
+\bar{y} = \dfrac{\sum\limits_{i=1}^N\frac{60}{x_i - x_{i-1}}}{N-1}
 \end{align}
 where $x_i$ is the mean of all onsets matched to beat $i$, for $i \geq 1$. Across \GLS{JTD}, the observed $mean(\bar{y}) = 193.92 \ \text{BPM}$ ($SD = 46.93$, Figure \ref{fig:jtd_mean_tempo}); this was comparable to the equivalent result calculated using the timestamps $y'$ estimated from the beat tracking algorithm ($mean(\bar{y'}) = 193.70, SD = 46.59$). The slowest performance in \GLS{JTD} had a mean tempo of 102.10 BPM (Cedar Walton, ``Ghost of a Chance'', \citeyear{Walton2010}) and the fastest 299.82 BPM (John Hicks, ``Airegin'', \citeyear{Hicks1987}).
 
 As a measure of tempo stability, for each track we obtained the standard deviation of the tempo normalized by the mean tempo i.e., the percentage fluctuation about the overall tempo (``tempo fluctuation'', $F$). This can be written simply as
 \begin{align}\label{eq:tempo_fluctuation}
-F = \dfrac{\sqrt{\frac{1}{N-1} \sum_{i=1}^N (y_i - \bar{y})^2}}{\bar{y}},
+F = \dfrac{\sqrt{\frac{1}{N-1} \sum\limits_{i=1}^N (y_i - \bar{y})^2}}{\bar{y}},
 \end{align}
 where $y_i$ is the tempo value in quarter-note beats-per-minute at beat $i$. The observed $mean(F) = 5.55\%$ ($SD = 2.70$) for \GLS{JTD} recordings, suggesting that they were generally stable.
 
 We also calculated the slope of a linear regression of instantaneous tempo against beat onset time (``tempo slope'', $S$) using the standard least squares formula
 \begin{align}\label{eq:tempo_slope}
-S = \frac{\sum_{i=1}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum_{i=1}^N (x_i - \bar{x})^2},
+\hat{S} = \frac{\sum\limits_{i=1}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2},
 \end{align}
-such that $S > 0$ implies acceleration and $S < 0$ implies deceleration. The observed $mean(S) = 0.04\ \text{BPM/s}$ ($SD = 0.10$) for \GLS{JTD} recordings, suggesting that they displayed a very slight tendency towards acceleration (with a predicted increase of 1 BPM every 25 seconds).
+such that $\hat{S} > 0$ implies acceleration and $\hat{S} < 0$ implies deceleration. The observed $mean(\hat{S}) = 0.04\ \text{BPM/s}$ ($SD = 0.10$) for \GLS{JTD} recordings, suggesting that they displayed a very slight tendency towards acceleration (with a predicted increase of 1 BPM every 25 seconds).
 
-There was no correlation between signed tempo slope and unsigned tempo fluctuation, $r_{S, F}(1292) = -0.06, p = 0.06$; however, there was a positive correlation between the unsigned slope (i.e., any global change in tempo, regardless of direction) and fluctuation, $r_{|S|, F}(1292) = 0.37, p < .001$. There were positive correlations between both mean tempo and signed tempo slope, $r_{\bar{y}, S}(1292) = 0.25, p < .001$, mean tempo and unsigned slope, $r_{\bar{y}, |S|}(1292) = 0.60, p < .001$, and mean tempo and fluctuation, $r_{\bar{y}, F}(1292) = 0.24, p < .001$. This suggests that performances which had a faster pace tended to involve a greater magnitude of tempo change than those which were slower, and were also less stable overall.
+There was no correlation between signed tempo slope and unsigned tempo fluctuation, $r_{\hat{S}, \ F}(1292) = -0.06, p = 0.06$; however, there was a positive correlation between the unsigned slope (i.e., any global change in tempo, regardless of direction) and fluctuation, $r_{|\hat{S}|, \ F}(1292) = 0.37, p < .001$. There were positive correlations between both mean tempo and signed tempo slope, $r_{\bar{y}, \ \hat{S}}(1292) = 0.25, p < .001$, mean tempo and unsigned slope, $r_{\bar{y}, \ |\hat{S}|}(1292) = 0.60, p < .001$, and mean tempo and fluctuation, $r_{\bar{y}, \ F}(1292) = 0.24, p < .001$. This suggests that performances which had a faster pace tended to involve a greater magnitude of tempo change than those which were slower, and were also less stable overall.
 
 \subsection{Swing}\label{sec:jtd_swing}
 
@@ -458,9 +458,9 @@ We have also prepared a number of interactive web applications that enables \GLS
 
 \subsection{Subsequent Developments}\label{sec:jtd_subsequent_developments}
 
-Since the initial release of \GLS{JTD} in 2024, a number of extensions have been proposed by members of the \GLS{MIR} community. The lead author of the FiloBass dataset \citep{Riley2023} has applied their transcription pipeline to the source-separated recordings in \GLS{JTD}, with the potential to provide accurate, automatic transcriptions in MIDI format of the entire jazz trio.\footnote{An example of these transcriptions can be listened to at \url{https://huwcheston.github.io/Jazz-Trio-Database/resources/xriley_kbarron_howdeepistheocean_render.mp3}} The authors of the beat tracker described in \citet{Foscarin2024} are also exploring the possibility of fine-tuning their model for the jazz genre using the ground-truth annotations provided in \GLS{JTD} (see section \ref{sec:jtd_ground_truth_annotations}), with the potential to further optimize the results seen in Table \ref{tab:jtd_optimization_results}. We are encouraged to see these initial applications of \GLS{JTD} by the community and are excited by the possibilities it can unlock for future computational research.
+Since the initial release of \GLS{JTD} in 2024, a number of extensions have been proposed by members of the \GLS{MIR} community. The lead author of the FiloBass dataset \citep{Riley2023} has applied their transcription pipeline to the source-separated recordings in \GLS{JTD}, with the intention of providing accurate, automatic transcriptions in MIDI format of the entire jazz trio.\footnote{An example of these transcriptions can be listened to at \url{https://huwcheston.github.io/Jazz-Trio-Database/resources/xriley_kbarron_howdeepistheocean_render.mp3}} The authors of the beat tracker described in \citet{Foscarin2024} have also fine-tuned their model for the jazz genre using the ground-truth annotations provided in \GLS{JTD} (see section \ref{sec:jtd_ground_truth_annotations}), with the aim of further optimizing the results presented in Table \ref{tab:jtd_optimization_results}. We are encouraged to see these initial applications of \GLS{JTD} by the community and are excited by the possibilities it can unlock for future computational research.
 
-To make working with \GLS{JTD} easier for the end user, we have also integrated it with \texttt{mirdata} \citep{Bittner2019}. This is an open-source Python library that provides a consistent API for interacting with common datasets used in \GLS{MIR}, alongside helping to facilitate reproducible experimentation.\footnote{\url{https://github.com/HuwCheston/mirdata}} The following example shows how the dataset can be downloaded and initialised from inside the Python interpreter with only a few lines of code:
+To make working with \GLS{JTD} easier for the end user, we have also integrated it with \texttt{mirdata} \citep{Bittner2019}. This is an open-source Python library that provides a consistent API for interacting with common datasets used in \GLS{MIR}, alongside helping to facilitate reproducible experimentation.\footnote{\url{https://github.com/mir-dataset-loaders/mirdata}} The following example shows how the dataset can be downloaded and initialised from inside the Python interpreter with only a few lines of code:
 
 \begin{minted}{python}
 import mirdata

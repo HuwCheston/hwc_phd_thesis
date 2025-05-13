@@ -39,7 +39,7 @@
 \addbibresource{thesis.bib}
 
 % Adding packages
-\usepackage{booktabs, rotating, svg, subfig, amsmath, placeins, url, minted}
+\usepackage{booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts}
 % \usepackage[breaklinks=true]{hyperref}
 
 % Ensure only the year is displayed in citations & references
@@ -47,6 +47,7 @@
 \AtEveryCitekey{\clearfield{month}\clearfield{day}\clearfield{date}}
 
 % Fixes https://github.com/mrpiggi/svg/issues/11#issuecomment-525175569
+% TODO: eventually replace SVG files with PDF
 \svgsetup{inkscapepath=svgsubdir}
 
 %% The title of the thesis:
@@ -69,21 +70,20 @@ Jazz Improvisation}
 % \submissionnotice{A badass thesis submitted on time for the Degree of PhD}
 
 %% Declaration date:
-\date{My Month, My Year}
+\date{June, 2025}
 
 %% PDF meta-info:
 \subjectline{Music Information Retrieval}
 \keywords{music information retrieval, machine learning, jazz improvisation, explainable artificial intelligence, corpus analysis}
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract:
 %%
 \abstract{%
-    Improvisation is part of many musical traditions, with jazz perhaps one of the most diverse to have emerged in the past century. Through improvisation, jazz musicians manipulate many aspects of the music they play, including the harmony, melody, and rhythm of an underlying composition. These widespread freedoms render the computational modelling of jazz improvisation a challenging task within Music Information Retrieval research, both due to a lack of available data and a difficulty in generating models that can capture the complexity of this music while remaining interpretable. Here we detail computational studies of three core dimensions of jazz improvisation: musical style, rhythm, and ensemble interaction. Through these studies we examine long-standing issues in Music Information Retrieval and the wider digital humanities, including automatic performer identification and explainable computational modelling. The goal of this research is not only to advance the state-of-the-art in symbolic music modelling, but generate human-friendly explanations of supervised learning models that allow us to learn more about the ways in which a highly complex form of art is produced. This thesis is accompanied by a novel, open source dataset of hundreds of hours of jazz audio recordings annotated by an automated signal processing pipeline and numerous interactive web applications, which we hope will support future computational research into the nature and practice of musical improvisation --- both in jazz, and beyond.
+    % Improvisation is part of many musical traditions, with jazz perhaps one of the most diverse to have emerged in the past century. Through improvisation, jazz musicians manipulate many aspects of the music they play, including the harmony, melody, and rhythm of an underlying composition. These widespread freedoms render the computational modelling of jazz improvisation a challenging task within Music Information Retrieval research, both due to a lack of available data and a difficulty in creating models that can capture the complexity of this music while remaining interpretable. Here we detail computational studies of three core dimensions of jazz improvisation: musical style, rhythm, and ensemble interaction. Through these studies we examine long-standing issues in Music Information Retrieval and the wider digital humanities, including automatic performer identification and explainable computational modelling. The goal of this research is not only to advance the state-of-the-art in symbolic music modelling, but generate human-friendly explanations of supervised learning models that allow us to learn more about the ways in which a highly complex form of art is produced. This thesis is accompanied by a novel, open source dataset of hundreds of hours of jazz audio recordings annotated by an automated signal processing pipeline and numerous interactive web applications, which we hope will support future computational research into the nature and practice of musical improvisation --- both in jazz, and beyond.
+    
+    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of four studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (JTD). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised learning models that learn to identify particular JTD pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Our models also advance the technical state of the art in music performer identification, to 94\% accuracy across twenty classes. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to “feel”, “swing”, and “interaction”) from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive, browser-based web applications. We hope these will facilitate future computational research into musical improvisation — both in jazz, and beyond.
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Acknowledgements:
@@ -91,8 +91,6 @@ Jazz Improvisation}
 \acknowledgements{%
   My acknowledgements ...
 }
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Glossary [optional]:
@@ -115,11 +113,11 @@ Jazz Improvisation}
 }
 \newglossaryentry{WJD}{
     name=WJD,
-    description={Weimar Jazz Database}
+    description={Weimar Jazz Database \citep{Pfleiderer2017}}
 }
 \newglossaryentry{PiJAMA}{
     name=PiJAMA,
-    description={Piano Jazz with Automatic MIDI Annotations}
+    description={Piano Jazz with Automatic MIDI Annotations dataset \citep{Edwards2023}}
 }
 \newglossaryentry{CNN}{
     name=CNN,
@@ -135,7 +133,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{BUR}{
     name=BUR,
-    description={Beat-Upbeat Ratio}
+    description={Beat-Upbeat Ratio \citep{Benadon2006}}
 }
 \newglossaryentry{LR}{
     name=LR,
@@ -159,7 +157,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{LZ77}{
     name=LZ77,
-    description={Lempel-Ziv 77}
+    description={Lempel-Ziv 77 Compression Algorithm \citep{Ziv1977}}
 }
 \newglossaryentry{LIME}{
     name=LIME,
@@ -171,7 +169,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{DTL}{
     name=DTL,
-    description={Dig That Lick}
+    description={Dig That Lick project \citep{Frieler2018}}
 }
 \newglossaryentry{OR}{
     name=OR,
@@ -191,8 +189,6 @@ Jazz Improvisation}
 %% Title page, abstract, declaration etc.:
 %% -    the title page (is automatically omitted in the technical report mode).
 \frontmatter{}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Thesis body:
@@ -224,8 +220,6 @@ Jazz Improvisation}
 \input{appendix/rsi_feature_weights}
 \input{appendix/rsi_haerle_concepts}
 \input{appendix/mp_performer_selfreports}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% No index

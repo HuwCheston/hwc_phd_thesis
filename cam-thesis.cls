@@ -489,7 +489,7 @@ specified in the text. I further state that no substantial part of my dissertati
 already been submitted, or is being concurrently submitted, for any such degree, diploma
 or other qualification at the University of Cambridge or any other University or similar
 institution except as declared in the Preface and specified in the text.
-This dissertation does not exceed the prescribed limit of 80\,000 words.
+This dissertation does not exceed the prescribed limit of 80,000 words.
 
 % Leaving some space for the signature:
 \vspace{15mm}

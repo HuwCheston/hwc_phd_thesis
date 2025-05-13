@@ -154,7 +154,7 @@ We define tempo slope as the signed overall tempo change per second within a per
 
 We define asynchrony as the root mean square of the temporal distance between all matched beat pairs articulating the same metrical position played by both musicians \citep{Clayton2020}, including the latency applied by the testbed to both beats. Thus, the asynchrony $A$ for performer $i$ to performer $j$ with latency $d'$ can be written as
 \begin{align}
-A_{i,j} = \sqrt{\frac{1}{N} \sum_{k=1}^{N} \biggl((t^i_k+d'^i_k) - (t^j_k+d'^j_k)\biggr)^2}
+A_{i,j} = \sqrt{\frac{1}{N} \sum\limits_{k=1}^{N} \biggl((t^i_k+d'^i_k) - (t^j_k+d'^j_k)\biggr)^2}
 \end{align}
 where $t_k$ is the timestamp of quarter-note beat $k$ and $N$ is the total number of beats in the performance. The single asynchrony value obtained from each performance represents the perspective of a hypothetical listener joined to the same virtual ``call'' as our duo, who would have experienced latency and jitter applied to both musicians' performance equally. This was the perspective adopted by the participants in our online rating study. Note that, as all duos began at the same reference tempo, we do not need to express asynchrony proportionally with the duration of a quarter-note beat as in section \ref{sec:jtd_synchrony}.
 
@@ -377,7 +377,7 @@ Our second control analysis ran complementary to our first and investigated the 
 
 Our third control analysis evaluated the performance of our initial phase-correction models in comparison to higher-order linear models that consider a longer past history of beats. With respect to the phase-correction model defined in equation \eqref{eq:mp_phase_correction_model}, we define a further higher-order phase correction model that includes information from the previous $M + 1$ differenced inter-beat intervals and asynchronies as
 \begin{align}\label{eq:mp_higher_order_phase_correction_model}
-T'^{i,i}_{k+1} &= \sum^M_{m=0}\biggl(\alpha_{i,i}^m T'^{i,i}_{k-m} + \alpha_{i,j}^m (T^{i,j}_{k-m}+d'^j_{k-m})\biggr) + \alpha_{i,0} + \varepsilon^i_k,
+T'^{i,i}_{k+1} &= \sum\limits^M_{m=0}\biggl(\alpha_{i,i}^m T'^{i,i}_{k-m} + \alpha_{i,j}^m (T^{i,j}_{k-m}+d'^j_{k-m})\biggr) + \alpha_{i,0} + \varepsilon^i_k,
 \end{align}
 where $\alpha_{i,i}^m T'^{i,i}_{k-m}$ is the influence of previous differenced inter-beat interval durations at beat position $k - m$ on future durations for the same musician $i$ and $\alpha_{i,j}^m (T^{i,j}_{k-m}+d'^j_{k-m})$ is the coupling coefficient between musicians $i$ and $j$ at beat $k - m$ with delay $d'$ applied to $j$.
 
