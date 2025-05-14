@@ -515,13 +515,13 @@ This dissertation does not exceed the prescribed limit of 80,000 words.
 %%
 %%%%%
 
-\ifcam@firstyr
-% First yr report doesn't need the declaration
-\else
-\chapter*{Acknowledgements}
-\thispagestyle{empty}
-\@acknowledgements{}
-\fi
+% \ifcam@firstyr
+% % First yr report doesn't need the declaration
+% \else
+% \chapter*{Acknowledgements}
+% \thispagestyle{empty}
+% \@acknowledgements{}
+% \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
