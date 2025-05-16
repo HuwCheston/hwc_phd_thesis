@@ -76,7 +76,7 @@ When compiling any database of music recordings, deciding which material to incl
 
 For an artist to be included in \GLS{JTD}, they must be both ``popular'' and ``prolific''. With relation to ``popularity'', we want to ensure that artists are only included if they are both representative of general jazz listening habits and are highly regarded by experts. With relation to ``prolificacy'', we want to ensure that artists are only included if they have recorded a significant amount of material in the piano-bass-drums trio format.
 
-\subsubsection{Identifying ``Popular'' Performers}
+\subsubsection{Identifying ``Popular'' Performers}\label{sec:jtd_popular_performers}
 
 We search the Last.fm platform to obtain an overview of jazz listening habits. Last.fm is an online recommendation service that allows users to build profiles of their personal taste by tracking the music they listen to across many streaming platforms. We scrape the names of the top 250,000 performers and groups on Last.fm most frequently tagged by users with the genre ``Jazz'', using their official API.\footnote{\url{https://www.last.fm/api}} We order by tag count, rather than by plays or favourites, as we want to find the most quintessentially ``jazz'' artists, rather than those who fused jazz with other styles. 
 
