@@ -10,7 +10,7 @@ Most of these stylistic parameters can theoretically be assessed by human expert
 
 Computational methods promise a more scalable and objective approach to this problem. Once a researcher has crafted an algorithm that captures a particular stylistic parameter --- for example, using entropy to capture vocabulary complexity --- then a computer can easily apply the algorithm to large datasets, and hence compare different artists using this parameter \citep{Li2012, Abry2013, Deepaisarn2023}.
 
-Such hand-crafted algorithms are generally limited to relatively low-level aspects of artistic style that are easy to represent with mathematical formulae \citep[e.g.,][, also Chapter \ref{chap:rhythm_rsos}]{Falomir2015, Saunders2004, Li2012, Abry2013, Ens2020, Ramirez2010}. However, a more recent possibility is to avoid hand-crafting features, and instead train machine-learning models (in particular, deep neural networks) to capture relevant stylistic parameters in their own way \citep{Setzu2024, Theophilo2022, Kim2020, VanNoord2015, Mahmudrafee2023, Tang2023, Yang2021, Zhang2023-Horowitz, Kong2020, Abbasi2022}.
+Such hand-crafted algorithms are generally limited to relatively low-level aspects of artistic style that are easy to represent with mathematical formulae (e.g., \cite{Falomir2015, Saunders2004, Li2012, Abry2013, Ens2020, Ramirez2010}, also Chapter~\ref{chap:rhythm_rsos}). However, a more recent possibility is to avoid hand-crafting features, and instead train machine-learning models (in particular, deep neural networks) to capture relevant stylistic parameters in their own way \citep{Setzu2024, Theophilo2022, Kim2020, VanNoord2015, Mahmudrafee2023, Tang2023, Yang2021, Zhang2023-Horowitz, Kong2020, Abbasi2022}.
 
 Can we use such algorithms to deliver insights that are relevant both to art critics and educational for artists? This remains an ongoing challenge. Various studies have shown that deep neural networks can indeed learn important aspects of artistic style \citep{Foscarin2022, Zhang2023-Horowitz}, and have investigated what kinds of features the models look at across a variety of artistic domains \citep{Dervakos2022, VanNoord2015, Chirosca2024}. Nevertheless, it has proved relatively hard to work out just what these networks have learned about individual artists. 
 
@@ -18,7 +18,7 @@ In this chapter, we consider the particular case of musical style. Though music 
 
 We build on an existing tradition of music composer \& performer identification research that originated with the work of \citet{Widmer2004} and \citet{Saunders2004}. This research typically involves training supervised-learning models to identify the composer or performer of a given musical excerpt. A model that performs well at this task must, in theory, have learned the characteristic style of the composer or performer it identifies. Deep-learning models have recently achieved impressive accuracy levels in such tasks \citep[see][]{Tang2023, Kim2020, Edwards2023, Mahmudrafee2023, Chou2024, Yang2021, Zhang2023-Symbolic}; however, relatively little progress has been made in extracting interpretable insights from these models \citep[although, see][for recommendations]{Foscarin2022}.
 
-Such models can theoretically be applied to all kinds of music, including Western classical \citep{Stamatatos2005, Tang2023, Mahmudrafee2023, Zhang2023-Symbolic, Yang2021, Ens2020, Kong2020} and popular music \citep{Chou2024}. Here, we provide a case study of jazz, which is particularly interesting for the freedoms afforded to performers and has been studied in a number of prior works \citep[e.g.,][, also Chapter \ref{chap:rhythm_rsos}]{Ramirez2010, Edwards2023, Velenis2023}. Through improvisation, jazz performers manipulate many different aspects of the music they play, such as the harmony, melody, and rhythm of a composition. For a beginner, however, understanding which elements of a jazz performance reflect these personal styles can be difficult. This can act as a barrier to learning this music \citep{Kernfeld1995}: as trumpeter Wynton Marsalis claims, ``when you're just learning jazz, everything is mystical'' \citep[p. 2]{Berliner1994}.
+Such models can theoretically be applied to all kinds of music, including Western classical \citep{Stamatatos2005, Tang2023, Mahmudrafee2023, Zhang2023-Symbolic, Yang2021, Ens2020, Kong2020} and popular music \citep{Chou2024}. Here, we provide a case study of jazz, which is particularly interesting for the freedoms afforded to performers and has been studied in a number of prior works (e.g., \cite{Ramirez2010, Edwards2023, Velenis2023, Abeser2015-scoreinformed}, also Chapter~\ref{chap:rhythm_rsos}). Through improvisation, jazz performers manipulate many different aspects of the music they play, such as the harmony, melody, and rhythm of a composition. For a beginner, however, understanding which elements of a jazz performance reflect these personal styles can be difficult. This can act as a barrier to learning this music \citep{Kernfeld1995}: as trumpeter Wynton Marsalis claims, ``when you're just learning jazz, everything is mystical'' \citep[p. 2]{Berliner1994}.
 
 We show that we can use these models to address many issues relevant to music theorists and musicians. In particular, we ask:
 
@@ -42,7 +42,7 @@ We use transcriptions from two existing open source datasets: (1) the Jazz Trio 
 
 The transcriptions for both datasets were created by applying the automatic music transcription system described by \citet{Kong2021} to an audio signal. For the recordings in \GLS{PiJAMA}, an automatic music tagging system was first used to filter out non-music portions of the audio (e.g., applause, spoken introductions), with the transcription model applied to the remaining sections. For the recordings in \GLS{JTD}, the audio was manually trimmed to the piano solo, a source separation model was applied to isolate the playing of the pianist from the rest of the ensemble in this section, and the transcription model was then applied to the separated source. The transcriptions in both datasets were created at a resolution of 100 frames-per-second, the default setting for the transcription model.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_1.pdf}
   \caption[Dataset used for music performer identification.]{Dataset used for music performer identification. The upper row of panels show (a) the number of recordings by each pianist and (b) the total duration of their recordings, stratified by source database. Pianists are sorted in descending order by total duration, with the shaded area indicating when this is greater than 80 minutes. (c) shows the distribution of recording durations across tracks in both databases, with dashed lines representing the median recording duration. (d) shows the number of 30-second clips in each split of the dataset used to train the neural networks.}
@@ -78,7 +78,7 @@ A simpler method is the ``skyline'' algorithm outlined by \citet{Uitdenbogerd199
 
 Before applying the algorithm, we quantise a transcription by ``snapping'' note onsets to the nearest 100 ms (i.e,. 10 frames). This value is roughly equivalent to the duration of a triplet eighth note at the mean tempo of the recordings contained in both the full \GLS{JTD} and the smaller \GLS{JTD-300} subset (see sections \ref{sec:jtd_tempo} and \ref{sec:rsos_tempo_features}, respectively). We then apply the skyline and obtain a vector of pitch classes, from which we extract $n$-grams (i.e., melodic ``chunks'' obtained over a sliding window). We remove $n$-grams that have either a total span of greater than 12 semitones or that have at least one duration greater than 2 seconds between successive offsets and onsets prior to quantisation. This first heuristic removes cases where the skyline conceivably ``leaps'' between melody and accompaniment, while the second removes cases where $n$-grams might be collected between the boundaries of a musical phrase. Finally, we convert each $n$-gram into a transposition-invariant representation by computing the difference between successive pitch classes.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_s2.pdf}
   \caption[\GLS{LR} accuracy with different values of $n$.]{\GLS{LR} accuracy with different values of $n$. The left panel shows changes in accuracy when the maximum value of $n$ used to extract melody and harmony features increases, from 3 to 8 inclusive. The right panel shows equivalent changes when the minimum value of $n$ increases. All accuracy scores are the results of optimising hyperparameters separately using random sampling for each value of $n$ (see section \ref{sec:rsi_handcrafted_training} in the full text) and are obtained for the validation split of the dataset.}
@@ -91,7 +91,7 @@ To extract harmony features from the MIDI transcription, we follow a method simi
 
 We obtain counts for a total of 484,039 features (430,841 $n$-grams, 53,198 voicings) for the 1,629 recordings in the dataset. Similar to how text-based authorship models typically remove both frequent (i.e., ``stop'') and infrequent words \citep{Schonlau2017}, we then discard features contained in fewer than 10 and more than 1,000 recordings in order to reduce the size of the vocabulary. This leaves 21,670 features (17,918 melodic, 3,752 harmonic), with the reduced number of features explainable by a large number of melodic patterns and chord voicings that appear in very few recordings. We transform the matrix of feature counts to a normalised representation using the term frequency-inverse document frequency (\GLS{TF-IDF}) method, previously used for composer classification by \citet{Alvarez2024}. We found that \GLS{TF-IDF} substantially improved predictive accuracy compared with other techniques such as $z$-transformation.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_2.pdf}
   \caption[Feature counts for handcrafted models.]{Feature counts for handcrafted models. Each panel shows the counts of the twenty most frequently occurring (a) melody and (b) harmony features across all recordings and splits of the dataset. The $x$-axis values can be interpreted as the number of semitones from an initial starting note.}
@@ -102,7 +102,7 @@ We show counts for the twenty harmony and melody features that occur most freque
 
 \subsubsection{Training}\label{sec:rsi_handcrafted_training}
 
-\begin{table}[ht]
+\begin{table}[!ht]
     \centering
     \caption[Optimised parameters for \GLS{RF} performer identification model.]{Optimised parameters for \GLS{RF} performer identification model. These parameters resulted from the randomised search used to select parameters for the random forest classifier. Note that, when values for a parameter are sampled from either a uniform distribution $\mathcal{U}$ or logarithmic distribution $\mathcal{L}$ (with base 10), these are given in the range (start, stop).}
     \label{tab:rsi_sm_rf_optimised_parameters}
@@ -120,7 +120,7 @@ We show counts for the twenty harmony and melody features that occur most freque
     \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[!ht]
     \centering
     \caption[Optimised parameters for \GLS{SVM} performer identification model.]{Optimised parameters for \GLS{SVM} performer identification model.}
     \label{tab:rsi_sm_svm_optimised_parameters}
@@ -134,7 +134,7 @@ We show counts for the twenty harmony and melody features that occur most freque
     \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[!ht]
     \centering
     \caption[Optimised parameters for \GLS{LR} performer identification model.]{Optimised parameters for \GLS{LR} performer identification model.}
     \label{tab:rsi_sm_lr_optimised_parameters}
@@ -155,7 +155,7 @@ The process used to train each of the three models is the same. We generate a tw
 
 \subsubsection{Who is the Performer of an Unknown Musical Piece?}\label{sec:rsi_handcrafted_evaluation}
 
-\begin{table}[ht]
+\begin{table}[!ht]
     \centering
     \caption[Results for models trained using handcrafted features on held-out test data.]{Results for models trained using handcrafted features on held-out test data. Note that scores for the \GLS{SVM} at higher than top-1 accuracy cannot be provided due to limitations in the \texttt{scikit-learn} implementation of this model.}
     \label{tab:rsi_sm_handcrafted_results}
@@ -196,14 +196,14 @@ W'_{i, k} = \text{sort} \left( \max_{i \in \{1, \dots, I\}} \left( |W_{i, j}| \r
 
 We then fit separate models to recordings from both datasets using only these features, extract the vector of $k$ weights for every performer, and calculate the correlation coefficients between equivalent vectors from both datasets. We also repeat this process for the top-$K$ harmonic features. Note that, while it would be possible to use all features here, many of these would likely be noise given the high dimensionality of the feature space, which could artificially deflate the correlations.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_3.pdf}
   \caption[Relationships between databases.]{Relationships between databases. Each panel shows correlation coefficients obtained between the weights of every performer for models fitted using (a) melody and (b) harmony features. Performers are sorted in descending order of magnitude according to the correlations in panel (a). Asterisks show the significance of the observed coefficients ($^* \ p < .05, \ ^{**} \ p < .01, \ ^{***} \ p < .001$, with Bonferroni correction applied), calculated using permutation testing ($N = 1,000$ iterations).}
 \label{fig:rsi_dataset_correlations}
 \end{figure}
 
-In nearly every case, these correlations are positive (melody: $mean(r) = 0.267$, $SD = 0.108$, harmony: $mean(r) = 0.150$, $SD = 0.087$: see Figure \ref{fig:rsi_dataset_correlations}). To the extent that performer style differs between solo and ensemble performances, we would expect correlations to be lower across the datasets (i.e. between solo versus ensemble datasets) than within datasets. To test this hypothesis, we conduct a one-sided (left-tailed) permutation-based significance test, which involves randomly shuffling the dataset label for every recording prior to fitting the model, thereby obtaining a Monte Carlo null distribution of correlation coefficients ($N = 1,000$ iterations) against which we test our observed correlations. We apply Bonferroni correction for the number of feature sets (i.e., 2), thereby controlling false discovery rate on the performer level. These tests indicate that, in the majority of cases, the correlation between feature weights obtained from either dataset are significantly smaller than would be expected were the two datasets to be equivalent. 
+In nearly every case, these correlations are positive (melody: $\text{mean}(r) = 0.267$, $SD = 0.108$, harmony: $\text{mean}(r) = 0.150$, $SD = 0.087$: see Figure \ref{fig:rsi_dataset_correlations}). To the extent that performer style differs between solo and ensemble performances, we would expect correlations to be lower across the datasets (i.e. between solo versus ensemble datasets) than within datasets. To test this hypothesis, we conduct a one-sided (left-tailed) permutation-based significance test, which involves randomly shuffling the dataset label for every recording prior to fitting the model, thereby obtaining a Monte Carlo null distribution of correlation coefficients ($N = 1,000$ iterations) against which we test our observed correlations. We apply Bonferroni correction for the number of feature sets (i.e., 2), thereby controlling false discovery rate on the performer level. These tests indicate that, in the majority of cases, the correlation between feature weights obtained from either dataset are significantly smaller than would be expected were the two datasets to be equivalent. 
 
 This finding is broadly consistent with the literature on jazz improvisation, where musicians frequently comment on differences between playing unaccompanied versus with a group. For pianist John Lewis ``there is very little leeway in transferring your ideas from a group situation to a solo performance. You have a lot more freedom [when playing unaccompanied], but you have to learn how to discipline that freedom'' \citep[p. 81]{Lyons1983}. More specifically, Oscar Peterson noted how playing unaccompanied allowed him to use ``certain harmonic movements ... which [he] couldn't do with the trio'' \citep[p. 141]{Lyons1983}. A note can be made for Junior Mance, who demonstrated the greatest positive correlation between melody feature weights from both datasets ($r = 0.517$, $p = .218$): jazz critic Brian Priestley \citep[p. 319]{Carr1988} describes how ``his trio and solo routines are sometimes predictable ... highly rhythmic, bluesy''.
 
@@ -213,7 +213,7 @@ While this analysis is interesting in terms of demonstrating the importance of h
 
 We take a different approach by instead formalising the ``distinctiveness'' of a given musical feature for a particular performer using the weights it is associated with by our model. This helps mitigate the influence of features that are commonly used by all performers in the dataset (as a result of our \GLS{TF-IDF} pre-processing), while also avoiding the need to explicitly define an anti-corpus.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_4.pdf}
   \caption[Most predictive melody features.]{Most predictive melody features. Both panels show feature weights obtained for the top and bottom five melody $n$-grams associated with classifications of (a) Bill Evans and (b) Oscar Peterson. Error bars show $SD$, calculated by bootstrapping the dataset used to fit the model ($N = 1,000$ iterations). Corresponding musical notation for every $n$-gram is on the right, transposed such that the first note is C and the mean pitch height is approximately centred around $G_4$. The pitch spelling for each feature is estimated using the algorithm described by \citet{Meredith2006}}
@@ -230,7 +230,7 @@ We can make observations for several of the other performers shown in Appendix \
 
 Appendix \ref{chap:rsi_appendix_weights} (Figures \ref{fig:rsi_sm_ibrahim_harmony}--\ref{fig:rsi_sm_flanagan_harmony}) contains analogous figures for the harmony features. While we reserve a full analysis for subsequent work, several observations can nonetheless be made here. For instance, Bill Evans (Figure \ref{fig:rsi_sm_evans_harmony}) is strongly associated with the cluster $(0, 1, 5)$, which can be considered a minor voicing containing the ninth, minor third, and fifth; it was in the use of such ``rootless'' voicings that Evans was particularly known for \citep{Levine2011-1}. Many other features can be considered elaborations of an underlying dominant harmony, such as the $(0, 16, 22, 27)$ voicing associated with Cedar Walton (Figure \ref{fig:rsi_sm_walton_melody}) --- commonly known to rock musicians as the ``Jimi Hendrix chord'' \citep{Shapiro1995}. Finally, McCoy Tyner (Figure \ref{fig:rsi_sm_tyner_harmony}) is again associated with voicings built on the fourth interval, including $(0, 5, 10)$ and $(0, 6, 11)$.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_5.pdf}
   \caption[Feature counts decomposed with \GLS{PCA}.]{Feature counts decomposed with \GLS{PCA}. The horizontal and vertical axes respectively show melody feature and performer projections onto (a) principal components 1 and 2 and (b) components 3 and 4. Values are linearly scaled separately for each dimension to within the range $(-1, 1)$. Each melody feature shows the number of semitones relative to the initial note $0$, as in Figure \ref{fig:rsi_feature_counts}. To select the melody features to plot, we divide the two-dimensional representation into eight circular ``slices'' and within each slice plot the 5 features with the highest absolute magnitudes. Performers are shown by their initials, such that \texttt{BE} corresponds to Bill Evans.}
@@ -265,7 +265,7 @@ The second model consists of the classical ``ResNet-50'' architecture, initially
 
 Each 30-second MIDI clip extracted from a recording is represented as a one-channel ``image'' of shape $(88, 3000)$, where the channel dimension is the velocity of each note. Following \citet{Kong2020}, we scale this between 0 and 1 (where a value of 1 is equivalent to the note with the highest velocity in the clip) to avoid overfitting to any variation in dynamic range compression between recordings \citep[the ``album effect'': see][]{Edwards2023, Flexer2010, Rodriguez-algarra2019}. 
 
-The height of the input corresponds to the pitch range of the piano, with one key per bin; the width is the duration of the clip multiplied by the number of frames per second used by the transcription model. We do not downsample the width of the input due to the importance of microtiming in prior analyses of expressive jazz performances \citep[: see also Chapter \ref{chap:rhythm_rsos}][]{Benadon2006, Eppler2014, Ramirez2010}.
+The height of the input corresponds to the pitch range of the piano, with one key per bin; the width is the duration of the clip multiplied by the number of frames per second used by the transcription model. We do not downsample the width of the input due to the importance of microtiming in prior analyses of expressive jazz performances (\cite{Benadon2006, Eppler2014, Ramirez2010}: see also Chapter~\ref{chap:rhythm_rsos}).
 
 \subsubsection{Data Augmentation}\label{sec:rsi:data_augmentation}
 
@@ -283,13 +283,13 @@ As jazz pianists are encouraged to become familiar with playing the same music a
 
 \subsubsection{Training}\label{sec:rsi_representation_training}
 
-We train two versions of both models, with and without data augmentation. All models are trained for 100 epochs on NVIDIA A100 GPUs with categorical cross-entropy loss, which we noted was sufficient to minimise the validation loss. With the exception of batch size (which we set to 20), we tune hyperparameters for both models separately. For training the \GLS{CRNN}, we set the learning rate to 0.001 and use the Adam optimiser; for the ResNet, we use the hyperparameter configuration described in \citet{Kim2020}. After training, we use the saved model weights with the best accuracy on the validation split to predict the held-out test data, for compatibility with the process described earlier in section \ref{sec:rsi_handcrafted_training}. Training takes approximately five hours for the ResNet and six and a half hours for the \GLS{CRNN}.
+We train two versions of both models, with and without data augmentation. All models are trained for 100 epochs on NVIDIA A100 GPUs with categorical cross-entropy loss, which we found sufficient to minimise the validation loss. With the exception of batch size (which we set to 20), we tune hyperparameters for both models separately. For training the \GLS{CRNN}, we set the learning rate to 0.001 and use the Adam optimiser; for the ResNet, we use the hyperparameter configuration described in \citet{Kim2020}. After training, we use the saved model weights with the best accuracy on the validation split to predict the held-out test data, for compatibility with the process described earlier in section \ref{sec:rsi_handcrafted_training}. Training takes approximately five hours for the ResNet and six and a half hours for the \GLS{CRNN}.
 
 \subsection{Results}\label{sec:rsi_representation_results}
 
 \subsubsection{Who is the Performer of an Unknown Musical Piece?}\label{sec:rsi_representation_evaluation}
 
-\begin{table}[ht]
+\begin{table}[!ht]
     \centering
     \caption[Results for representation learning models.]{Results for representation learning models. Clip accuracy is the accuracy of ``raw'' predictions made from each input clip. Track accuracy is the accuracy of predictions obtained from averaging the estimated class probabilities across all clips from the same initial recording (see section \ref{sec:rsi_dataset}).}
     \label{tab:rsi_sm_representation_learning_results}
@@ -314,7 +314,7 @@ The fact that the ResNet outperformed the \GLS{CRNN} (both with and without augm
 
 One possible way to understand the local musical features that are associated with particular performers is to explore the areas of a single input that most influence the decisions made by the model. The Locally-Interpretable Model Explanations (\GLS{LIME}) technique is well-established here and was initially used to create human-interpretable explanations of black-box computer vision models \citep{Ribeiro2016}. In the audio domain, \GLS{LIME} has been applied to explain music recommender \citep{Melchiorre2021} and singing voice detection systems \citep{Mishra2017}. In the symbolic domain, it has been used to identify the regions of a MIDI piano roll that pushed a \GLS{CNN} to classify the clip as being from a particular genre of popular music \citep{Dervakos2022}. \GLS{LIME} works by creating multiple versions of the original input with slight perturbations, generating predictions for these versions using the original model, and then approximating these predictions using a simple (interpretable) model.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_6.pdf}
   \caption[Piano rolls annotated with \GLS{LIME}.]{Piano rolls annotated with \GLS{LIME}. Both panels show a single clip from a performance by (a) Bill Evans and (b) Oscar Peterson. Highlighted in blue are the five areas of the piano roll that contribute the most towards predicting the target label. The asterisk in (a) indicates the descending arpeggio $(0, -4, -7, -11)$ pattern identified in Figure \ref{fig:rsi_predictive_melody_features}.}
@@ -355,7 +355,7 @@ To generate the dynamics representation, we want to maintain only the velocity o
 
 Our proposed architecture uses four convolutional sub-networks to generate an $x$-dimensional embedding from every input roll. Each sub-network shares the same architecture, but the weights are updated separately. We test a range of architectures in our experiments, including 50-, 34-, and 18-layer ResNets --- the latter being the smallest implemented in \texttt{PyTorch}. We also test the \GLS{CRNN} architecture described in section \ref{sec:rsi_representation_methods}. As a form of regularisation, during training we experiment with masking the outputs of particular sub-networks with zeroes. There is a 10\% chance that one, two, or three sub-networks will be masked when processing a clip (i.e., a 30\% total probability of masking any number of sub-networks), with 70\% probability that all four sub-networks will be used during prediction.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_7.pdf}
   \caption[Proposed multi-input performer identification model architecture.]{Proposed multi-input performer identification model architecture. An input transcription is represented using four piano rolls, each relating to a musical domain. Each roll is processed with a separate sub-network, the embeddings are then pooled, and class probabilities are generated. The architecture of an 18-layer ResNet is shown here; different architectures are tested in our experiments (see Table \ref{tab:rsi_factorised_input_experiment_results}). Optional components are represented with dashed lines.}
@@ -414,7 +414,7 @@ Compared with the other models described here, our proposed architecture using m
 
 \subsubsection{Which Domains are Important for Musical Style?}\label{sec:rsi_factorised_domain_importance}
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_8.pdf}
   \caption[Multi-input performer identification model, musical domain masking.]{Multi-input performer identification model, musical domain masking. (a) shows the loss in accuracy compared with the full model when masking a single sub-network. (b) shows the accuracy of predictions made using only a single sub-network. The dotted lines in (b) show the accuracy from predicting the majority class and the accuracy of the ``full'' model (using all four sub-networks).}
@@ -438,14 +438,14 @@ An interesting discrepancy here is that harmony is seemingly the most predictive
 
 \subsubsection{Which Domains Best Distinguish Particular Performers?}\label{sec:rsi_performer_domain_distinctiveness}
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_9.pdf}
   \caption[Multi-input model, class accuracy per musical domain.]{Multi-input model, class accuracy per musical domain. Each facet shows the percentage of recordings in the held-out test split classified correctly for each pianist when predicting using only a single sub-network.}
 \label{fig:rsi_class_accuracy_per_domain}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_s44.png}
   \caption[Multi-input model, class accuracy across musical domains.]{Multi-input model, class accuracy across musical domains. Each facet contains a heatmap showing the probability that, when given a recording and the output from a sub-network, the model will identify a particular pianist. The proportion of hits is shown for each facet along the diagonal; all other values are misses. Lighter and darker colours indicate lower and higher predictive probability, respectively.}
@@ -456,7 +456,7 @@ In Figure \ref{fig:rsi_class_accuracy_per_domain}, we show the per-class accurac
 
 Our results also suggest that several musicians are particularly distinctive for their use of rhythm. This includes Kenny Barron and Chick Corea, as all of their recordings in the held-out test set can be correctly classified solely using the rhythm sub-network, with considerably lower accuracy obtained when using only the harmony sub-network (0.800 for Kenny Barron, 0.714 for Chick Corea). A possible explanation could be that Corea is one of the only pianists in our dataset to have extensively recorded Latin American music \citep{Gioia2011}. The distinctiveness of every domain for each performer can be explored as part of our interactive web application (see note \ref{note:rsi_webapp}, subheading ``style'').
 
-However, we also note that the performers distinguished most accurately using the rhythm sub-network of our multi-input model differ from those identified by the model we go on to describe in Chapter \ref{chap:rhythm_rsos}. This model is trained on a handcrafted set of rhythmic features derived from prior empirical writings on jazz, such as swing ratio and onset density. There are nine performers in common between the datasets used to train both models. Ranking the accuracy of classifications for these performers and then correlating the ranks demonstrates little connection between the performers that can be distinguished solely using rhythm ($r = -0.296$). One possibility is that the earlier, handcrafted model averages features across an entire recording to produce a global value, while our multi-input model may instead have learned to pick up on more local rhythmic features. 
+However, we also note that the performers distinguished most accurately using the rhythm sub-network of our multi-input model differ from those identified by the model we go on to describe in Chapter \ref{chap:rhythm_rsos}. As we shall see, this model is trained on a handcrafted set of rhythmic features derived from prior empirical writings on jazz, such as swing ratio and onset density. There are nine performers in common between the datasets used to train both models. Ranking the accuracy of classifications for these performers and then correlating the ranks demonstrates little connection between the performers that can be distinguished solely using rhythm ($r = -0.296$). One possibility is that the handcrafted model averages features across an entire recording to produce a global value, while our multi-input model may instead have learned to pick up on more local rhythmic features. 
 
 \subsubsection{What is the Most ``Characteristic'' Example of a Performer's Style?}
 
@@ -481,7 +481,7 @@ We derive our concepts from the exercises in each chapter, transposed to C minor
 
 Next, we train binary logistic regressions to separate the activations for one concept with those from a random dataset, consisting of an equivalent number of exercises sampled randomly across every other chapter in Haerle's book. We then take a clip from either the validation or test split of the dataset and score its sensitivity to a concept by taking the dot product of the layer activations with the corresponding concept activation vector. Finally, we define the sign-count ratio for a given performer and concept as the proportion of their clips for which the score is positive. If the sign-count ratio is greater than 0.5, this suggests that this concept encourages the classification of the performer; vice-versa, a sign-count ratio below 0.5 suggests that it discourages classification.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_10.pdf}
   \caption[Concept sensitivity heatmap.]{Concept sensitivity heatmap. The heatmap shows the mean sign-count scores obtained for each performer ($y$-axis) to every harmonic concept ($x$-axis). The dendrograms show the results of applying agglomerative hierarchical clustering on the sign-count scores within each ``column'' or ``row''; pianists or concepts joined at lower positions are estimated to be more similar to those joined at higher values. Darker green colours indicate a positive influence of a concept on the classification of a performer; darker purples show negative influence. Asterisks show the significance of the sign-count scores ($^* \ p < .05$).}
@@ -516,7 +516,7 @@ Finally, after computing $S_{x', y}$ at every kernel position, we transform the 
 \end{figure}
 \FloatBarrier\clearpage
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_12.pdf}
   \caption[Visualising changes in concept score with masking.]{Visualising changes in concept score with masking. Each panel contains a MIDI piano roll with a heatmap overlaid to show the change in score to the (a) ``Modal Fourthy Voicings'' and (b) ``Block Chords'' concepts. Intuitively, green coloured sections contribute positively to the score calculated between the clip and the concept (i.e., they ``embody'' the target concept) and blue coloured sections contribute negative to the score. Values are scaled such that 0 is equivalent to the original score, calculated without masking. Musical notation is provided in Figure \ref{fig:rsi_sm_tivoli_transcription}.}
@@ -527,7 +527,7 @@ Figure \ref{fig:rsi_tivoli_cav} shows how the score calculated between a clip an
 
 \subsubsection{How are the Styles of Particular Performers Related?}\label{sec:rsi_cav_clustering}
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_s47.pdf}
   \caption[Pairwise correlations between pianists.]{Pairwise correlations between pianists. The colour of each cell shows the strength of the linear relationships (Pearson's $r$) between sign-count ratios obtained between performers along the $x$- and $y$-axis. Darker reds and blues indicate stronger positive and negative associations, respectively. Sign-count ratios are collected for all concepts ($N = 20$) and across all iterations ($N = 10$) of the testing process, such that the total number of values considered for each pianist in every correlation is 200.}
@@ -538,7 +538,7 @@ Finally, we relate the harmonic style of each performer using agglomerative hier
 
 The final split in the dendrogram partitions the pianists into two groups containing nine and eleven musicians, respectively. The pianists in group 1 are associated more frequently with chords based on fourths (e.g., ``Modal `So What' Voicings'', ``Modal Fourthy Voicings''). McCoy Tyner and Chick Corea are included in this group (see Figures \ref{fig:rsi_sm_tyner_harmony}, \ref{fig:rsi_sm_corea_harmony}). Vice-versa, the pianists in group 2 are instead associated with altered and extended chords (e.g., ``Cycling Altered Dominants'', ``Polychordal Blues Voicings''). Cedar Walton and John Hicks are included in this group (see Figures \ref{fig:rsi_sm_walton_harmony} and \ref{fig:rsi_sm_hicks_harmony}).
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_11.pdf}
   \caption[Pairwise correlations between musical concepts.]{Pairwise correlations between musical concepts. Sign-count ratios are collected for all performers ($N = 20$) and across all iterations, such that the total number of values considered for each concept in every correlation is 200.}
