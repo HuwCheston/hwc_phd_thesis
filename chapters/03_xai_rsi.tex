@@ -161,11 +161,11 @@ The process used to train each of the three models is the same. We generate a tw
     \label{tab:rsi_sm_handcrafted_results}
     \begin{tabular}{l c c c c}
         \toprule
-        \textbf{Architecture} & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-5} \\
-        \midrule
-        Random Forest (RF) & 0.454 & 0.626 & 0.706 & 0.785 \\
-        Support Vector Machine (SVM) & 0.687 & -- & -- & -- \\
-        Logistic Regression (LR) & \textbf{0.767} & \textbf{0.859} & \textbf{0.896} & \textbf{0.939} \\
+        \textbf{Architecture} & \multicolumn{4}{c}{\textbf{Accuracy (track)} $\uparrow$} \\ \cmidrule{2-5}
+         & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-5} \\ \midrule
+        Random Forest (\GLS{RF}) & 0.454 & 0.626 & 0.706 & 0.785 \\
+        Support Vector Machine (\GLS{SVM}) & 0.687 & -- & -- & -- \\
+        Logistic Regression (\GLS{LR}) & \textbf{0.767} & \textbf{0.859} & \textbf{0.896} & \textbf{0.939} \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -295,7 +295,7 @@ We train two versions of both models, with and without data augmentation. All mo
     \label{tab:rsi_sm_representation_learning_results}
     \begin{tabular}{l c c c}
         \toprule
-        \textbf{Architecture} & \textbf{Data Augmentation} & \multicolumn{2}{c}{\textbf{Accuracy}} \\
+        \textbf{Architecture} & \textbf{Data Augmentation} & \multicolumn{2}{c}{\textbf{Accuracy} $\uparrow$} \\ \cmidrule{3-4}
         &  & \textbf{Clip} & \textbf{Track} \\
         \midrule
         \GLS{CRNN} & N & 0.594 & 0.769 \\
@@ -378,7 +378,7 @@ We train the model for 100 epochs with a batch size of 20, using thirty-second c
     \centering
         \begin{tabular}{l c c c c c c}
         \toprule
-        \textbf{Input Encoder} & \textbf{Attention heads} & \textbf{Pooling} & \textbf{Augmentation} & \textbf{Masking} & \multicolumn{2}{c}{\textbf{Accuracy}} \\
+        \textbf{Input Encoder} & \textbf{Attention heads} & \textbf{Pooling} & \textbf{Augmentation} & \textbf{Masking} & \multicolumn{2}{c}{\textbf{Accuracy} $\uparrow$} \\ \cmidrule{6-7}
         & & & & & \textbf{Clip} & \textbf{Track} \\
         \midrule
         \multicolumn{7}{c}{\textit{Network Architecture}} \\

@@ -68,7 +68,7 @@ One way this can be accomplished is by grouping continuous data into bins. We ch
 
 We assume that rhythmic complexity may change over time within a performance, and thus should be assessed over short time spans, rather than for a complete performance \citep[here, see][]{Edwards2023}. Therefore, we measure complexity across a sliding window of four measures in duration --- this being a standard length for a melodic phrase in jazz --- with three measures overlap (i.e., a distance of one measure separates two successive windows). The \GLS{LZ77} algorithm is then applied to string representations of the binned inter-onset intervals contained within each window (Figure~\ref{fig:rsos_featureset}b). We obtain 33,865 such compression scores across \GLS{JTD-300}, with a mean compression score of 11.1 ($SD = 1.9$). Note that the binned inter-onset intervals are only used in the calculation of features deriving from the \GLS{LZ77} algorithm; all other features make use of ``raw'' inter-onset interval values, with microtiming preserved.
 
-We also extract the density of each sliding window (i.e., the number of inter-onset intervals it contained). This correlates positively with the complexity of the window; across individual recordings in \GLS{JTD-300}, $mean(r) = 0.41$ ($SD = 0.25$). The average density of a window of four measures is 26.1 onsets ($SD = 8.6$) --- meaning that, assuming four beats-per-measure, there are approximately 1.6 piano onsets per quarter note.\footnote{Note that this is not the same as 1.6 \emph{notes per beat}; for instance, chords are classified as a single onset, with the parameters of the onset detection algorithm (including the number of frames processed per second) affecting the degree with which perceptually simultaneous events are treated as unique onsets. Here, see Section~\ref{sec:jtd_onset_detection}.}
+We also extract the density of each sliding window (i.e., the number of inter-onset intervals it contained). This correlates positively with the complexity of the window; across individual recordings in \GLS{JTD-300}, $\text{mean}(r) = 0.41$ ($SD = 0.25$). The average density of a window of four measures is 26.1 onsets ($SD = 8.6$) --- meaning that, assuming four beats-per-measure, there are approximately 1.6 piano onsets per quarter note.\footnote{Note that this is not the same as 1.6 \emph{notes per beat}; for instance, chords are classified as a single onset, with the parameters of the onset detection algorithm (including the number of frames processed per second) affecting the degree with which perceptually simultaneous events are treated as unique onsets. Here, see Section~\ref{sec:jtd_onset_detection}.}
 
 \subsubsection{Feel}
 
@@ -82,7 +82,7 @@ While the analysis of rhythmic feel is interesting insofar as it can reveal wher
 
 There are numerous methods described in the literature that are suitable for modelling the reciprocal adaptation and coupling within a musical ensemble: for a recent review, see \citet{Demos2023}. One of the best established is the linear phase correction model described by \citet{Wing2014}, where the duration of a performer's upcoming inter-beat interval is predicted from both the duration of their prior inter-beat interval and the asynchrony with their partner(s) at the previous beat. In other words, in this model higher levels of coupling imply a greater degree of temporal correction and anticipation to a partner than would be present at lower levels of coupling \citep{Jacoby2021, Konvalinka2010, Wing2014}. We reserve a formal definition of this model for Equation~\eqref{eq:mp_phase_correction_model} in the next chapter. 
 
-We apply the phase correction model separately to the performance of the pianist, bassist, and drummer in every recording. Thus, with 300 recordings, $N = 900$ models. By doing so, we are able to model adaptation both ``to'' and ``from'' the piano soloist. As the robustness of this model varies depending on the amount of data given to it, in cases where fewer than 30 observations are obtained for a given performer in a given track (i.e., the number of predictors in the model, multiplied by ten), this model is classified as an outlier. This results in the exclusion of 55 models (6.1\%). Across the remaining models, $mean(R^2_{adj}) = 0.61$ ($SD = 0.13$) ---  which suggests that, on average, linear phase correction captures slightly less than two-thirds of the variation in inter-beat intervals. 
+We apply the phase correction model separately to the performance of the pianist, bassist, and drummer in every recording. Thus, with 300 recordings, $N = 900$ models. By doing so, we are able to model adaptation both ``to'' and ``from'' the piano soloist. As the robustness of this model varies depending on the amount of data given to it, in cases where fewer than 30 observations are obtained for a given performer in a given track (i.e., the number of predictors in the model, multiplied by ten), this model is classified as an outlier. This results in the exclusion of 55 models (6.1\%). Across the remaining models, $\text{mean}(R^2_{adj}) = 0.61$ ($SD = 0.13$) ---  which suggests that, on average, linear phase correction captures slightly less than two-thirds of the variation in inter-beat intervals. 
 
 The mean influence of the piano soloist on the bassist is 0.15 ($SD = 0.13$) and their influence on the drummer is 0.14 (0.12). Vice-versa, the mean influence of the bassist on the piano soloist is 0.40 (0.28) and the influence of the drummer is 0.59 (0.32). These coefficients can be interpreted as the predicted change (in seconds) between the pianist's upcoming and previous inter-beat interval, for every one second increase in asynchrony with the coupled instrument; thus, larger values imply that a greater degree of correction to any previous asynchrony takes place on the immediately following beats. 
 
@@ -107,20 +107,20 @@ The mean values extracted for each feature are: 195.00 ($SD = 50.02$) BPM for pe
 \textbf{Category} & \textbf{Number} & \textbf{Feature Description} \\
 \midrule
 ``Swing and Snap''  & 1  & Mean, $log_2(BUR)$. \\
-                  & 2  & Standard deviation, $log_2(BUR)$ \\
+                  & 2  & Standard deviation, $log_2(BUR)$ \\ \midrule
 ``Complexity''      & 3  & Mean compression (\GLS{LZ77}) scores, across all groupings \\
                   & 4  & Standard deviation compression scores \\
                   & 5  & Mean onset density \\
-                  & 6  & Standard deviation onset density \\
+                  & 6  & Standard deviation onset density \\ \midrule
 ``Feel''            & 7  & Mean piano-bass asynchrony \\
                   & 8  & Standard deviation piano-bass asynchrony \\
                   & 9  & Mean piano-drum asynchrony \\
-                  & 10 & Standard deviation piano-drum asynchrony \\
+                  & 10 & Standard deviation piano-drum asynchrony \\ \midrule
 ``Interaction''     & 11 & Pianist modeled coupling to bassist \\
                   & 12 & Pianist coupling to drummer \\
                   & 13 & Drummer coupling to pianist \\
                   & 14 & Bassist coupling to pianist \\
-                  & 15 & Pianist self-coupling \\
+                  & 15 & Pianist self-coupling \\ \midrule
 ``Tempo''           & 16 & Performance mean tempo \\
                   & 17 & Performance tempo slope \\
                   & 18 & Pianist tempo stability \\
