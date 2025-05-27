@@ -2,86 +2,92 @@
 %% HCheston PhD Thesis, University of Cambridge, Centre for Music & Science
 %%%%%
 
-% Available documentclass options:
-%
-%   <all `report` document class options, e.g.: `a5paper`>
-%   withindex   - enables the index. New index entries can be added through `\index{my entry}`
-%   glossary    - enables the glossary.
-%   techreport  - typesets the thesis in the technical report format.
-%   firstyr     - formats the document as a first-year report.
-%   times       - uses the `Times` font.
-%   backrefs    - add back references in the Bibliography section
-%
-% For more info see `README.md`
 \documentclass[glossary]{cam-thesis}
 
 \usepackage[
-    % style=authoryear,
-    % sorting=nty,
-    % maxcitenames=1,
-    % autolang=hyphen,
-    % usetranslator=true,
-    % giveninits=true,
-    % maxbibnames=2,
-    % backend=biber,natbib
-    style=apa,
+    style=authoryear,
+    % bibstyle=apa, % why biblatex, why?
+    maxcitenames=2,
+    mincitenames=1, 
+    maxbibnames=99,
+    minbibnames=1,
     sortcites=true,
-    backend=biber,natbib,
-    labeldate=year
+    backend=biber,
+    natbib=true,
+    labeldate=year,
+    uniquename=false,
+    uniquelist=false,
+    giveninits=true,
+    isbn=false,
+    url=false,
+    eprint=false,
+    dashed=false,
+    doi=true
 ]{biblatex}
-
-% Use sentence case and italicise correctly in bibliography
-\DeclareFieldFormat[article, inbook, incollection, inproceedings, thesis, report]{title}{\MakeSentenceCase{#1}}
-% \DeclareFieldFormat[book, booklet, manual, periodical]{title}{\MakeTitlecase{\textit{#1}}}
-% \DeclareFieldFormat{booktitle}{\MakeTitlecase{\textit{#1}}}
-% \DeclareFieldFormat{journaltitle}{\MakeTitlecase{\textit{#1}}}
-
-\addbibresource{thesis.bib}
 
 % Adding packages
 \usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts}
-% \usepackage[breaklinks=true]{hyperref}
+
+%% Fucking LateX, this shit is cursed
+% remove quotations from article titles
+\DeclareFieldFormat[article]{title}{#1}
+
+% sentence case for article titles
+\DeclareFieldFormat[article, inbook, incollection, inproceedings, patent, thesis, report, unpublished]{title}{\MakeSentenceCase*{#1}}
+
+% names as last-first
+\DeclareNameAlias{author}{family-given}
+
+% Redefine macro to only print DOI, not eprint or URL
+\DeclareFieldFormat{doi}{%
+  \ifhyperref
+    {\href{http://doi.org/#1}{\url{http://doi.org/#1}}}
+    {\url{\http://doi.org/#1}}}
+\renewbibmacro*{doi+eprint+url}{%
+  \printfield{doi}}
+
+% Print volume/issue as Volume(Issue)
+\renewbibmacro*{volume+number+eid}{%
+  \printfield[italic]{volume}%
+  \iffieldundef{number}
+    {}
+    {\printtext{(\printfield{number})}}%
+  \setunit{\addcomma\space}%
+  \printfield{eid}}
+
+% Remove "In:" from bibliography for journal articles, replace with In for everything else
+\renewbibmacro*{in:}{%
+  \ifentrytype{article}
+    {}
+    {\printtext{In\space}}%
+}
 
 % Ensure only the year is displayed in citations & references
 \AtEveryBibitem{\clearfield{month}\clearfield{day}\clearfield{date}}
 \AtEveryCitekey{\clearfield{month}\clearfield{day}\clearfield{date}}
 
+\addbibresource{thesis.bib}
+
 % Fixes https://github.com/mrpiggi/svg/issues/11#issuecomment-525175569
 % TODO: eventually replace SVG files with PDF
 \svgsetup{inkscapepath=svgsubdir}
 
-%% The title of the thesis:
 \title{Computational Modelling of \\
 Jazz Improvisation}
-
-%% The full name of the author (e.g.: James Smith):
 \author{Huw William Cheston}
-
-%% College affiliation:
 \college{Robinson College}
-
-%% College shield [optional]:
 \collegeshield{figures/college_shield}
-
-%% Submission date [optional]:
 \submissiondate{June, 2025}
-
-%% You can redefine the submission notice [optional]:
 % \submissionnotice{A badass thesis submitted on time for the Degree of PhD}
-
-%% Declaration date:
 \date{June, 2025}
 
-%% PDF meta-info:
 \subjectline{Music Information Retrieval}
 \keywords{music information retrieval, machine learning, jazz improvisation, explainable artificial intelligence, corpus analysis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract:
 %%
-\abstract{%
-    % Improvisation is part of many musical traditions, with jazz perhaps one of the most diverse to have emerged in the past century. Through improvisation, jazz musicians manipulate many aspects of the music they play, including the harmony, melody, and rhythm of an underlying composition. These widespread freedoms render the computational modelling of jazz improvisation a challenging task within Music Information Retrieval research, both due to a lack of available data and a difficulty in creating models that can capture the complexity of this music while remaining interpretable. Here we detail computational studies of three core dimensions of jazz improvisation: musical style, rhythm, and ensemble interaction. Through these studies we examine long-standing issues in Music Information Retrieval and the wider digital humanities, including automatic performer identification and explainable computational modelling. The goal of this research is not only to advance the state-of-the-art in symbolic music modelling, but generate human-friendly explanations of supervised learning models that allow us to learn more about the ways in which a highly complex form of art is produced. This thesis is accompanied by a novel, open source dataset of hundreds of hours of jazz audio recordings annotated by an automated signal processing pipeline and numerous interactive web applications, which we hope will support future computational research into the nature and practice of musical improvisation --- both in jazz, and beyond.
-    
+\abstract{    
     Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of four studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (JTD). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised learning models that learn to identify particular JTD pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Our models also advance the technical state of the art in music performer identification, to 94\% accuracy across twenty classes. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to “feel”, “swing”, and “interaction”) from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive, browser-based web applications. We hope these will facilitate future computational research into musical improvisation — both in jazz, and beyond.
 }
 
@@ -93,8 +99,7 @@ Jazz Improvisation}
 % }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Glossary [optional]:
-%%
+%% Glossary
 \newglossaryentry{AIC}{
     name=AIC,
     description={Akaike information criteria}
@@ -191,7 +196,6 @@ Jazz Improvisation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Title page, abstract, declaration etc.:
-%% -    the title page (is automatically omitted in the technical report mode).
 \frontmatter{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -211,10 +215,6 @@ Jazz Improvisation}
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \printbibliography
-% \bibliographystyle{plainnat}
-% \bibliography{thesis}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Appendix:
@@ -225,9 +225,5 @@ Jazz Improvisation}
 \input{appendix/rsi_haerle_concepts}
 \input{appendix/mp_performer_selfreports}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% No index
-%%
-% \printthesisindex
-
+% It is finished.
 \end{document}
