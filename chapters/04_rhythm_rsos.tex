@@ -82,7 +82,7 @@ While the analysis of rhythmic feel is interesting insofar as it can reveal wher
 
 There are numerous methods described in the literature that are suitable for modelling the reciprocal adaptation and coupling within a musical ensemble: for a recent review, see \citet{Demos2023}. One of the best established is the linear phase correction model described by \citet{Wing2014}, where the duration of a performer's upcoming inter-beat interval is predicted from both the duration of their prior inter-beat interval and the asynchrony with their partner(s) at the previous beat. In other words, in this model higher levels of coupling imply a greater degree of temporal correction and anticipation to a partner than would be present at lower levels of coupling \citep{Jacoby2021, Konvalinka2010, Wing2014}. We reserve a formal definition of this model for Equation~\eqref{eq:mp_phase_correction_model} in the next chapter. 
 
-We apply the phase correction model separately to the performance of the pianist, bassist, and drummer in every recording. Thus, with 300 recordings, $N = 900$ models. By doing so, we are able to model adaptation both ``to'' and ``from'' the piano soloist. As the robustness of this model varies depending on the amount of data given to it, in cases where fewer than 30 observations are obtained for a given performer in a given track (i.e., the number of predictors in the model, multiplied by ten), this model is classified as an outlier. This results in the exclusion of 55 models (6.1\%). Across the remaining models, $\text{mean}(R^2_{adj}) = 0.61$ ($SD = 0.13$) ---  which suggests that, on average, linear phase correction captures slightly less than two-thirds of the variation in inter-beat intervals. 
+We apply the phase correction model separately to the performance of the pianist, bassist, and drummer in every recording. Thus, with 300 recordings, $N = 900$ models. By doing so, we are able to model adaptation both ``to'' and ``from'' the piano soloist. As the robustness of this model varies depending on the amount of data given to it, in cases where fewer than 30 observations are obtained for a given performer in a given track (i.e., the number of predictors in the model, multiplied by ten), this model is classified as an outlier. This results in the exclusion of 55 models (6.1\%). Across the remaining models, $\text{mean}(R^2_{adj}) = 0.61$ ($SD = 0.13$) --- which suggests that, on average, linear phase correction captures slightly less than two-thirds of the variation in inter-beat intervals. 
 
 The mean influence of the piano soloist on the bassist is 0.15 ($SD = 0.13$) and their influence on the drummer is 0.14 (0.12). Vice-versa, the mean influence of the bassist on the piano soloist is 0.40 (0.28) and the influence of the drummer is 0.59 (0.32). These coefficients can be interpreted as the predicted change (in seconds) between the pianist's upcoming and previous inter-beat interval, for every one second increase in asynchrony with the coupled instrument; thus, larger values imply that a greater degree of correction to any previous asynchrony takes place on the immediately following beats. 
 
@@ -116,7 +116,7 @@ The mean values extracted for each feature are: 195.00 ($SD = 50.02$) BPM for pe
                   & 8  & Standard deviation piano-bass asynchrony \\
                   & 9  & Mean piano-drum asynchrony \\
                   & 10 & Standard deviation piano-drum asynchrony \\ \midrule
-``Interaction''     & 11 & Pianist modeled coupling to bassist \\
+``Interaction''     & 11 & Pianist modelled coupling to bassist \\
                   & 12 & Pianist coupling to drummer \\
                   & 13 & Drummer coupling to pianist \\
                   & 14 & Bassist coupling to pianist \\
@@ -231,7 +231,7 @@ The fifth most important feature for the model is the pianist's mean beat-upbeat
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_9}
-  \caption[Modeled coupling networks.]{Modeled coupling networks. Individual plots show the average coupling for ensembles led by each pianist. The direction and degree of the coupling is given by the colour and thickness of the arrows respectively, insofar as an arrow from the pianist to the bassist indicates how much the bassist adjusted to the pianist. Values above each arrow show the mean coupling coefficient. Values of $N$ indicate the number of models obtained for that performer or role, with $\text{max}(N) = 30$.}
+  \caption[Modelled coupling networks.]{Modelled coupling networks. Individual plots show the average coupling for ensembles led by each pianist. The direction and degree of the coupling is given by the colour and thickness of the arrows respectively, insofar as an arrow from the pianist to the bassist indicates how much the bassist adjusted to the pianist. Values above each arrow show the mean coupling coefficient. Values of $N$ indicate the number of models obtained for that performer or role, with $\text{max}(N) = 30$.}
 \label{fig:rsos_pianist_networks}
 \end{figure}
 
@@ -259,7 +259,7 @@ Next, we want to consider the relationship between different aspects of musical 
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_10}
-  \caption[Odds ratios for rhythmic features.]{Odds ratios for rhythmic features. This forest plot shows results from a binary \GLS{LR} model predicting the cluster assigned to a pianist, with cluster 2 (right-most on dendrogram, Figure~\ref{fig:rsos_confusion_matrix}) used as the outcome group.  Markers represent the standardised \GLS{OR} and whiskers 95\% confidence intervals. A numerical increase in features with $OR > 1$ should be interpreted as higher odds that the pianist comes from the outcome cluster 2 (and, vice-versa, an increase in features with $OR < 1$ should be interpreted as lower odds). Significant associations are shown with asterisks: $^{***} \  p < .001, \ ^{**} \ p < .01, \ ^{*} \ p < .05.$}
+  \caption[Odds ratios for rhythmic features.]{Odds ratios for rhythmic features. This forest plot shows results from a binary \GLS{LR} model predicting the cluster assigned to a pianist, with cluster 2 (right-most on dendrogram, Figure~\ref{fig:rsos_confusion_matrix}) used as the outcome group. Markers represent the standardised \GLS{OR} and whiskers 95\% confidence intervals. A numerical increase in features with $OR > 1$ should be interpreted as higher odds that the pianist comes from the outcome cluster 2 (and, vice-versa, an increase in features with $OR < 1$ should be interpreted as lower odds). Significant associations are shown with asterisks: $^{***} \ p < .001, \ ^{**} \ p < .01, \ ^{*} \ p < .05.$}
 \label{fig:rsos_odds_ratios}
 \end{figure}
 
