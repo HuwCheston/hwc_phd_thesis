@@ -69,7 +69,7 @@
 \addbibresource{thesis.bib}
 
 % Fixes https://github.com/mrpiggi/svg/issues/11#issuecomment-525175569
-% TODO: eventually replace SVG files with PDF
+% TODO: eventually replace SVG files with PDF as they slow compile
 \svgsetup{inkscapepath=svgsubdir}
 
 \title{Computational Modelling of \\
@@ -78,7 +78,7 @@ Jazz Improvisation}
 \college{Robinson College}
 \collegeshield{figures/college_shield}
 \submissiondate{June, 2025}
-% \submissionnotice{A badass thesis submitted on time for the Degree of PhD}
+% \submissionnotice{}
 \date{June, 2025}
 
 \subjectline{Music Information Retrieval}
@@ -88,7 +88,7 @@ Jazz Improvisation}
 %% Abstract:
 %%
 \abstract{    
-    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of four studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (JTD). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised learning models that learn to identify particular JTD pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Our models also advance the technical state of the art in music performer identification, to 94\% accuracy across twenty classes. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to “feel”, “swing”, and “interaction”) from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive, browser-based web applications. We hope these will facilitate future computational research into musical improvisation — both in jazz, and beyond.
+    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of four studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this and other similar datasets using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (\GLS{JTD}). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised-learning models that learn to identify particular \GLS{JTD} pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Our models also advance the technical state of the art in music performer identification, to 94\% accuracy across twenty classes. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to ``feel'', ``swing'', and ``interaction'') from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive, browser-based web applications. We hope these will facilitate future computational research into musical improvisation --- both in jazz, and beyond.
 }
 % Finally, we introduce a music language model that generates music in the styles of particular performers and jazz subgenres and is trained using data and techniques introduced in the previous chapters. 
 % TODO: update "four" chapters reference
@@ -97,7 +97,15 @@ Jazz Improvisation}
 %% Acknowledgements:
 %%
 % \acknowledgements{%
-%   My acknowledgements ...
+%   - Peter (and Ian)
+%   - Marcus Pearce + Tuomas Eerola (interim reports)
+%   - Feedback on work: Joshua Frank, Katelyn Emerson, David Whyatt, Katya Ness, Nicky Swett, Xavier Riley, Nicolas Guo, Ben Hayes, Alex Williams, Pedro Sarmento, and anonymous reviewers (+ who else?)
+%   - Support of: Centre for Music & Science, Centre for Digital Humanities at the University of Cambridge, and Centre for Digital Music at Queen Mary University of London.
+%   - Intern & Spotify: thank Jan Van Balen, Simon Durand, Sebastian Ewert (sp?)
+%   - Past students and collaborators: Joshua Schlichting, Reuben Bance, Tessa Pastor, prior undergraduate students at the Centre for Music & Science
+%   - External examiners: Simon Dixon & Martin Clayton
+%   - Family & Hayley
+%   - Work supported by Vice-Chancellor's award from the Cambridge Trust.
 % }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
