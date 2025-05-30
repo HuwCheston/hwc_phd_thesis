@@ -250,7 +250,7 @@ We show this dendrogram above the heatmap in Figure~\ref{fig:rsos_confusion_matr
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.75\textwidth]{figures/rsos_rhythm/figure_s3}
-  \caption[Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist]{Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist in Figure~\ref{fig:rsos_confusion_matrix}. The solid line shows the performance of the regression model, and the dotted line the baseline model (i.e. random guesses).}
+  \caption[Receiver operating characteristic curve when predicting the cluster assigned to a pianist]{Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist in Figure~\ref{fig:rsos_confusion_matrix}. The solid line shows the performance of the regression model, and the dotted line the baseline model (i.e. random guesses).}
 \label{fig:rsos_roc_curve}
 \end{figure}
 
@@ -272,7 +272,7 @@ Finally, we consider whether the rhythmic style of each pianist changes over the
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.85\textwidth]{figures/rsos_rhythm/figure_s4}
-  \caption[Permutation test results for performer identification model trained on rhythmic features.]{Permutation test results for performer identification model trained on rhythmic features. The bell curve on both plots shows a null distribution obtained by training the model on random splits of 270 recordings taken from the database ($N = 10,000$ replicates), and measuring the accuracy of identifying the performer in the remaining 30 recordings. The shaded areas show the percentage of accuracy measurements from this distribution lower than the accuracy of predicting only the earliest (left) or final (right) three recordings from each of the 10 pianists, after training on all other recordings.}
+  \caption[Permutation test results for performer identification model.]{Permutation test results for performer identification model trained on rhythmic features. The bell curve on both plots shows a null distribution obtained by training the model on random splits of 270 recordings taken from the database ($N = 10,000$ replicates), and measuring the accuracy of identifying the performer in the remaining 30 recordings. The shaded areas show the percentage of accuracy measurements from this distribution lower than the accuracy of predicting only the earliest (left) or final (right) three recordings from each of the 10 pianists, after training on all other recordings.}
 \label{fig:rsos_permutation_hists}
 \end{figure}
 
