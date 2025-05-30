@@ -299,15 +299,16 @@
 \ifcam@firstyr
 First year report submitted
 \else
-This dissertation is submitted
-\fi
-\ifcam@submissiondate
-    on \@submissiondate{}
-\fi
-\ifcam@firstyr
-in partial fulfilment of the requirements
-\fi
-for the degree of Doctor of Philosophy%
+A Thesis Submitted for the Degree of \\
+% \fi
+% \ifcam@submissiondate
+%     on \@submissiondate{}
+% \fi
+% \ifcam@firstyr
+% in partial fulfilment of the requirements \\
+% \fi
+\textit{Doctor of Philosophy} \\
+in the Faculty of Music
 }
 \newcommand{\submissionnotice}[1]{\renewcommand{\@submissionnotice}{#1}}
 
@@ -398,10 +399,10 @@ for the degree of Doctor of Philosophy%
 \begin{lrbox}{\cam@authorcollege}
     \begin{minipage}[c][\height][c]{.98\textwidth}
         \begin{center}
-        {\large \@author{}~\\[1ex]}
         \ifcam@collegeshield%
             \vspace{2mm}{\usebox{\cam@collegeshieldbox}}\\
         \fi
+        {\large \@author{}~\\[1ex]}
         \@college{}
         \end{center}
     \end{minipage}
