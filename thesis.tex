@@ -26,7 +26,7 @@
 ]{biblatex}
 
 % Adding packages
-\usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts, float}
+\usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts, float, tabularx, multirow}
 
 %% Fucking LateX, this shit is cursed
 % remove quotations from article titles
@@ -88,11 +88,8 @@ Jazz Improvisation}
 %% Abstract:
 %%
 \abstract{    
-    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of four studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this and other similar datasets using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (\GLS{JTD}). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised-learning models that learn to identify particular \GLS{JTD} pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to ``feel'', ``swing'', and ``interaction'') from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive web applications. We hope these will facilitate future computational research into musical improvisation --- in jazz, and beyond.
+    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of five studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this and other similar datasets using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (\GLS{JTD}). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised-learning models that learn to identify particular \GLS{JTD} pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to ``feel'', ``swing'', and ``interaction'') from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Finally, we introduce a music language model that generates music in the styles of particular performers and jazz subgenres and is trained using data and techniques introduced in the previous chapters. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive web applications. We hope these will facilitate future computational research into musical improvisation --- in jazz, and beyond.
 }
-% Our models also advance the technical state of the art in music performer identification, to 94\% accuracy across twenty classes.
-% Finally, we introduce a music language model that generates music in the styles of particular performers and jazz subgenres and is trained using data and techniques introduced in the previous chapters. 
-% TODO: update "four" chapters reference
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Acknowledgements:
@@ -111,6 +108,10 @@ Jazz Improvisation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Glossary
+\newglossaryentry{ATEPP}{
+    name=ATEPP,
+    description={Automatically Transcribed Expressive Piano Performances dataset \citep{Zhang2022-atepp}}
+}
 \newglossaryentry{AIC}{
     name=AIC,
     description={Akaike Information Criterion}
@@ -118,6 +119,10 @@ Jazz Improvisation}
 \newglossaryentry{BIC}{
     name=BIC,
     description={Bayesian Information Criterion}
+}
+\newglossaryentry{DPO-P}{
+    name=DPO-P,
+    description={Direct Preference Optimisation Positive \citep{Pal2024}}
 }
 \newglossaryentry{JTD}{
     name=JTD,
@@ -217,7 +222,8 @@ Jazz Improvisation}
 \input{chapters/03_xai_rsi}
 \input{chapters/04_rhythm_rsos}
 \input{chapters/05_network_mperc}
-\input{chapters/06_discussion}
+\input{chapters/06_conditioned_gen}
+\input{chapters/07_discussion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography:

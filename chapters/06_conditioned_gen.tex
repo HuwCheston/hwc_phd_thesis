@@ -1,0 +1,396 @@
+\chapter{Style Conditioned Jazz Generation}\label{chap:conditioned_gen}
+
+\section{Introduction}
+
+% Early music generation models were uncontrollable
+Training machine learning models to generate music is an important area of artificial intelligence research, with clear applications both to music production and education \citep{Loth2023-proggp}. Historically, early models for music generation could not easily be controlled by the user. Learning typically took place on smaller datasets containing music from a restricted number of styles, genres, and instrumentations, and the generated outputs tended to reflect these qualities \citep[e.g.,][]{Oore2018, Huang2018}. However, as the diversity and number of datasets available for training a music generation model has increased, more interest has been placed on explicitly controlling these models to produce music that reflects certain qualities desired by the user. This process of controlling a generative model is often referred to as \textit{conditioning}. 
+
+% Defining conditioning for music
+In music generation, prior research has focussed on how a model can be conditioned to produce compositions with certain low-level features, such as a particular tempo, note density, or pitch range \citep{Tan2020}. A generative model can also be conditioned on higher-level perceptual and psychoacoustic features, such as the intended emotional affect of the composition \citep{Sulun2022}. Finally, it is also possible to guide a model to produce music in the style of a particular genre or artist, using methods such as fine-tuning on a specific dataset \citep{Donahue2019, Gotham2022}, adding control tokens to the vocabulary of a model \citep{Sarmento2023-gtrctrl, Sarmento2023-shredgp, Loth2023-proggp}, and using reinforcement learning to align generations with a ground-truth \citep{Wang2025}. 
+
+% Introducing jazz here
+Whereas low-level musical features and higher-level perceptual features can be approximated with an algorithm, in the case of genre or performer conditioned generation, a dataset of rich metadata must usually be available. One example of a musical genre where we are largely missing such metadata is jazz. As a result, many previous generative models for jazz improvisation have not been explicitly controllable \citep[e.g.,][]{Edwards2023, Row2024, Trieu2018, Wu2020-frontline}. This is surprising, as jazz research across the humanities and sciences has placed great emphasis on understanding the stylistic differences separating the musical language and vocabulary of individual performers (see Chapter \ref{chap:xai_rsi}). Such a model would have useful applications in creative tasks like music ``over-painting'' \citep{Row2024}, as well as in educational contexts.
+
+% In this chapter
+In this chapter, we address the problem of conditioning a generative model to produce jazz performances conditioned on particular musical subgenres and performers. We focus on generating jazz piano music in the symbolic domain, due to the wealth of existing datasets containing recordings for this instrument transcribed into MIDI ``piano roll'' format \citep[e.g., Chapter \ref{chap:jtd_tismir}][]{Edwards2023, Row2024-jazzvar, Chou2024}. We develop an automated method to link several of these datasets with high-quality metadata gathered from the TiVo Music Metadata service.\footnote{\url{https://tivo.stoplight.io/docs/music-metadata-api/}\label{note:gen_tivo_url}} We then use this information to condition a large pre-trained music language model to produce jazz performances in the style of particular subgenres and performers. We further experiment with using reinforcement learning to align the outputs of our model with the desired subgenre or performer. We evaluate our model with both objective measures and in a subjective listening test, where participants guess the subgenre used to condition our model. 
+
+% Overview
+In the next section of this chapter, we discuss existing work on conditioned symbolic music generation. In Section \ref{sec:gen_dataset}, we explain our metadata curation pipeline and outline the datasets used during training. In Section \ref{sec:gen_data_representation}, we discuss the methods used to represent this data during training. In Section \ref{sec:gen_training}, we outline our model architecture and training paradigms. Finally, in Section \ref{sec:gen_results}, we present results from objective and subjective evaluations of our work.
+
+\section{Related Work}
+
+\subsection{Non-Neural Approaches to Jazz Music Generation}
+
+While jazz is often included (alongside other genres) in the data used to train symbolic music generation models \citep[e.g.,][]{Lee2025-gigamidi}, a number of works have focussed explicitly on generating music in this style. One possible approach is to assume that jazz improvisation takes place based on a set of common principles --- such as particular chord progressions being associated with certain musical scales --- and that these rules can be approximated with an algorithm \citep{Urlich1977}. For example, \citet{Johnson-laird2002} developed a rule-based algorithm for generating jazz bass lines based on contour, chord progressions, chord-scale relationships, and passing tones. 
+
+However, generative models based on handcrafted rules can produce improvisations that may fulfil the basic harmonic qualities of jazz, but which ultimately lack musical interest \citep{Pachet2012}. Another option is to assume that jazz improvisation draws from repertoires of stock sequences that can be approximated via probabilistic modelling with Markovian methods.\footnote{Note that some approaches combine Markov models with rule-based systems: one example is described by \citet{Frieler2022}.} This approach was used by \citet{Norgaard2013-cognitive} to generate monophonic jazz improvisations from short musical patterns (``$n$-grams'')  extracted from a corpus of solos by the influential saxophonist Charlie Parker. Similar work has also been conducted for the jazz pianist Bill Evans \citep{Gross2011}. 
+
+The ``Impro-visor'' software is an important example of a software platform capable of  generating jazz improvisations. Impro-visor operates by breaking up a notated improvisation into smaller fragments of several bars in length. Related fragments are then clustered together using unsupervised learning ($k$-means clustering) and $n$-gram and transition statistics are computed based on related clusters. This data can then be used as the input to a Markov model \citep{Gillick2010}. One advantage of Impro-visor is that the learned distribution of $n$-grams can easily be updated based on a corpus of recordings from a single performer --- leading, for instance, to ``twelve-bar'' blues solos generated using a grammar learned from either Charlie Parker or John Coltrane \citep[see][, Figures 12 \& 13]{Gillick2010}. Impro-visor is limited, however, to generating monophonic improvisations represented as a musical score --- while, in this work, we consider polyphonic improvisations with expressive performance timing.
+
+\subsection{Jazz Music Generation with Deep Learning}\label{sec:gen_lit_review_symbolic_music_generation}
+
+The current state-of-the-art in symbolic music generation makes use of deep learning. A variety of architectures have been proposed for the backbone of a symbolic music generation system, including diffusion models \citep{Mittal2021} and recurrent neural networks \citep{Oore2018}. \citet{Trieu2018} used adversarial methods to train a recurrent neural network to improvise monophonic jazz melodies over a given chord progression. While their method obtained surface-level similarities with jazz, it was also vulnerable to collapsing and producing highly repetitive outputs. Variational autoencoders have also been explored for jazz melody generation by \citet{Hung2019}.
+
+In recent years, variants of the transformer architecture have become standard in many systems \citep[e.g.,][]{Pasquier2025}. One example is the ``Transformer-XL'', which was used by \citet{Sarmento2023-shredgp} to produce guitar tablature in the style of several well-known electric guitar players. \citet{Wu2020-frontline} also used the ``Transformer-XL'' to produce both jazz melodies and chordal accompaniments with long-range musical dependencies learned throughout the sequence. While their work obtained some similarities with jazz in terms of groove and tonality, it was also unable to match real performances in terms of subjective quality and diversity. The size of the datasets used in both works was limited, however --- with only 11 hours of recordings considered by \citet{Wu2020-frontline}.
+
+The ``Music Transformer'' architecture has frequently been used in the generation of symbolic piano music. This model applies self-attention to symbolic music generation through the use of a decoder-only Transformer model with relative positional embeddings \citep{Huang2018}. In its initial implementation, the model was trained on 200 hours of expressive performances of Western classical music and proved capable of generating long sequences of music with compelling structure, including repetitions and elaborations of motifs. The Music Transformer has subsequently been applied to datasets of Western popular music \citep{Sulun2022, Huang2020-pop}. 
+
+With relation to jazz, \citet{Row2024-jazzvar} introduced a dataset of over 500 pairs of variations on classic jazz ``standards'' by pianists, subsequently using these to train a Music Transformer to ``overpaint'' new variations of existing material in a jazz style. \citet{Edwards2023} fine-tuned a pre-trained Music Transformer on a subset of a larger dataset containing over 2,000 automatically transcribed solo jazz piano performances. Many of their generated examples are compelling, but, as noted by the authors, they tend to drift over time in terms of their stylistic coherence. In this work, we use conditioning and reinforcement learning to explicitly control a model to produce improvisations in the style of particular jazz subgenres and performers.
+
+\subsection{Conditioned Music Generation}
+
+Conditioning refers to controlling the output of a generative model by providing it with auxiliary inputs, labels, or categories, which may or may not belong to the same domain as the sequence being modelled. During training, this auxiliary information can then be used by the model to adjust its predictions, depending on patterns learned from many examples with the same label or category. During inference, the user is also able to explicitly control the output by providing specific conditioning labels to the model. In symbolic music generation, this allows for exciting possibilities such as combining different styles or genres that often do not appear together in reality, or continuing a pre-defined input prompt according to a particular style. 
+
+A wide variety of different concepts and musical qualities can potentially be used to condition a symbolic music generation model. One straightforward option is to calculate low-level musical features straight from the input data, such as tempo, note density, or pitch range \citep{Tan2020}. Another is to extract features from the training data using an existing model --- for instance, one trained to estimate valence and arousal based on an acoustic signal \citep{Sulun2022}. Finally, conditioning can also be conducted based on metadata, such as musical genre \citep{Sarmento2023-gtrctrl, Wang2022, Xu2023, Sarmento2024-between}, composer or performer \citep{Wang2025, Sarmento2023-shredgp, Loth2023-proggp, Gotham2022}, and instrumentation \citep{Sarmento2023-gtrctrl, Pasquier2025, Xu2023}. This type of conditioning typically requires a labelled dataset of musical examples, however, which may not be straightforward to obtain \citep{Xu2024}. In this work, we obtain these labels by developing an automated method that links several existing datasets of musical transcriptions to a large database of hand-curated music metadata.
+
+\subsection{Training Paradigms for Music Generation}
+
+Recent work in symbolic music generation has drawn from paradigms commonly adopted in natural language processing. In particular, the ``pretraining-and-finetuning'' paradigm has been shown to be beneficial, especially in limited data scenarios. This is typically accomplished by first training a model on a large and diverse dataset of symbolic music and then optimizing it on a smaller dataset geared towards a particular downstream task. When combined with conditioning based on particular subgenres, composers, or instrumentation types contained in the fine-tuning dataset, this method can be used to produce stylistic, idiosyncratic music from a relatively small amount of training data \citep{Loth2023-proggp, Xu2023, Donahue2019, Gotham2022}. For instance, \citet{Sarmento2023-shredgp} showed how a model pre-trained on a diverse dataset of guitar tablatures could be fine-tuned to produce music in the style of four iconic guitarists using only 50 songs by each performer.
+
+A number of works have also explored subsequent reinforcement learning ``on top of'' fine-tuning, as a means to further align the outputs of a generative model with a given target style or condition. Here, the reward signal can be based either on handcrafted music-theoretic rules \citep{Guo2022-finetuning} or on human feedback and preference data \citep{Cideron2024}. In particular, \citet{Wang2025} showed how pre-training, fine-tuning, and conditioning could be combined with reinforcement learning to improve the musicality of the generated outputs. Their reward signal was derived by using a pre-trained embedding model to compute the similarity between the generated output and the ground-truth data. A standard reinforcement loss function was then used to optimise this similarity for subsequent generations. In this work, we experiment with using a similar approach to optimise the similarity between generated and real examples coming from the same jazz subgenre or performer.
+
+\section{Dataset}\label{sec:gen_dataset}
+
+\subsection{Source Datasets}\label{sec:gen_source_datasets}
+
+\begin{table}[!ht]
+    \caption{Datasets of symbolic jazz piano transcriptions and their respective sizes. All times are in \texttt{hours:minutes:seconds} format. The number of tokens is calculated using the scheme detailed in Section \ref{sec:gen_tokenization}, before adding conditioning tokens (Section \ref{sec:gen_conditioning}).}
+    \label{tab:gen_finetuning_dataset}
+    \centering
+        \begin{tabular}{l c c c c c}
+        \toprule
+        \textbf{Source} & \textbf{Tracks} & \textbf{Time} & \textbf{Notes} & \textbf{Tokens} \\
+        \midrule
+        \GLS{PiJAMA} & 2,777 & 218:23:26 & 7,128,802 & 26,831,866 \\
+        \GLS{JTD} (Chapter \ref{chap:jtd_tismir}) & 1,294 & 45:30:32 & 2,174,832 & 7,758,974 \\
+        Doug McKenzie & 299 & 22:15:33 & 570,627 & 2,174,290 \\
+        Pianist8 & 47 & 5:42:23 & 182,214 & 626,714 \\
+        Chapter \ref{chap:mp_network} & 45 & 1:14:59 & 30,250 & 115,701 \\
+        \midrule
+        \textit{Total} & 4,462 & 293:06:55 & 10,086,725 & 37,507,545 \\
+        \bottomrule
+        \end{tabular}
+\end{table}
+
+Our dataset of symbolic jazz transcriptions is compiled from five pre-existing sources, shown in Table \ref{tab:gen_finetuning_dataset}. The first three are \GLS{PiJAMA} \citep{Edwards2023}, \GLS{JTD} (Chapter \ref{chap:jtd_tismir}), and Pianist8 \citep{Chou2024}. These datasets all consist of jazz performances transcribed automatically from commercial audio recordings by well-known pianists using an automatic music transcription model \citep{Kong2021}. For the Pianist8 dataset, we solely use the transcriptions of Herbie Hancock, as he is the only jazz musician featured in the dataset. We remove all three transcriptions from this dataset that are duplicated in \GLS{PiJAMA}. Importantly: both \GLS{PiJAMA} and Pianist8 do not contain the same restrictions used for \GLS{JTD} (see Section \ref{sec:jtd_inclusion_criteria}). This means, for instance, that they contain a broader range of rhythmic feels, beyond ``swing eighths''.
+
+Additionally, we use the jazz piano recordings by Doug McKenzie\footnote{\url{https://bushgrafts.com/}} and those created during the networked music-making experiment described in Chapter \ref{chap:mp_network}. These recordings were all created by professional pianists playing on a MIDI keyboard. For the McKenzie dataset, we find that nine recordings are in fact drum performances inaccurately assigned the MIDI piano program number \texttt{0}; removing these leaves 299 recordings. For the networked music recordings created in Chapter \ref{chap:mp_network}, we use only the 45 performances created under ``real-time'' conditions (i.e., shown in Figure \ref{fig:mp_baseline_results}).
+
+In total, our dataset comprises 4,462 expressive jazz piano performances lasting for approximately 293 hours, equivalent to 10.1 million MIDI note events or 37.5 million unique tokens when tokenised using the methods outlined in Section \ref{sec:gen_tokenization}. The dataset includes recordings by 135 different pianists, spanning a variety of different ensembles, including solo, duo, and trio performances. We randomly split these recordings into training, validation, and testing subsets in the ratio $8:1:1$, stratifying these splits by source dataset. Note that tracks contained in the splits described in Section \ref{sec:rsi_dataset} appear in the same split here, such that our results are directly comparable across both datasets.
+
+\subsection{Metadata Curation}\label{sec:gen_metadata_curation}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_performer_genre_counts.pdf}
+  \caption{Bar plots for number of albums by the 25 most common artists and tagged with the 25 most common TiVo subgenres.}
+\label{fig:gen_raw_genre_count}
+\end{figure}
+
+We augment our dataset with metadata obtained from the TiVo Music Metadata service (see note \ref{note:gen_tivo_url}). Compared with other services more frequently used in \GLS{MIR} (e.g., MusicBrainz, Last.FM), TiVo provides fine-grained subgenre, mood, and theme tags for a large number of commercial albums, alongside reviews and artist biographies. This metadata is hand-curated by an in-house editorial team and powers a variety of downstream music services, including AllMusic and Spotify.
+
+We scrape metadata for every album in the dataset that was commercially released (i.e., included in the \GLS{JTD}, \GLS{PiJAMA}, Pianist8 datasets) using the public TiVo API. The query for the search is the title of the album, the primary artist, and the year it was released. When a single query matches with multiple results, we use fuzzy string matching between the artist and album names to obtain the closest match. When the similarity between the query and best possible match falls below a predefined threshold, we correct the matched results as and when required and set the album as missing if no match can be found manually.
+
+Of the 649 unique albums in the dataset, only 35 (5.39\%) cannot be matched with an album on the TiVo service. A total of 78 subgenre tags are retrieved for the remaining albums, with the average number of tags obtained for a single album being 4.07 ($SD = 1.89$). Figure \ref{fig:gen_raw_genre_count} shows the number of unique albums associated with the 25 most common subgenres and artists.
+
+We then perform a second API search where we scrape subgenres associated with the 129 \textit{pianists} with commercial recordings in the dataset. Together, these pianists are associated with 107 unique subgenre tags, with the average number of tags retrieved for a single pianist being 7.16 ($SD = 3.08$). We also scrape the ``similar artists'' tagged for every pianist, keeping only those who themselves have commercial recordings in our dataset. The average number of such artists for a pianist is 5.92 ($SD = 4.55$), with Mulgrew Miller (40 pianists tagged as similar), McCoy Tyner (27 tags), and Bill Evans (21 tags) appearing most frequently. 
+
+\subsubsection{Metadata Weights}\label{sec:gen_metadata_weights}
+
+Finally, we note that the TiVo API also provides an associated numerical weighting for every subgenre and similar artist tag, given along a discrete scale from 1--10 inclusive. It may be tempting to treat these values as (quasi-)continuous and use them in conditioning a generative model, similar to \citet{Sulun2022}. In practice, however, we find that there is relatively little variation in weight scores across subgenre tags assigned to different albums, with 89.55\% of tags given a weighting of either five, nine, or ten. Nonetheless, we are able to use these weight scores to select a smaller subset of subgenre tokens for recordings with many individual tags (see Section \ref{sec:gen_conditioning}).
+
+As part of this research, we release the metadata linked with \GLS{JTD}, \GLS{PiJAMA}, and Pianist8 upon request on a permanent archive.\footnote{\url{https://doi.org/10.5281/zenodo.15610452}\label{note:gen_dataset}} This includes both the album-level subgenre and similar artist tags described above, as well as equivalent ``mood'' and ``theme'' annotations. This information is not utilised here, but could be employed to condition a model on particular emotional qualities, similar to \citet{Sulun2022}.
+
+\subsection{Metadata Refinement}\label{sec:gen_metadata_refinement}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_grouped_genre_counts.pdf}
+  \caption{Bar plots showing the number of recordings tagged with the 20 high-level subgenre categories described in Section \ref{sec:gen_metadata_refinement}.}
+\label{fig:gen_grouped_genre_count}
+\end{figure}
+
+Considering the kinds of subgenre tags returned from both searches (see Figure \ref{fig:gen_raw_genre_count}), a number of things become clear. Firstly, several tags could feasibly describe nearly every recording in our dataset: for instance, all but two albums (and all but one artist) are tagged simply as ``Jazz''. We identify six such tags (also including  ``Jazz Instrument'', ``Piano Jazz', and ``Keyboard'') and remove them. Secondly, numerous other tags seem likely to be inaccurate, given the types of material known to be included in our source datasets. We remove 16 of these tags: they include ``Vocal'', ``Electronica'', ``Club/Dance'', ``Big Band'', ``Choral'', ``Guitar Jazz'', and ``Trumpet Jazz''. We note that the majority of these tags were typically assigned to ``compilation'' albums, that include a wide range of jazz styles beyond the piano jazz material that we consider here. 
+
+\begin{sidewaystable}[!p]
+    \caption{Mapping used to group ``raw'' tags scraped from TiVo (right column) with high-level subgenres (left column).}
+    \label{tab:gen_genre_matching}
+    \centering
+        \begin{tabularx}{\linewidth}{@{}>{\bfseries}l@{\hspace{.5em}}X@{}}
+        \toprule
+        \textbf{Subgenre} & \textbf{Tags} \\
+        \midrule
+        African & \texttt{African Jazz, African Folk, African Traditions, Township Jazz, South African Folk, Southern African, Highlife} \\
+        Avant-Garde Jazz & \texttt{Modern Free, Free Improvisation, Free Jazz, Avant-Garde Jazz, Progressive Jazz, Modern Creative, Modern Free, Avant-Garde} \\
+        Blues & \texttt{Blues, Jazz Blues, Boogie-Woogie} \\
+        Bop & \texttt{Bop, Bebop} \\
+        Caribbean & \texttt{Calypso, Cuban Jazz, Afro-Cuban Jazz, Caribbean Traditions} \\
+        Classical & \texttt{Classical, Chamber Jazz, Classical Crossover, Chamber Music, Concerto, Third Stream, Modern Composition, French, Western European Traditions, European Folk} \\
+        Cool Jazz & \texttt{Cool, West Coast Jazz} \\
+        Easy Listening & \texttt{Piano/Easy Listening, New Age, Smooth Jazz, Lounge, Easy Listening} \\
+        Fusion & \texttt{Funk, Jazz Funk, Fusion, Jazz-Funk} \\
+        Global & \texttt{Global Jazz, International} \\
+        Hard Bop & \texttt{Hard Bop} \\
+        Latin American & \texttt{Latin, Latin Jazz, Venezuelan, South American Traditions, Brazilian Pop, Brazilian Jazz, Brazilian Traditions} \\
+        Straight-Ahead Jazz & \texttt{Mainstream Jazz, Standards, Straight-Ahead Jazz, Contemporary Jazz, Crossover Jazz} \\
+        Modal Jazz & \texttt{Modal Music, Modal Jazz} \\
+        Religious & \texttt{Black Gospel, Gospel, Religious, Holidays, Christmas, Holiday, Spirituals} \\
+        Stage \& Screen & \texttt{Ballet, Film Music, Original Score, Cast Recordings, Show Tunes, Film Score, Spy Music, Soundtracks Stage \& Screen, Show/Musical, Musical Theater} \\
+        Soul Jazz & \texttt{Soul Jazz} \\
+        Pop/Rock & \texttt{Traditional Pop, Adult Alternative Pop/Rock, Alternative/Indie Rock, American Popular Song, Jazz-Pop, Pop/Rock} \\
+        Post-Bop & \texttt{Post-Bop, Neo-Bop} \\
+        Traditional \& Early Jazz & \texttt{Trad Jazz, Ragtime, Early Jazz, Swing, Stride, New Orleans Jazz, New Orleans Jazz Revival, Dixieland} \\
+        \bottomrule
+        \end{tabularx}
+\end{sidewaystable}
+
+Thirdly, there is substantial overlap between several subgenre tags, like``Lounge'', ``Piano/Easy Listening'', and ``Easy Listening'', and `Modern Free'', ``Free Improvisation'', and ``Free Jazz''. As such, we group the retrieved tags into 20 distinct, higher-level subgenre categories, based on both their shared musical qualities and explicit references to particular geographical locations. These categories are mutually exclusive, such that each tag scraped from TiVo can only be assigned to one high-level category. We use the definitions provided in jazz textbooks by \citet{Gioia2011} and \citet{Levine2011} to assist in this grouping process. We argue that this grouping is necessary to both minimise the vocabulary of our model with relation to the total number of recordings available for training, and also to reduce redundancy in cases of clear overlap between tags. We show the exact mapping used to group distinct tags in Table \ref{tab:gen_genre_matching}.
+
+Finally, to link an individual recording with these high-level subgenre categories, we simply take the subgenre categories associated with the album it was originally released on. In cases where no subgenres are obtained for an album, we instead link the recording with the subgenre categories retrieved for the pianist who made it. The number of recordings associated with each of the 20 subgenre categories can be seen in Figure \ref{fig:gen_grouped_genre_count}. While this does reduce the granularity of our annotations somewhat, automated methods for classifying the subgenre of an individual jazz \textit{performance} can be inaccurate and are usually only trained on a limited number of subgenres \citep[e.g.,][]{Eppler2014, Quinto2017}. 
+
+\subsection{Descriptive Comparison Between Subgenres}\label{sec:gen_comparison_between_genres}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_genre_pce_nps.pdf}
+  \caption{Bar plots for mean sliding pitch class entropy (left) and notes per second (right) across all subgenres.}
+\label{fig:gen_pce_nps_mean}
+\end{figure}
+
+To validate that the 20 subgenre categories we identify here are meaningfully distinct from each other, we conduct a brief exploratory analysis of their musical qualities, in the vein of \citet{Sarmento2023-shredgp}, \citet{Loth2023-proggp}, and \citet{Edwards2023}. We use two metrics defined previously for expressive jazz piano performances in \citet{Edwards2023}: (1) sliding pitch class entropy,\footnote{Also used by \citet{Wu2020-frontline} to evaluate generated monophonic jazz melodies.} which measures the mean Shannon entropy of the normalised pitch class histogram obtained for all notes across a sliding window of 15 seconds, with a one second overlap between successive windows, and (2) notes per second, which measures the mean density of note onset times across non-overlapping, one second windows. Note that individual notes within a chord are treated separately for both metrics.
+
+The results for this analysis are shown in Figure \ref{fig:gen_pce_nps_mean}. In general, jazz styles associated with the global south (e.g., ``African'', ``Caribbean'') typically display both lower pitch class entropy and have fewer notes per second than those typically understood to have emerged in the United States (e.g., ``Modal Jazz'', ``Cool Jazz''). Rather than this representing any implicit musical quality of these styles, one straightforward explanation is simply that the vast majority of performances in these styles come from pianists like Abdullah Ibrahim and Tete Montoliu, who themselves demonstrate relatively low average scores for these metrics relative to other musicians \citep[see Figures 7 \& 8 in][]{Edwards2023}.
+
+Several other surprising points emerge here. First, ``Modal Jazz'' scores highest for pitch-class entropy ($\text{mean}= 2.323$, $SD = 0.095$). One explanation is that, while the underlying harmonic structure of this music may depend on static modal structures, performers are by no means required to remain within these structures when improvising. Indeed, a common technique in this music involves ``side-slipping'' into scales either a semitone above or below the target mode, which would induce high momentary pitch class entropy \citep{Levine2011}. On the other hand, ``Avant-Garde Jazz' demonstrates relatively low entropy ($\text{mean} = 2.141$, $SD = 0.199$). Again, however, recordings in this subgenre from our dataset are dominated by performers (especially Keith Jarrett and Brad Mehldau) who themselves demonstrate comparatively low pitch class entropy in their playing styles \citep[][, Figure 8]{Edwards2023}.
+
+Finally (and perhaps unsurprisingly), both metrics are positively correlated with each other, $r(8731) = .395$. This reflects the fact that, the more notes a pianist plays, the more likely these are to include a wider range of different pitch classes.
+
+\section{Data Representation}\label{sec:gen_data_representation}
+
+\subsection{Preprocessing}\label{sec:gen_preprocessing}
+
+We preprocess our MIDI files using the \texttt{symusic} (version 0.5.6) Python library \citep{Liao2024}. We remove any notes with a pitch outside the standard range of the piano (i.e., lower than 21 and higher than 108) or that have a duration shorter than 10 milliseconds. We clip notes to a maximum duration of five seconds, which proved necessary due to a small number of cases (0.26\% of notes in the dataset) where the automatic transcription model failed to correctly apply note-off events. Finally, we remove any overlap between successive note offset and onset times played at the same pitch, quantise every onset and offset to the nearest ten milliseconds, and align the first onset in a performance with zero seconds to remove any silence at the beginning of a file.
+
+\subsection{Tokenisation}\label{sec:gen_tokenization}
+
+As the recordings in our dataset involve expressive performance timing --- and, in some cases, may not feature a clear pulse or metre --- we cannot reliably use position- or bar-based music tokenisation schemes such as those proposed in \citet{Huang2020-pop, Lenz2024}. In our initial experiments, we found that the \texttt{Note-On}/\texttt{Note-Off} ``MIDILike'' format proposed by \citet{Oore2018} led to the model frequently ``forgetting'' to send note-off events, resulting in abnormally long note durations during inference. This phenomenon has also been observed by \citet{Fradet2023-impact}. Instead, we use the ``TimeShift-Duration'' (``TSD'') tokenisation format described by \citet{Fradet2023-byte}. 
+
+We represent the individual keys of the piano using 88 \texttt{Pitch} tokens, from $\text{A}_{0}$ (\texttt{Pitch\_21}) to $\text{C}_{8}$ (\texttt{Pitch\_108}). Dynamics are represented using 32 evenly-spaced \texttt{Velocity} tokens that cover the standard MIDI range, from \texttt{Velocity\_4} to \texttt{Velocity\_127}. We use 100 \texttt{Duration} tokens to indicate the length of time a note is held for and 100 \texttt{TimeShift} tokens to move the time-step forward to the next event. Both types of token span a linear range from 10 to 1000 milliseconds at 10 millisecond intervals, with the minimum value corresponding to the resolution of the transcription model and the maximum set following \citet{Oore2018}. In cases where a duration or time-shift value is longer than 1 second, we select multiple tokens using a greedy algorithm that aims to find the smallest number of tokens needed to represent that value without exceeding it.
+
+Adding both a \texttt{Start} and \texttt{End} to denote the beginning and ending of a recording, alongside a \texttt{Pad} token to pad input sequences when necessary, we are left with 323 tokens to represent the musical content of a performance. Note that we do not attempt to represent sustain pedal events in our tokenisation scheme. Subjectively, we found that the automatically annotated pedal onset and offset times in our dataset were erratic and poor quality, and that the sustain of a note was better captured implicitly by its offset time instead.
+
+\subsection{Conditioning}\label{sec:gen_conditioning}
+
+We condition our model using four different types of token.
+
+We use 20 \texttt{Genre} tokens to represent each of the subgenre categories described in Section \ref{sec:gen_metadata_refinement}. If more than three subgenre categories are associated with a single recording, we instead take a sample of three subgenres (without replacement) using the weights assigned by TiVo (see Section \ref{sec:gen_metadata_weights}). This sample of tokens is drawn anew every epoch during training and kept fixed during both validation and testing. We allow multiple \texttt{Genre} tokens for a single recording --- rather than limiting to only one, as in \citet{Sarmento2023-gtrctrl} --- because stylistic fusion and experimentation is a hallmark of jazz music \citep{Gioia2011}. A desirable use-case for our model is also to allow users to combine multiple subgenres together.
+
+We use 25 \texttt{Pianist} tokens, one for each of the performers with at least 50 recordings in the dataset. This number of recordings was shown to be sufficient to condition a symbolic music generation model to imitate the styles of particular rock guitarists in \citet{Sarmento2023-shredgp}. In cases where a pianist has fewer than this many recordings, we instead randomly draw a token corresponding to one of their ``similar artists'' (again, using the assigned TiVo weights) and use this instead. This is to capture patterns of influence and stylistic similarity between different jazz musicians. When sampling randomly, we refresh the \texttt{Pianist} token during every training epoch and keep it fixed during both validation and testing.
+
+We also use 30 \texttt{Tempo} and two \texttt{TimeSignature} tokens. The \texttt{Tempo} tokens cover 80 to 330 quarter-note beats-per-minute and follow a non-linear geometric sequence, such that each token multiplies the BPM of the previous token by a factor of 1.05. The \texttt{TimeSignature} tokens correspond with either three or four quarter-note beats per measure. Tempo and time signature values are extracted from either the metadata provided with each source dataset or from the MIDI file itself. When this information is not provided in a dataset (for \GLS{PiJAMA} and Pianist8), these tokens are not used. Subjectively, we found that including these tokens helped the model to generate examples with a more coherent musical metre and tempo.
+
+For all recordings, the order of tokens is as follows: \texttt{Genre} tokens first (in descending order of associated weight), followed by \texttt{Pianist}, \texttt{Tempo}, \texttt{TimeSignature}, \texttt{Start}, and then the corresponding music tokens. The tokens are placed in this order so that the \texttt{Genre} and \texttt{Pianist} tokens can help the model predict the \texttt{Tempo} and \texttt{TimeSignature} of a recording, as these may reflect both the style of jazz and the performer (see Figure \ref{fig:rsos_feature_importance}). The maximum number of conditioning tokens any recording can be associated with is six (i.e., three \texttt{Genre} tokens and one each of \texttt{Pianist}, \texttt{Tempo}, and \texttt{TimeSignature}) and the minimum is zero. The vocabulary size of our model (including both ``music'' and conditioning tokens) is 400.
+
+\section{Training}\label{sec:gen_training}
+
+\subsection{Model Architecture}\label{sec:gen_model_architecture}
+
+During our initial experiments, we tested several backbone architectures used in prior symbolic music generation work, including GPT-2 and Transformer-XL. For a dataset of our size, however, we found that we obtained the best results using the Music Transformer \citep{Huang2018}: for further description of this model, see Section \ref{sec:gen_lit_review_symbolic_music_generation}. 
+
+Our model has a total of 12 self-attention layers, each with 8 multi-attention heads, and is implemented in the \texttt{torch} (version 2.6.0) Python library \citep{Paszke2019}. Every layer has a hidden dimension of 768 and a feed-forward layer with a dimension of 3072, with a dropout rate of 0.1. Overall, our model has approximately 87 million learnable parameters and is trained with a context window of 1,024 tokens. We use both an autoregressive and padding mask to prevent the model from attending either to future or \texttt{Pad} tokens. We use a batch size of 4 chunks, gradient clipping at a norm of 1, and the Adam optimiser. We tune the remaining hyperparameters, including the learning rate, separately for each stage of the training process (section \ref{sec:gen_training_paradigms}). 
+
+During training, we sample a random chunk of $1024 - c$ tokens from the first 90\% of each individual track, where $c$ is the number of conditioning tokens associated with the recording and $0 \leq c \leq 6$. Using the first 90\% of a recording ensures that the model does not learn, for instance, only from the very last tokens (e.g., \texttt{End}). We find that this is necessary  to generate pieces that are longer than the training input length during inference \citep{Sulun2022}.
+
+Training input chunks are sampled such that the first ``music'' token is always either \texttt{Pitch}, \texttt{TimeShift}, or \texttt{Start}. We find that this method helped the model avoid generating meaningless \texttt{Velocity} and \texttt{Duration} tokens during inference. During validation and testing, we ensure that the entirety of the held-out data is seen by sequentially taking non-overlapping chunks of $1024 - c$ tokens from every track. We then append the associated conditioning tokens to the start of the chunk and add \texttt{Pad} tokens when necessary to the end to fill out the total context length. 
+
+\subsection{Data Augmentation}\label{sec:gen_data_augmentation}
+
+During training, we augment the pitch, time, and dynamics of every MIDI file. Pitch augmentation transposes all pitches according to a value uniformly sampled from the range $\{-6, -5, \dots, 5, 6\}$; time augmentation stretches all note onset and offset times by a value uniformly sampled from $\{0.85, 0.875, 0.9, \dots, 1.1, \\ 1.125, 1.15\}$; dynamics augmentation shifts every velocity value by $\{-12, -8, \\ \dots, 8, 12\}$ points. Note that augmentation is applied prior to sampling a random chunk of tokens and that, when the tempo of a recording changes due to time augmentation, any corresponding \texttt{Tempo} tokens are scaled as well.
+
+\subsection{Training Paradigms}\label{sec:gen_training_paradigms}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/overview_diagram.pdf}
+  \caption{Overview of the three paradigms used in training our model.}
+\label{fig:gen_training_paradigms}
+\end{figure}
+
+\noindent
+Inspired by paradigms adopted in language modelling and applied to symbolic music generation by \citet{Wang2025}, our training process consists of three stages. First, we pre-train our model on a large dataset of expressive, non-jazz piano performances; second, we fine-tune the model with conditioning on our dataset of jazz performances; third, we use reinforcement learning to align the model's outputs with the stylistic content of our jazz dataset. The entire training process is shown in Figure \ref{fig:gen_training_paradigms}. We make checkpoints taken at every stage of the training process available on the same repository used to store the metadata (see Footnote \ref{note:gen_dataset}). We also release our training and evaluation code.\footnote{\url{https://github.com/HuwCheston/jazz-style-conditioned-generation}}
+
+\subsubsection{Pre-Training}\label{sec:gen_pretraining}
+
+Supervised pre-training has been shown to improve the performance of symbolic music generation models \citep{Edwards2023, Wang2025, Sulun2022, Sarmento2023-shredgp, Donahue2019}. We pre-train our model on expressive piano performances of Western classical music as, unlike jazz and other styles, there are many existing datasets that contain this type of music transcribed into MIDI format. 
+
+More specifically, we use the Automatically Transcribed Expressive Piano Performance \citep[ATEPP:][]{Zhang2022-atepp} dataset. Like both \GLS{JTD}, \GLS{PiJAMA}, and Pianist8, the performances in \GLS{ATEPP} are transcribed automatically from commercial audio recordings using a version of the system initially proposed by \citet{Kong2021}. \GLS{ATEPP} is also one of the largest datasets of its kind that solely contains expressive piano performances, exceeding both the MAESTRO \citep{Hawthorne2019} and ASAP \citep{Foscarin2020-asap} datasets.\footnote{Note that, while the GiantMIDI-Piano \citep{Kong2022} dataset is slightly larger (1,237 hours), unlike \GLS{ATEPP} it includes both sequenced scores and expressive performances.} In total, \GLS{ATEPP} consists of 11,660 unaccompanied piano performances (982 hours, 31.9 million note events) by 49 different pianists. A total of 1,594 unique musical pieces are included by 25 different composers. When tokenised following Section \ref{sec:gen_tokenization}, \GLS{ATEPP} contains 118.9 million unique tokens --- over three times the size of our fine-tuning dataset.
+
+We split \GLS{ATEPP} into training and validation subsets in the ratio $9:1$, stratified on a composition level such that all performances of the same musical piece are included in the same split of the data. We then pre-train the model on \GLS{ATEPP} for 100 epochs, which we find to be sufficient for the negative log-likelihood loss on the validation data to plateau. We do not use conditioning tokens (e.g., \texttt{TimeSignature}, \texttt{Tempo}) during pre-training as this information is not embedded in the MIDI files contained within \GLS{ATEPP}.
+
+The learning rate increases linearly from $0$ over the first 10,000 steps to a maximum of $1e^{-4}$, and subsequently decreases to $0$ by the final step. We measure the validation loss after every epoch and select the model weights with the smallest loss for subsequent fine-tuning. It takes approximately four days to pre-train our model on \GLS{ATEPP} using a single NVIDIA RTX 3090 TI GPU, with the smallest validation loss recorded being 2.232.
+
+\subsubsection{Fine-Tuning}\label{sec:gen_finetuning}
+
+We fine-tune the model with conditioning on our jazz dataset (Table \ref{tab:gen_finetuning_dataset}) using an initial learning rate of $6e^{-5}$. After every epoch we measure the validation loss: when this fails to improve for 5 consecutive epochs, we reduce the learning rate by a factor of 2. This process repeats up to 10 times, after which we stop training and measure the loss on the held-out test data using the model parameters that yielded the smallest validation loss (2.413). The entire fine-tuning process takes approximately two and a half days, after which early-stopping is applied.
+
+We find that fine-tuning yields better results than training from scratch. Objectively, the smallest validation loss achieved training solely on the jazz dataset (using the hyperparameters described in Section \ref{sec:gen_pretraining}) is 2.514. Subjectively, we find that the examples produced after fine-tuning are less sporadic and more compelling than those produced when training from scratch, while still sounding considerably more like the recordings in Table \ref{tab:gen_finetuning_dataset} than \GLS{ATEPP} \citep[see also][]{Edwards2023}.
+
+\subsubsection{Reinforcement Learning}\label{sec:gen_reinforcement_learning}
+
+The final stage of our training process involves using reinforcement learning to align examples generated by our model with corresponding ground-truth recordings. 
+
+More specifically, we make use of a pre-trained multimodal music information retrieval model \citep[CLaMP-3: see][]{Wu2025-clamp3} to function as an objective ``critic'' within our learning framework. We use CLaMP-3 to extract features from both real and generated musical examples created by our model and evaluate their similarity. We then optimise our model with a standard reinforcement loss function to effectively increase this similarity \citep[as in][]{Wang2025}.
+
+We define the CLaMP-3 Score ($\textbf{CS}$) as the similarity between examples generated by our model and equivalent examples with the same conditioning token that are taken from the training dataset. We define $P$ as the set of 45 \texttt{Genre} and \texttt{Pianist} tokens detailed in Section \ref{sec:gen_conditioning}. For any token $p \in P$, we define $Y_p$ as the set of ground-truth recordings in the training dataset also tagged with $p$ (i.e., either by pianist $p$ or tagged with subgenre $p$). We then define $X_p$ as an equivalent set of synthetic examples, generated by our model using the initial token sequence $[p, \texttt{Start}, \dots \ , \ ]$. 
+
+Next, we define the score $c_{x_p,y_p}$ for a single generated example $x_p \in X_p$ as the cosine similarity between embedding vectors extracted using CLaMP-3 from $x_p$ and a single ground-truth recording tagged with the same token $p$, i.e. $y_p \in Y_p$. We then average values of $c_{x_p,y_p}$ across all the ground-truth recordings $y_p \in Y_p$ to obtain the scalar $\textbf{CS}_{x_p}$. We rank all generations in $X_p$ by $\textbf{CS}_{x_p}$ and reserve the top- and bottom-10\% of pieces to create the non-overlapping sets $X_{pw}$ and $X_{pl}$. So as to not encourage the model to simply plagiarise the ground-truth dataset, when any value of $c_{x_p,y_p} > 0.95$, we omit $x_p$ from the ranked list.
+
+We shuffle the generations $x_{pw} \in X_{pw}$ and $x_{pl} \in X_{pl}$ and randomly group them into preferred and rejected pairs $(x_{pw}, \ x_{pl})$. Finally, we use the DPO-Positive (DPO-P) objective function \citep{Pal2024} to increase the relative log probability of $x_{pw}$ over $x_{pl}$. We set the number of examples generated for every conditioning token $p \in P$ to 400 (i.e., 18,000 total generations) and optimise \GLS{DPO-P} with an initial learning rate of $1e^{-5}$, which yields stable performance for our model. We set the \GLS{DPO-P} hyperparameters $\beta = 0.1$ and $\lambda = 10$.
+
+After the first round of \GLS{DPO-P} optimisation is completed for all conditioning tokens $p \in P$ (i.e., $N = 18000$ optimisation steps), we then generate a new set of examples $X_p \ \text{for} \ p \in P$ and repeat the whole process up to $k$ times.
+
+\section{Results}\label{sec:gen_results}
+
+\subsection{Objective Evaluation}
+
+Numerous heuristics have been proposed for evaluating symbolic music generation models and there are currently no standards universally accepted by the community. We use two different quantitive metrics to evaluate our model: 
+\begin{enumerate}
+\item{the negative log-likelihood (\textbf{NLL}) of next-token predictions, averaged across all recordings in the held-out test dataset,}
+\item{the average CLaMP-3 Score (\textbf{ACS}), equivalent to $\text{mean}(\textbf{CS}_{x_p})$ for $x_p \in X_p$, for $p \in P$, where $-1 \leq \textbf{ACS} \leq 1$.}
+\end{enumerate}
+In addition, we also track the same musicological metrics described earlier in Section \ref{sec:gen_comparison_between_genres}:
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item{the mean sliding pitch class entropy (\textbf{PCE}),}
+\item{the mean notes per second (\textbf{NPS}).}
+\end{enumerate}
+In general, \textbf{NLL} evaluates the accuracy of our model in correctly predicting the next musical even and \textbf{ACS} evaluates the alignment between the generated outputs and the target jazz performer or subgenre. Both \textbf{PCE} and \textbf{NPS} provide an indication as to the musical qualities of the outputs. As in \citet{Wang2025}, we also compute all metrics (other than \textbf{NLL}) across the held-out test dataset to act as a ground truth.
+
+\begin{table}[!ht]
+    \caption{Objective evaluation results. Note that ``Ground Truth'' refers to metrics computed directly on the held-out test data. For both \textbf{PCE} and \textbf{NPS}, values that are closer to the ``Ground Truth'' in absolute terms can be considered better. The column $k$ refers to the iteration of \GLS{DPO-P}: see Section \ref{sec:gen_reinforcement_learning}.}
+    \label{tab:gen_objective_results}
+    \centering
+        \begin{tabular}{l c c c c c}
+        \toprule
+        \textbf{Data} & \textbf{$k$} & \textbf{NLL} $\downarrow$ & \textbf{ACS} $\uparrow$ & \textbf{PCE} $\cdot$ & \textbf{NPS} $\cdot$ \\
+        \midrule
+        Ground Truth & -- & -- & 0.737 & 2.249 & 10.596 \\
+        \midrule
+        \multirow[t]{4}{*}{Generated} & 0 & \textbf{2.422} & 0.543 & 2.188 & 8.784 \\
+        & 1 & 2.453 & 0.596 & 2.316 & 9.830 \\
+        & 2 & 2.486 & 0.617 & 2.325 & \textbf{10.175} \\
+        & 3 & 2.540 & \textbf{0.639} & \textbf{2.294} & 9.670 \\
+        % & 4 & 2.615 & XXXX & 2.305 & 10.555 \\
+        \bottomrule
+        \end{tabular}
+\end{table}
+
+We show our results in Table \ref{tab:gen_objective_results}. We observe the same trade-off in \textbf{NLL} and \textbf{ACS} that was previously shown by \citet{Wang2025}. Successive rounds of \GLS{DPO-P} lead to generated outputs that align to the target jazz style, but this comes at the expense of next-token prediction accuracy. Early iterations of \GLS{DPO-P} show substantial gains in \textbf{ACS} with minimal increase in \textbf{NLL}, while subsequent ones show diminishing returns --- leading us to terminate training after three iterations. Later iterations of \GLS{DPO-P} also typically show closer alignment with the held-out test data in terms of their objective musical qualities (\textbf{PCE} and \textbf{NPS}).
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_avgclamp.pdf}
+  \caption{Bar plots showing values of \textbf{ACS} for different \texttt{Genre} (top) and \texttt{Pianist} (bottom) tokens. Blue-coloured bars show results from held-out test data; orange-coloured bars show results from examples generated with the corresponding token. Error bars show standard deviations.}
+\label{fig:gen_acs_per_token}
+\end{figure}
+
+In Figure \ref{fig:gen_acs_per_token}, we show values of \textbf{ACS} obtained for every conditioning token with $k = 3$ \GLS{DPO-P} iterations. This figure shows how our model performs better at generating examples for certain tokens than others; for instance, the model performs comparatively well at generating examples with the ``Bill Evans'' \texttt{Pianist} token, but less so with the ``Brad Mehldau'' token. This may not be related to the amount of data for these performers: when combining \GLS{PiJAMA} and \GLS{JTD}, there are considerably more recordings by Mehldau than Evans (see Figure \ref{fig:rsi_dataset}). In a small number of cases (e.g., ``Abdullah Ibrahim'', ``African''), the model produces outputs with roughly an equivalent \textbf{ACS} to the held-out test examples; in no cases does the model exceed the held-out examples, however.
+
+The mean cosine similarity between generations created after three \GLS{DPO-P} iterations and the \textit{entire} training set (regardless of conditioning token) is 0.629. This is slightly smaller than the equivalent value obtained when considering only the matching conditioning token (0.639, Table \ref{tab:gen_objective_results}). This suggests that generations created with \GLS{DPO-P} are, on average, more similar to ground-truth tracks with the equivalent conditioning token than they are to the entire training set. % The relatively small margin of difference between these two values could, perhaps, be unsurprising, given that all tracks in the fine-tuning dataset are jazz piano recordings and thus would be expected to share fundamental musical qualities regardless of their subgenre.
+
+\subsection{Subjective Evaluation}\label{sec:gen_subjective_evaluation}
+
+Objective evaluation metrics only partially capture the success of a generative music model and cannot indicate desirable qualities such as creativity and musicality \citep{Frieler2022}. As such, we conduct a subjective listening test where participants listen both to real jazz performances and examples of performances generated by our model and evaluate them across a range of criteria. These investigate both the fidelity of the generated outputs to the desired jazz subgenre, alongside their overall musical quality. 
+
+\subsubsection{Test Design}
+
+Our listening test considers three diverse jazz subgenres that our model is able to produce with a good degree of fidelity (see Figure \ref{fig:gen_acs_per_token}). These are: ``Traditional \& Early Jazz'', ``Straight-Ahead Jazz'', and ``Avant-Garde Jazz''. We do not test how well the model is able to produce music in the style of particular jazz performers, given the difficulties that are involved in this task for both human experts and highly specialised computational models \citep[][, also Chapters \ref{chap:xai_rsi}--\ref{chap:rhythm_rsos}]{Wong2020}. 
+
+For each of these three subgenres, we mine the 10 recordings from the held-out data (test and validation splits) with the highest \textbf{ACS} compared with the training data. We trim a random chunk of $1024$ tokens from each example and keep only the first 15 seconds whenever the chunk is longer than this. We follow the same process for examples generated both with and without \GLS{DPO-P}. In other words, we generate 400 examples for each subgenre, rank them by \textbf{ACS}, and choose the top 10. Again, we trim each generated example to the first 15 seconds whenever they are longer than this. 
+
+We then convert the performance from MIDI format to audio using a high-quality virtual instrument library (Spitfire Audio). We instruct participants to focus on the musical qualities of the performance when making their judgements, not on the quality of the virtual instrument library or music production mix. The initial instructions given to participants also describe the three subgenres of jazz and provide some example performers commonly associated with each (e.g., Paul Bley for ``Avant-Garde Jazz'', Art Tatum for ``Traditional \& Early Jazz''). 
+
+Every participant listens to 15 performances --- five from every condition (i.e., real, generated with \GLS{DPO-P}, generated without \GLS{DPO-P}) and each with a random subgenre. They are then asked to choose which of the three subgenres they believe best matches the performance and to rate (out of five) how much the performance fits with their perception of that subgenre. Following this, they are asked to respond to three statements along a five-point Likert scale, ranging from ``Strongly Disagree'' to ``Strongly Agree''. These statements are:
+\begin{enumerate}
+    \item I liked the performance,
+    \item The performance was creative,
+    \item The performance was generated using artificial intelligence.
+\end{enumerate}
+These statements are taken from \citet{Sarmento2024-between} and are designed to assess the overall musical quality of the examples. 
+
+After they finish rating each performance, participants are provided with feedback that tells them both the actual subgenre of the performance and whether it was generated or ``real''. When an example was generated, we do not tell participants whether or not this was using \GLS{DPO-P}. When an example was real, we also reveal the name of the recording and the pianist. At the end of the experiment, we ask participants to indicate whether or not they recognised any of the performances, as well as describe the types of musical features they used when deciding which subgenre to assign.
+
+As in Section \ref{sec:mp_methods}, we implement the experiment using the \texttt{PsyNet} platform \citep{Harrison2020} and distribute it to the members of a University music faculty and jazz orchestra, alongside our wider social circles. We obtain a total of 12 responses from 9 men and 3 women with a median age of 26 ($SD = 15$). We obtain 60 ratings for every condition.
+
+Participants reported an average of 11.3 years ($SD = 5.67$) of formal musical training and that they spent 4.88 hours ($SD = 6.06$) listening to music daily. A total of 5 participants (41.7\%) answered that they ``frequently'' listen to or perform jazz, while the remaining 7 (58.3\%) answered ``sometimes'' to this question. Finally, 8 participants (66.7\%) indicated that they ``sometimes'' earn money from performing music. We make the code and anonymised results for our listening test available.\footnote{\url{https://github.com/HuwCheston/2025-jazz-generation-listening-test}}
+
+\subsubsection{Subgenre Fidelity}
+
+We evaluate the fidelity of our models to the target subgenre with some of the same metrics used to evaluate computational music genre and performer identification models \citep[e.g.,][]{Quinto2017, Eppler2014}. In particular, we consider both the overall and per-class accuracy of participants' responses for the three subgenres tested here. 
+
+Given the balanced number of examples produced for each subgenre, we report a baseline overall accuracy (equivalent to randomly guessing the subgenre) of 33.3\% for every condition. Compared to chance, we find that participants were 55.0\% accurate when identifying the subgenre of real performances, 41.7\% accurate when identifying the subgenre of performances generated with \GLS{DPO-P}, and 53.3\% accurate when identifying the subgenre of performances generated without \GLS{DPO-P}. 
+
+Here, we note that the stronger performance of examples generated without \GLS{DPO-P} could suggest that this process negatively affected the ability of the model to generate examples aligned with particular jazz subgenres. This is despite the objective results in Table \ref{tab:gen_objective_results} suggesting otherwise. However, we note that both models outperform chance accuracy, suggesting that they are capable --- at least in part --- of generating improvisations that ``embody'' stylistic qualities of the three target subgenres considered here. 
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/heatmap_accuracy.pdf}
+  \caption{Confusion matrices showing per-subgenre prediction accuracy during the listening test. From left-to-right, individual matrices show predictions for examples generated with \GLS{DPO-P}, without \GLS{DPO-P}, and taken from the held-out test data. Values along the diagonal are ``hits'': all other values are misses.}
+\label{fig:gen_subjective_cm}
+\end{figure}
+
+It is interesting to note, however, that accuracy levels were relatively low across the board and significantly lower than automated methods capable of performing this task \citep[e.g.,][]{Quinto2017}. This suggests that our participants struggled with the task of jazz subgenre identification, regardless of whether the performances they heard were ``real'' or not. To explore this possibility further, we show confusion matrices for the per-class accuracy of predictions made for each subgenre in Figure \ref{fig:gen_subjective_cm}. 
+
+One claim that can be made here is that, for both the ground truth examples and those generated without \GLS{DPO-P}, ``Avant-Garde'' and ``Traditional \& Early'' jazz performances were predicted with a greater degree of accuracy than ``Straight-Ahead'' performances. In some ways, this is unsurprising. As the musical ``middle child'' of the three subgenres tested here, ``Straight-Ahead Jazz'' perhaps falls between either end of the extremes suggested by both ``Traditional'' and ``Avant-Garde'' performances, and thus may be harder to identify accurately compared with these subgenres. 
+
+Additionally,``Avant-Garde'' and ``Traditional'' performances were more frequently confused with each other when they were generated with \GLS{DPO-P}. Alongside the objective results shown in Table \ref{tab:gen_objective_results} (e.g., higher \textbf{NLL} as values of $k$ increase), this could suggest that the model trained with \GLS{DPO-P} ``unlearned'' some of its music-theoretic knowledge. This may have lead to it producing less ``tonal'' examples (regardless of the desired subgenre), that could be more likely to be unintentionally regarded by participants as ``Avant-Garde'' in nature.
+
+The musical features that participants most frequently referenced when explaining their judgements related to the use of harmony, rhythmic devices, and melodic ornamentation. For one participant, ``if [the rhythms and harmony] were too funky, I guessed Avant-Garde. If they resembled tunes I know to be traditional, I chose Traditional \& Early''. A number of participants noted the presence of musical devices specific to jazz like ``swing'' and certain chord progressions. One participant explained how their judgements were ``quite often to do with stylistic vocab [\textit{sic}]: left hand on every beat was quite a strong push towards Traditional \& Early; rich harmony was a push to Avant-Garde (so was florid melody)''. 
+
+\subsubsection{Musical Quality}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_quality.pdf}
+  \caption{Bar plots showing mean scores for the numerical questions asked to participants during the subjective listening test. Results in the left panel are stratified such that colour indicates the kind of example shown to participants; results in the right panel are stratified such that colour indicates genre. Error bars show 95\% confidence intervals obtained via bootstrapping with 10,000 replicates.}
+\label{fig:gen_subjective_bp}
+\end{figure}
+
+We show results for the remaining questions in Figure \ref{fig:gen_subjective_bp}, stratified by condition and subgenre. In general, participants showed a slight preference towards the ground truth when evaluating how diverse and enjoyable a performances was. However, these differences between condition and model type are relatively small and are not likely to prove statistically significant at the 95\% confidence level (see Figure \ref{fig:gen_subjective_bp}, left panel error bars).
+
+There are greater discrepancies between performances when considering the questions relating to subgenre fit and likelihood of being artificially generated, however. Participants rated ``real'' performances as both fitting the target subgenre better and having a lower likelihood of being generated when compared to the examples created by both of our models. This suggests that there is still room to further optimise the performance of our models and how well they conform to the desired subgenres. 
+
+Finally, there are also differences between evaluations given for different \textit{subgenres}, regardless of whether these performances were generated or not (see Figure \ref{fig:gen_subjective_bp}, right panel). Of the three subgenres tested, we find that participants rated ``Traditional \& Early Jazz'' performances as having the lowest likelihood of being artificially generated. This difference is especially clear when comparing with the results obtained for ``Avant-Garde Jazz''. This may be unsurprising, however, given that ``Avant-Garde'' performances are often associated with more erratic musical devices that may potentially be considered by participants to be recognisable hallmarks of artificial intelligence \citep[see][]{Loth2023-proggp}.
+
+In the future, we hope to further evaluate our model with additional subjective listening tests. One possibility would be to test a wider variety of jazz subgenres, beyond the three considered here. Another would be to simplify the task, potentially by replacing the subgenre identification component with a similarity or comparative test \citep[here, see the evaluation in][]{Gillick2010}. This would also allow for a larger pool of participants than were considered here. Finally, we also hope to test examples of performances generated with a lower number of \GLS{DPO-P} iterations, in order to further evaluate its effect on perceived musicality.
+
+\subsubsection{Examples of Generated Outputs}
+
+We make examples of performances used in the listening test (i.e., generated in the ``Traditional \& Early Jazz'', ``Straight-Ahead Jazz'', and ``Avant-Garde Jazz'' subgenres) available as part of an interactive web application.\footnote{\url{https://huwcheston.github.io/jazz-style-conditioned-generation/}\label{note:conditioned_gen_examples}} 
+
+We can make a few informal comments about these performances. Examples of ``Traditional \& Early Jazz'' feature straightforward tonal harmony combined with distinctive musical devices like ``stride'' --- a ragtime technique where the left-hand plays bass notes on the first and third beats of a bar and chords on the second and fourth beats. In contrast, many ``Avant-Garde Jazz'' generations feature dissonant tone clusters and a sense of harmony that often appears to ``wander'' between unrelated key centres. Finally, ``Straight-Ahead Jazz'' examples frequently include off-beat ``stabbed'' chords in the left-hand combined with melodic lines and patterns in the right --- a clear example of the ``comping'' style often present in many of the piano trio recordings contained, for instance, in \GLS{JTD}.
+
+In general, we find that examples generated with \GLS{DPO-P} tend to feature less coherent harmonic progressions and a more sporadic sense of tonality compared to examples for the same subgenre generated without \GLS{DPO-P}. This supports the suggestion given in Table \ref{tab:gen_objective_results}, that this process may have caused the model to ``unlearn'' some of these musical qualities (as shown by the higher values of \textbf{NLL}). Nevertheless, the \GLS{DPO-P} examples do still contain stylistic elements (such as ``stride'' patterns), but not necessarily to any greater degree than examples generated without using \GLS{DPO-P}.
+
+\section{Discussion}
+
+The purpose of the research described in this chapter was to condition a symbolic music generation model to produce polyphonic jazz improvisations in the style of particular musicians and jazz subgenres. We accomplished this by first developing an automated method capable of linking existing datasets of transcribed jazz piano performances with high-quality subgenre annotations obtained from the TiVo Music Metadata service. We then used this annotations and data to fine-tune a pre-trained music language model. A subjective evaluation demonstrated that listeners correctly identified the subgenre used to generate an improvisation more often than chance --- however, with slightly less accuracy than ``real'' performances. No substantial improvement was obtained using post-training reinforcement learning to align the generated outputs with ground-truth examples, contradicting the results observed by \citet{Wang2025}. We open-source both the dataset of annotated metadata and the checkpoints of our generative model (see Footnote \ref{note:gen_dataset}). 
+
+One clear application of this work is in music education. While existing tools such as ``Impro-visor'' are capable of producing jazz improvisations in the style of particular musicians \citep{Gillick2010}, they are limited purely to monophonic transcriptions without expressive performance timing. Our approach can be used to generate a large number of improvisations in the style of particular musicians and subgenres within a ``human readable'' format, which could help jazz students learn to imitate these styles. Using the \textbf{CS} metric, it is also possible to rank these improvisations by the degree to which they objectively reflect the desired style --- allowing a student to ``zero in'' on only the most idiomatic examples.
+
+% Weakness 1: dataset size
+We can think of a number of weaknesses of the work presented here. First, while our fine-tuning dataset (Table \ref{tab:gen_finetuning_dataset} is several orders of magnitude larger than the datasets used by to train existing jazz generation models \citep[e.g.,][]{Hung2019, Wu2020-frontline, Trieu2018}, it is still smaller than the datasets used to train genre-nonspecific models \citep[e.g.,][]{Pasquier2025, Guo2025}. However, we used all of the appropriate open-source databases that we are aware of. An interesting alternative possibility would instead be to artificially generate data. Jazz pianists are often encouraged to improvise ``like a horn player'' \citep{Levine2011-1}. It could be possible to combine monophonic transcriptions of jazz improvisations \citep[contained in, e.g., the Weimar Jazz Database:][]{Pfleiderer2017} in the ``right hand'' with realisations of the accompanying chords in the ``left hand''. Realistic voice-leading could be approximated, for instance, using the model described by \citet{Harrison2020-voiceleading}. This process would significantly increase the amount of data available for fine-tuning the model.
+
+% Weakness 2: subjective evaluation
+A second weakness relates to our subjective evaluation (Section \ref{sec:gen_subjective_evaluation}). The nature of our test paradigm (identifying particular subgenres of jazz) meant that some level of musical experience was required, which limited the pool of potential participants. Even in spite of this, participants clearly still struggled with the task, especially when compared with the results obtained by automated methods \citep[e.g.,][]{Quinto2017, Eppler2014}. \citet{Gillick2010} implemented an alternative design for a listening test: this requires participants to listen to multiple musical examples sequentially (some generated, some ``real'') and match together those that they perceive to be similar. When we initially piloted this design, however, we found that participants described it as placing a significant burden on memory, reportedly making the task much harder than simply identifying the subgenre of a single example. This lead us to use the approach that described here.
+
+% Weakness 3: automatic transcription
+A third weakness of this work relates to how the MIDI data itself was generated. Our model was trained almost entirely on automatically transcribed piano performances created using the model described by \citet{Kong2021}. This model (and automatic transcription models in general) are not perfect and can occasionally introduce errors, such as repeated MIDI notes and octave misalignment. We note that these errors can sometimes be heard in outputs generated by our model (see Footnote \ref{note:conditioned_gen_examples}). While these errors could be removed to a certain extent during post-processing (see Section \ref{sec:gen_preprocessing}), in an ideal world our dataset would consist of more performances created by pianists playing into a MIDI piano or keyboard.
+
+% Weakness 4: general problems with symbolic music models
+Finally, our synthetic examples display weaknesses typical of symbolic music generation models in general, namely a tendency towards repetition and low-entropy outputs \citep{Hung2019} and a lack of global structure \citep{Gillick2010, Edwards2023}. The former problem can effectively be controlled by using nucleus and temperature sampling during inference \citep[see][]{Row2024}. The latter can be addressed to a certain degree by enriching the dataset with tokens related to musical structure and phrase, as in \citet{Wu2020-frontline}. Here, however, this information was annotated manually, which would prevent the large-scale, data-driven methods we employed here. Future work could instead consider applying automatic methods for jazz structure and phrase detection \citep[e.g.,][]{Gregorio2016}.
+
+% Close
+Taken together, this chapter has described a generative music model capable of producing symbolic piano music conditioned on a diverse range of jazz subgenres and performers, which we trained using a rich annotated dataset of recordings and metadata.  Much work remains to evaluate the exact degree to which our model is usable in fields like music education; however, we hope that the public release of our annotated dataset and model checkpoints will aid future research into this subject (see Footnote \ref{note:gen_dataset}).
+
+In the next and final chapter, we conclude the present thesis by summarising the outcomes of the work we have conducted, discussing its limitations, and offering suggestions for future research into the computational modelling of jazz improvisation style.
