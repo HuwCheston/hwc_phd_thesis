@@ -83,7 +83,7 @@ In total, our dataset comprises 4,462 expressive jazz piano performances lasting
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_performer_genre_counts.pdf}
-  \caption[Bar plots for number of albums by the 25 most common artists and tagged with the 25 most common TiVo subgenres.]{Bar plots for number of albums by the 25 most common artists and tagged with the 25 most common TiVo subgenres.}
+  \caption[Number of albums by the 25 most common artists and tagged with the 25 most common TiVo subgenres.]{Number of albums by the 25 most common artists (left) and tagged with the 25 most common TiVo subgenres (right).}
 \label{fig:gen_raw_genre_count}
 \end{figure}
 
@@ -106,14 +106,14 @@ As part of this research, we release the metadata linked with \GLS{JTD}, \GLS{Pi
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_grouped_genre_counts.pdf}
-  \caption[Bar plots showing the number of recordings tagged with the 20 high-level subgenre categories.]{Bar plots showing the number of recordings tagged with the 20 high-level subgenre categories described in Section \ref{sec:gen_metadata_refinement}.}
+  \caption[Number of recordings tagged with the 20 high-level subgenre categories.]{Number of recordings tagged with the 20 high-level subgenre categories described in Section \ref{sec:gen_metadata_refinement}.}
 \label{fig:gen_grouped_genre_count}
 \end{figure}
 
 Considering the kinds of subgenre tags returned from both searches (see Figure \ref{fig:gen_raw_genre_count}), a number of things become clear. Firstly, several tags could feasibly describe nearly every recording in our dataset: for instance, all but two albums (and all but one artist) are tagged simply as ``Jazz''. We identify six such tags (also including  ``Jazz Instrument'', ``Piano Jazz', and ``Keyboard'') and remove them. Secondly, numerous other tags seem likely to be inaccurate, given the types of material known to be included in our source datasets. We remove 16 of these tags: they include ``Vocal'', ``Electronica'', ``Club/Dance'', ``Big Band'', ``Choral'', ``Guitar Jazz'', and ``Trumpet Jazz''. We note that the majority of these tags were typically assigned to ``compilation'' albums, that include a wide range of jazz styles beyond the piano jazz material that we consider here. 
 
 \begin{sidewaystable}[!p]
-    \caption[Mapping used to group ``raw'' tags scraped from TiVo with high-level subgenres.]{Mapping used to group ``raw'' tags scraped from TiVo (right column) with high-level subgenres (left column).}
+    \caption[Mapping used to group ``raw'' tags with high-level subgenres.]{Mapping used to group ``raw'' tags scraped from TiVo (right column) with high-level subgenres (left column).}
     \label{tab:gen_genre_matching}
     \centering
         \begin{tabularx}{\linewidth}{@{}>{\bfseries}l@{\hspace{.5em}}X@{}}
@@ -153,7 +153,7 @@ Finally, to link an individual recording with these high-level subgenre categori
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_genre_pce_nps.pdf}
-  \caption[Bar plots for mean sliding pitch class entropy and notes per second across all subgenres.]{Bar plots for mean sliding pitch class entropy (left) and notes per second (right) across all subgenres.}
+  \caption[Mean sliding pitch class entropy and notes per second across all subgenres.]{Mean sliding pitch class entropy (left) and notes per second (right) across all subgenres in Table \ref{tab:gen_genre_matching}.}
 \label{fig:gen_pce_nps_mean}
 \end{figure}
 
@@ -292,7 +292,7 @@ We show our results in Table \ref{tab:gen_objective_results}. We observe the sam
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_avgclamp.pdf}
-  \caption[Bar plots showing objective results for different subgenres and pianists.]{Bar plots showing values of \textbf{ACS} for different \texttt{Genre} (top) and \texttt{Pianist} (bottom) tokens. Blue-coloured bars show results from held-out test data; orange-coloured bars show results from examples generated with the corresponding token. Error bars show standard deviations.}
+  \caption[Similarity between ground-truth and generated outputs for different subgenres and pianists.]{Bar plots showing values of \textbf{ACS} for different \texttt{Genre} (top) and \texttt{Pianist} (bottom) tokens. Blue-coloured bars show results from held-out test data; orange-coloured bars show results from examples generated with the corresponding token. Error bars show standard deviations.}
 \label{fig:gen_acs_per_token}
 \end{figure}
 
@@ -337,7 +337,7 @@ As both models thus outperform chance accuracy, this suggests that they are capa
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/heatmap_accuracy.pdf}
-  \caption[Confusion matrices showing per-subgenre prediction accuracy during the listening test.]{Confusion matrices showing per-subgenre prediction accuracy during the listening test. From left-to-right, individual matrices show predictions for examples generated with \GLS{DPO-P}, without \GLS{DPO-P}, and taken from the held-out test data. Values along the diagonal are ``hits'': all other values are misses.}
+  \caption[Accuracy of subgenre predictions during listening test.]{Confusion matrices showing per-subgenre prediction accuracy during the listening test. From left-to-right, individual matrices show predictions for examples generated with \GLS{DPO-P}, without \GLS{DPO-P}, and taken from the held-out test data. Values along the diagonal are ``hits'': all other values are misses.}
 \label{fig:gen_subjective_cm}
 \end{figure}
 
@@ -352,7 +352,7 @@ The musical features that participants most frequently referenced when explainin
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{figures/conditioned_gen/barplot_quality.pdf}
-  \caption[Bar plots showing mean ratings obtained from the subjective listening test.]{Bar plots showing mean scores for the numerical questions asked to participants during the subjective listening test. Results in the left panel are stratified such that colour indicates the kind of example shown to participants; results in the right panel are stratified such that colour indicates genre. Error bars show 95\% confidence intervals obtained via bootstrapping with 10,000 replicates.}
+  \caption[Mean ratings obtained from the listening test.]{Bar plots showing mean scores for the numerical questions asked to participants during the subjective listening test. Results in the left panel are stratified such that colour indicates the kind of example shown to participants; results in the right panel are stratified such that colour indicates genre. Error bars show 95\% confidence intervals obtained via bootstrapping with 10,000 replicates.}
 \label{fig:gen_subjective_bp}
 \end{figure}
 
