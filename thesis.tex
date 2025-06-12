@@ -26,7 +26,7 @@
 ]{biblatex}
 
 % Adding packages
-\usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts, float, tabularx, multirow}
+\usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts, float, tabularx, multirow, setspace}
 
 %% Fucking LateX, this shit is cursed
 % remove quotations from article titles
@@ -72,11 +72,14 @@
 % TODO: eventually replace SVG files with PDF as they slow compile
 \svgsetup{inkscapepath=svgsubdir}
 
+% Cambridge requirements specif 1.5 line spacing
+\onehalfspacing
+
 \title{Computational Modelling of \\
 Jazz Improvisation}
 \collegeshield{figures/college_shield}
 \author{\textbf{Huw William Cheston}}
-\college{University of Cambridge}
+\college{Robinson College \\ University of Cambridge}
 \submissiondate{June, 2025}
 % \submissionnotice{}
 \date{June, 2025}
@@ -94,8 +97,16 @@ Jazz Improvisation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Acknowledgements:
 %%
-% \acknowledgements{%
-%     Although my name is the only one on the cover of this thesis, the reality is is that many people have played a role in shaping this work into its current format.
+\acknowledgements{
+{\setlength{\parindent}{0cm}
+    Although my name is the only one on the cover of this thesis, in reality many people have played a role in shaping this work into its current format. I could not have hoped for a more dedicated supervisor than Peter Harrison, who was continuously generous with his time and advice. I am also grateful to Ian Cross for his guidance throughout the earlier stages of this research, and to Marcus Pearce, Tuomas Eerola, and John Rink for providing helpful comments on earlier drafts presented at my progression meetings. I am indebted to many others who contributed useful feedback on this research, including Katelyn Emerson, Joshua Frank, David Whyatt, Katya Ness, Nicky Swett, Manuel Anglada-Tort, David Baker, Alex Williams, Nicolas Guo, Iran Roman, Xavier Riley, and several anonymous reviewers. I am also grateful to numerous collaborators and co-authors who helped with aspects of this research, including Joshua Schlichting, Reuben Bance, and Tessa Pastor, alongside all of the musicians who participated in the experiments described in Chapters \ref{chap:mp_network} and \ref{chap:conditioned_gen}. During the course of this PhD, I spent several months as a research intern at Spotify, and would like to thank Jan Van Balen, Simon Durand, Sebastian Ewert, Peter Sobot, and Ben Hayes for their support and advice during this time. More generally, I also enjoyed the support of various research groups, including the Centre for Music and Science and Centre for Digital Humanities at Cambridge, and the Centre for Digital Music at Queen Mary. Lastly, I would like to thank my family, Andrea, Al, Katharine --- and Rick especially, for proofreading! --- and my partner Hayley, for their support and encouragement throughout this process.
+    
+    \vspace{1.5em}
+    
+    This work was supported by a Vice-Chancellor's Award from the Cambridge Trust.
+}}
+
+% I'm also grateful to Marcus Pearce and Tuomas Eerola for taking the time to examine my interim submissions and prociding useful advice during my 
 %   - Peter (and Ian)
 %   - Marcus Pearce + Tuomas Eerola (interim reports)
 %   - External examiners: Simon Dixon & Martin Clayton
@@ -112,7 +123,7 @@ Jazz Improvisation}
 %% Glossary
 \newglossaryentry{ATEPP}{
     name=ATEPP,
-    description={Automatically Transcribed Expressive Piano Performances dataset \citep{Zhang2022-atepp}}
+    description={Automatically Transcribed Expressive Piano Performances \citep{Zhang2022-atepp}}
 }
 \newglossaryentry{AIC}{
     name=AIC,
@@ -140,7 +151,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{PiJAMA}{
     name=PiJAMA,
-    description={Piano Jazz with Automatic MIDI Annotations dataset \citep{Edwards2023}}
+    description={Piano Jazz with Automatic MIDI Annotations \citep{Edwards2023}}
 }
 \newglossaryentry{CNN}{
     name=CNN,
@@ -192,7 +203,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{DTL}{
     name=DTL,
-    description={Dig That Lick project \citep{Frieler2018}}
+    description={Dig That Lick \citep{Frieler2018}}
 }
 \newglossaryentry{OR}{
     name=OR,
@@ -205,6 +216,26 @@ Jazz Improvisation}
 \newglossaryentry{t-SNE}{
     name=t-SNE,
     description={t-Distributed Stochastic Neighbour Embedding}
+}
+\newglossaryentry{NLL}{
+    name=NLL,
+    description={Negative Log-Likelihood}
+}
+\newglossaryentry{CS}{
+    name=CS,
+    description={CLaMP-3 Score \citep[see][]{Wu2025-clamp3, Wang2025}}
+}
+\newglossaryentry{ACS}{
+    name=ACS,
+    description={Average CLaMP-3 Score}
+}
+\newglossaryentry{PCE}{
+    name=PCE,
+    description={Pitch-Class Entropy}
+}
+\newglossaryentry{NPS}{
+    name=NPS,
+    description={Notes Per Second}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -299,7 +299,7 @@
 \ifcam@firstyr
 First year report submitted
 \else
-A Thesis Submitted for the Degree of \\
+This thesis is submitted for the degree of \\
 % \fi
 % \ifcam@submissiondate
 %     on \@submissiondate{}
@@ -308,7 +308,6 @@ A Thesis Submitted for the Degree of \\
 % in partial fulfilment of the requirements \\
 % \fi
 \textit{Doctor of Philosophy} \\
-in the Faculty of Music
 }
 \newcommand{\submissionnotice}[1]{\renewcommand{\@submissionnotice}{#1}}
 
@@ -403,7 +402,8 @@ in the Faculty of Music
             \vspace{2mm}{\usebox{\cam@collegeshieldbox}}\\
         \fi
         {\large \@author{}~\\[1ex]}
-        \@college{}
+        \@college{} \\
+        \@submissiondate{}
         \end{center}
     \end{minipage}
 \end{lrbox}
@@ -448,24 +448,24 @@ in the Faculty of Music
 
 % Epigraph on odd page. (optional)
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Abstract
 %%
 %%%%%
+
 \ifcam@techreport%
     \setcounter{page}{3}
 \fi
 
-\ifcam@firstyr
-% First yr report doesn't need a standalone abstract
-\else
+% \ifcam@firstyr
+% % First yr report doesn't need a standalone abstract
+% \else
 
-\chapter*{Abstract}
-\thispagestyle{empty}
-\@abstract{}
-\fi
+% \chapter*{Abstract}
+% \thispagestyle{empty}
+% \@abstract{}
+% \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -479,18 +479,14 @@ in the Faculty of Music
 {\ifcam@firstyr
 % First yr report doesn't need the declaration
 \else
-\chapter*{Declaration}
-\thispagestyle{empty}
-This dissertation is the result of my own work and includes nothing which is the outcome of work done in collaboration except as declared in the Preface and specified in the text. It is not substantially the same as any that I have submitted, or am concurrently submitting, for a degree or diploma or other qualification at the University of Cambridge or any other University or similar institution. I further state that no substantial part of my dissertation has already been submitted, or is being concurrently submitted, for any such degree, diploma or other qualification at the University of Cambridge or any other University or similar institution except as declared in the Preface and specified in the text. This dissertation does not exceed the prescribed limit of 80,000 words (excluding notes, appendices, bibliographies, musical transcriptions, and examples).
-
-% Leaving some space for the signature:
-\vspace{15mm}
+\input{declaration}
 
 \begin{flushright}
 \@author{}\\
 \@date{}\\
 \end{flushright}
 \vfill
+
 \fi}
 \fi
 
@@ -510,9 +506,9 @@ This dissertation is the result of my own work and includes nothing which is the
 % \ifcam@firstyr
 % % First yr report doesn't need the declaration
 % \else
-% \chapter*{Acknowledgements}
-% \thispagestyle{empty}
-% \@acknowledgements{}
+\chapter*{Acknowledgements}
+\thispagestyle{empty}
+\@acknowledgements{}
 % \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -536,6 +532,16 @@ This dissertation is the result of my own work and includes nothing which is the
 \fi
 
 \cleardoublepage
+
+% ABSTRACT (moved here to follow TOC and glossary)
+\ifcam@firstyr
+% First yr report doesn't need a standalone abstract
+\else
+\chapter*{Abstract}
+\thispagestyle{empty}
+\@abstract{}
+\fi
+
 \pagestyle{plain}
 }
 

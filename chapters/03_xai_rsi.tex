@@ -1,4 +1,4 @@
-\chapter{Modelling Improvisation Style}\label{chap:xai_rsi}
+\chapter{Modelling Individual Style}\label{chap:xai_rsi}
 
 \section{Introduction}\label{sec:rsi_introduction}
 
@@ -281,7 +281,7 @@ As jazz pianists are encouraged to become familiar with playing the same music a
 
 \subsubsection{Training}\label{sec:rsi_representation_training}
 
-We train two versions of both models, with and without data augmentation. All models are trained for 100 epochs on NVIDIA A100 GPUs with categorical cross-entropy loss, which we found sufficient to minimise the validation loss. With the exception of batch size (which we set to 20), we tune hyperparameters for both models separately. For training the \GLS{CRNN}, we set the learning rate to 0.001 and use the Adam optimiser; for the ResNet, we use the hyperparameter configuration described in \citet{Kim2020}. After training, we use the saved model weights with the best accuracy on the validation split to predict the held-out test data, for compatibility with the process described earlier in Section~\ref{sec:rsi_handcrafted_training}. Training takes approximately five hours for the ResNet and six and a half hours for the \GLS{CRNN}.
+We train two versions of both models, with and without data augmentation. All models are trained for 100 epochs on NVIDIA A100 GPUs with categorical cross-entropy loss, which we found sufficient to minimise the validation negative log-likelihood (\GLS{NLL}) loss. With the exception of batch size (which we set to 20), we tune hyperparameters for both models separately. For training the \GLS{CRNN}, we set the learning rate to 0.001 and use the Adam optimiser; for the ResNet, we use the hyperparameter configuration described in \citet{Kim2020}. After training, we use the saved model weights with the best accuracy on the validation split to predict the held-out test data, for compatibility with the process described earlier in Section~\ref{sec:rsi_handcrafted_training}. Training takes approximately five hours for the ResNet and six and a half hours for the \GLS{CRNN}.
 
 \subsection{Results}\label{sec:rsi_representation_results}
 
