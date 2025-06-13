@@ -18,14 +18,14 @@ In this chapter, we describe several related datasets, discuss the curation of \
 
 \begin{sidewaystable}[ph!]
 \centering
-\caption[Comparison of existing datasets for jazz piano trios.]{Comparison of existing datasets for each instrument in the jazz piano trio. *Note that RWC-Jazz has not been made available free and open source, meaning that it is not possible to provide full detail here.}
+\caption[Comparison of existing datasets for jazz piano trios.]{Comparison of existing datasets for each instrument in the jazz piano trio. *Note that RWC-Jazz has not been made available free and open source, meaning that it is not possible to provide full detail here. See also Table \ref{tab:gen_finetuning_dataset}.}
 \label{tab:jtd_existing_datasets}
 \begin{tabular}{l c c c c l l}
 \toprule
 \textbf{Instrument} & \textbf{Name} & \textbf{Method} & \textbf{Tracks} & \textbf{Duration (s)} & \textbf{Annotations} & \textbf{Metadata} \\
 \midrule
 \textbf{Piano} & \GLS{WJD} & Manual & 6 & 582 & 3,149 onsets & Beat, chord, section \\
- & \GLS{PiJAMA} & Automatic & 2,777 & 804,960 & 7,108,460 MIDI notes & N/A \\
+ & \GLS{PiJAMA} & Automatic & 2,777 & 786,206 & 7,128,802 MIDI notes & N/A \\
  & RWC-Jazz & Manual & 5 & 1,672 & N/A* & Beat, section \\
  & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 866,116 onsets, 2,174,833 MIDI notes & Beat \\ \midrule
 \textbf{Bass} & \GLS{WJD} & Automatic & 426 & 49,010 & 5,000 beat-wise pitches & Beat, chord, section \\

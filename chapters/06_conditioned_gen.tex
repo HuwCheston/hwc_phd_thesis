@@ -54,7 +54,7 @@ A number of works have also explored subsequent reinforcement learning ``on top 
 \subsection{Source Datasets}\label{sec:gen_source_datasets}
 
 \begin{table}[!ht]
-    \caption[Datasets of symbolic jazz piano transcriptions and their respective sizes.]{Datasets of symbolic jazz piano transcriptions and their respective sizes. All times are in \texttt{hours:minutes:seconds} format. The number of tokens is calculated using the scheme detailed in Section \ref{sec:gen_tokenization}, before adding conditioning tokens (Section \ref{sec:gen_conditioning}).}
+    \caption[Datasets of symbolic jazz piano transcriptions and their respective sizes.]{Datasets of symbolic jazz piano transcriptions and their respective sizes. All times are in \texttt{hours:minutes:seconds} format. The number of tokens is calculated using the scheme detailed in Section \ref{sec:gen_tokenization}, before adding conditioning tokens (Section \ref{sec:gen_conditioning}). See also Table \ref{tab:jtd_existing_datasets}.}
     \label{tab:gen_finetuning_dataset}
     \centering
         \begin{tabular}{l c c c c c}
@@ -62,12 +62,12 @@ A number of works have also explored subsequent reinforcement learning ``on top 
         \textbf{Source} & \textbf{Tracks} & \textbf{Time} & \textbf{Notes} & \textbf{Tokens} \\
         \midrule
         \GLS{PiJAMA} & 2,777 & 218:23:26 & 7,128,802 & 26,831,866 \\
-        \GLS{JTD} (Chapter \ref{chap:jtd_tismir}) & 1,294 & 45:30:32 & 2,174,832 & 7,758,974 \\
+        \GLS{JTD} (Chapter \ref{chap:jtd_tismir}) & 1,294 & 44:21:08 & 2,174,833 & 7,758,974 \\
         Doug McKenzie & 299 & 22:15:33 & 570,627 & 2,174,290 \\
         Pianist8 & 47 & 5:42:23 & 182,214 & 626,714 \\
         Chapter \ref{chap:mp_network} & 45 & 1:14:59 & 30,250 & 115,701 \\
         \midrule
-        \textit{Total} & 4,462 & 293:06:55 & 10,086,725 & 37,507,545 \\
+        \textit{Total} & 4,462 & 291:40:49 & 10,086,726 & 37,507,545 \\
         \bottomrule
         \end{tabular}
 \end{table}
@@ -76,7 +76,7 @@ Our dataset of symbolic jazz transcriptions is compiled from five pre-existing s
 
 Additionally, we use the jazz piano recordings by Doug McKenzie\footnote{\url{https://bushgrafts.com/}} and those created during the networked music-making experiment described in Chapter \ref{chap:mp_network}. These recordings were all created by professional pianists playing on a MIDI keyboard. For the McKenzie dataset, we find that nine recordings are in fact drum performances inaccurately assigned the MIDI piano program number \texttt{0}; removing these leaves 299 recordings. For the networked music recordings created in Chapter \ref{chap:mp_network}, we use only the 45 performances created under ``real-time'' conditions (i.e., shown in Figure \ref{fig:mp_baseline_results}).
 
-In total, our dataset comprises 4,462 expressive jazz piano performances lasting for approximately 293 hours, equivalent to 10.1 million MIDI note events or 37.5 million unique tokens when tokenised using the methods outlined in Section \ref{sec:gen_tokenization}. The dataset includes recordings by 135 different pianists, spanning a variety of different ensembles, including solo, duo, and trio performances. We randomly split these recordings into training, validation, and testing subsets in the ratio $8:1:1$, stratifying these splits by source dataset. Note that tracks contained in the splits described in Section \ref{sec:rsi_dataset} appear in the same split here, such that our results are directly comparable across both datasets.
+In total, our dataset comprises 4,462 expressive jazz piano performances lasting for approximately 292 hours, equivalent to 10.1 million MIDI note events or 37.5 million unique tokens when tokenised using the methods outlined in Section \ref{sec:gen_tokenization}. The dataset includes recordings by 135 different pianists, spanning a variety of different ensembles, including solo, duo, and trio performances. We randomly split these recordings into training, validation, and testing subsets in the ratio $8:1:1$, stratifying these splits by source dataset. Note that tracks contained in the splits described in Section \ref{sec:rsi_dataset} appear in the same split here, such that our results are directly comparable across both datasets.
 
 \subsection{Metadata Curation}\label{sec:gen_metadata_curation}
 
