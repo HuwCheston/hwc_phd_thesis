@@ -91,7 +91,7 @@ Jazz Improvisation}
 %% Abstract:
 %%
 \abstract{    
-    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of five studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this and other similar datasets using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (\GLS{JTD}). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised-learning models that learn to identify particular \GLS{JTD} pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to ``feel'', ``swing'', and ``interaction'') from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Finally, we introduce a music language model that generates music in the styles of particular performers and jazz subgenres and is trained using data and techniques introduced in the previous chapters. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive web applications. We hope these will facilitate future computational research into musical improvisation --- in jazz, and beyond.
+    Jazz is a highly improvised form of Western music that so far has received limited scientific attention. This is due in part both to the difficulty of analysing music for which written scores are generally not available and of crafting statistical models that are likely to be meaningful for those who engage with this music. This thesis reports a research programme of five studies that address these problems by first developing a large dataset of annotated jazz recordings and then analysing this and other similar datasets using a variety of computational methods. First, we describe the construction of the Jazz Trio Database (\GLS{JTD}). This is an open source dataset of 45 hours of jazz rhythm section performances with symbolic annotations, comprising both quarter-note downbeats and beats, alongside MIDI for the pianist. Second, we construct a series of supervised-learning models that learn to identify particular \GLS{JTD} pianists from features relating to their use of harmony, melody, rhythm, and dynamics. We then use the decision functions learned by these models to disentangle the different elements that contribute towards defining musical style in jazz. Third, we refine the scope of the previous study to focus on modelling the relationship between rhythm and musical style. We extract a range of rhythmic features (including those relating to ``feel'', ``swing'', and ``interaction'') from JTD and use these to objectively test accounts of jazz rhythmic style given in prior musicological and ethnographic writing. Fourth, we model the mechanisms by which ensemble jazz improvisations actually take place. We use several features from the previous studies to explore the strategies that five duos of professional musicians employ to coordinate with one another under experimental conditions that are designed to disrupt the tight temporal coordination of action typically involved in group jazz performances. Finally, we introduce a generative model that produces music in the styles of particular performers and jazz subgenres, which we train using data and techniques introduced across the entire thesis. Our studies are accompanied by open-source implementations of our models, data, and research software, alongside numerous interactive web applications. We hope these will facilitate future computational research into musical improvisation --- in jazz, and beyond.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,7 +99,7 @@ Jazz Improvisation}
 %%
 \acknowledgements{
 {\setlength{\parindent}{0cm}
-    Although my name is the only one on the cover of this thesis, in reality many people have played a role in shaping this work into its current format. I could not have hoped for a more dedicated supervisor than Peter Harrison, who was continuously generous with his time and advice. I am also grateful to Ian Cross for his guidance throughout the earlier stages of this research, and to Marcus Pearce, Tuomas Eerola, and John Rink for providing helpful comments on earlier drafts presented at my progression meetings. I am indebted to many others who contributed useful feedback on this research, including Katelyn Emerson, Joshua Frank, David Whyatt, Katya Ness, Nicky Swett, Manuel Anglada-Tort, David Baker, Alex Williams, Nicolas Guo, Iran Roman, Xavier Riley, and several anonymous reviewers. I am also grateful to numerous collaborators and co-authors who helped with aspects of this research, including Joshua Schlichting, Reuben Bance, and Tessa Pastor, alongside all of the musicians who participated in the experiments described in Chapters \ref{chap:mp_network} and \ref{chap:conditioned_gen}. During the course of this PhD, I spent several months as a research intern at Spotify, and would like to thank Jan Van Balen, Simon Durand, Sebastian Ewert, Peter Sobot, and Ben Hayes for their support and advice during this time. More generally, I also enjoyed the support of various research groups, including the Centre for Music and Science and Centre for Digital Humanities at Cambridge, and the Centre for Digital Music at Queen Mary. Lastly, I would like to thank my family, Andrea, Al, Katharine --- and Rick especially, for proofreading! --- and my partner Hayley, for their support and encouragement throughout this process.
+    Although my name is the only one on the cover of this thesis, in reality many people have played a role in shaping this work into its current format. I could not have hoped for a more dedicated supervisor than Peter Harrison, who was continuously generous with his time and advice. I am also grateful to Ian Cross for his guidance throughout the earlier stages of this research, and to Marcus Pearce, Tuomas Eerola, and John Rink for providing helpful comments on earlier drafts presented at my progression meetings. I am indebted to many others who contributed useful feedback on this research, including Katelyn Emerson, Joshua Frank, David Whyatt, Katya Ness, Nicky Swett, Manuel Anglada-Tort, David Baker, Alex Williams, Nicolas Guo, Iran Roman, Xavier Riley, and several anonymous reviewers. I am also grateful to numerous collaborators and co-authors who helped with aspects of this research, including Joshua Schlichting, Reuben Bance, and Tessa Pastor, alongside all of the musicians who participated in the experiments described in Chapters \ref{chap:mp_network} and \ref{chap:conditioned_gen}. During the course of this PhD, I spent several months working as a research intern at Spotify, and I would like to thank Jan Van Balen, Simon Durand, Sebastian Ewert, Peter Sobot, and Ben Hayes for their support and advice during this time. More generally, I also enjoyed the support of various research groups, including the Centre for Music and Science and Centre for Digital Humanities at Cambridge, and the Centre for Digital Music at Queen Mary. It is unlikely that I would have pursued this research area if not for the encouragement of my earliest teachers, John Law, Stuart Ryan, and Richard O'Mahony, and my tutors at Oxford, Jonathan Cross, Mark Doffman, Eric Clarke, and Leah Broad. Lastly, I would like to thank my partner Hayley and my family, Andrea, Al, Katharine, and Rick, for their support and encouragement (and proofreading!) throughout this process.
     
     \vspace{1.5em}
     
@@ -153,6 +153,10 @@ Jazz Improvisation}
     name=PiJAMA,
     description={Piano Jazz with Automatic MIDI Annotations \citep{Edwards2023}}
 }
+\newglossaryentry{TSD}{
+    name=TSD,
+    description={TimeShift Duration \citep{Fradet2023-impact}}
+}
 \newglossaryentry{CNN}{
     name=CNN,
     description={Convolutional Neural Network}
@@ -172,6 +176,14 @@ Jazz Improvisation}
 \newglossaryentry{LR}{
     name=LR,
     description={Logistic Regression}
+}
+\newglossaryentry{LSTM}{
+    name=LSTM,
+    description={Long Short-Term Memory}
+}
+\newglossaryentry{GRU}{
+    name=GRU,
+    description={Gated Recurrent Unit}
 }
 \newglossaryentry{SVM}{
     name=SVM,
@@ -215,7 +227,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{t-SNE}{
     name=t-SNE,
-    description={t-Distributed Stochastic Neighbour Embedding}
+    description={t-Distributed Stochastic Neighbor Embedding}
 }
 \newglossaryentry{NLL}{
     name=NLL,
