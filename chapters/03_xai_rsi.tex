@@ -508,18 +508,18 @@ Finally, after computing $S_{x', y}$ at every kernel position, we transform the 
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/rsi_xai/figure_s46.png}
-  \caption[``Tivoli'' (1991) transcription.]{`Tivoli'' (1991) transcription. The musical notation shows a transcription of the final 30 seconds from an unaccompanied performance by McCoy Tyner (``Tivoli'' from ``Soliloquy'', recorded in 1991, originally composed by Dexter Gordon). Transcription created by the author.}
-\label{fig:rsi_sm_tivoli_transcription}
-\end{figure}
-\FloatBarrier\clearpage
-
-\begin{figure}[!ht]
-  \centering
   \includegraphics[width=1\textwidth]{figures/rsi_xai/figure_12.pdf}
   \caption[Visualising changes in concept score with masking.]{Visualising changes in concept score with masking. Each panel contains a MIDI piano roll with a heatmap overlaid to show the change in score to the (a) ``Modal Fourthy Voicings'' and (b) ``Block Chords'' concepts. Intuitively, green coloured sections contribute positively to the score calculated between the clip and the concept (i.e., they ``embody'' the target concept) and blue coloured sections contribute negative to the score. Values are scaled such that 0 is equivalent to the original score, calculated without masking. Musical notation is provided in Figure~\ref{fig:rsi_sm_tivoli_transcription}.}
 \label{fig:rsi_tivoli_cav}
 \end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/rsi_xai/figure_s46.png}
+  \caption[``Tivoli'' (1991) transcription.]{`Tivoli'' (1991) transcription. The musical notation shows a transcription of the final 30 seconds from an unaccompanied performance by McCoy Tyner (``Tivoli'' from ``Soliloquy'', recorded in 1991, originally composed by Dexter Gordon). Transcription created by the author.}
+\label{fig:rsi_sm_tivoli_transcription}
+\end{figure}
+% \FloatBarrier\clearpage
 
 Figure~\ref{fig:rsi_tivoli_cav} shows how the score calculated between a clip and the ``Modal Fourthy Voicings'' concept is based on the appearance of stacked, parallel fourth intervals. The same sections of this clip are not sensitive to the ``Block Chords'' concept, which involves chords based on stacked third intervals. Musical notation for this excerpt is given in Figure~\ref{fig:rsi_sm_tivoli_transcription}. We make interactive versions of these figures available for many other performances and concepts as part of our web application (see Footnote~\ref{note:rsi_webapp}, subheading ``harmony'').
 

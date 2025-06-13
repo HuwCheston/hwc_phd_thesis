@@ -20,18 +20,21 @@ In this chapter, we describe several related datasets, discuss the curation of \
 \centering
 \caption[Comparison of existing datasets for jazz piano trios.]{Comparison of existing datasets for each instrument in the jazz piano trio. *Note that RWC-Jazz has not been made available free and open source, meaning that it is not possible to provide full detail here. See also Table \ref{tab:gen_finetuning_dataset}.}
 \label{tab:jtd_existing_datasets}
-\begin{tabular}{l c c c c l l}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{2.2cm} p{2.5cm} p{2.8cm} c c p{4cm} p{3.5cm}}
 \toprule
 \textbf{Instrument} & \textbf{Name} & \textbf{Method} & \textbf{Tracks} & \textbf{Duration (s)} & \textbf{Annotations} & \textbf{Metadata} \\
 \midrule
 \textbf{Piano} & \GLS{WJD} & Manual & 6 & 582 & 3,149 onsets & Beat, chord, section \\
  & \GLS{PiJAMA} & Automatic & 2,777 & 786,206 & 7,128,802 MIDI notes & N/A \\
  & RWC-Jazz & Manual & 5 & 1,672 & N/A* & Beat, section \\
- & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 866,116 onsets, 2,174,833 MIDI notes & Beat \\ \midrule
+ & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 866,116 onsets, 2,174,833 MIDI notes & Beat \\
+\midrule
 \textbf{Bass} & \GLS{WJD} & Automatic & 426 & 49,010 & 5,000 beat-wise pitches & Beat, chord, section \\
  & FiloBass & Automatic + manual & 48 & 17,880 & 53,646 MIDI notes & Downbeat, chord \\
  & RWC-Jazz & Manual & 5 & 1,672 & N/A* & Beat, section \\
- & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 543,693 onsets & Beat \\ \midrule
+ & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 543,693 onsets & Beat \\
+\midrule
 \textbf{Drums} & \GLS{WJD} & Automatic + manual & 67 & 6,506 & 28,851 cymbal onsets & Beat, chord, section \\
  & RWC-Jazz & Manual & 5 & 1,672 & N/A* & Beat, section \\
  & \textbf{\GLS{JTD} (ours)} & Automatic & 1,294 & 159,668 & 796,604 onsets & Beat \\
@@ -287,7 +290,7 @@ Note that, as method (1) generates multiple MIDI events for what would be regard
 \midrule
 \textbf{Table \ref{tab:jtd_optimization_results}} & \textbf{0.93} (0.03) & 0.93 (0.04) & \textbf{0.93} (0.04) \\ \midrule
 \textbf{\citet{Kong2021} (1)} & 0.77 (0.13) & 0.71 (0.16) & 0.86 (0.09) \\
-\textbf{Spectral Flux (2)} & 0.84 (0.06) & 0.79 (0.10) & 0.90 (0.04) \\
+\textbf{Spectral flux (2)} & 0.84 (0.06) & 0.79 (0.10) & 0.90 (0.04) \\
 \textbf{Ours, no filter (3)} & 0.92 (0.03) & 0.90 (0.06) & \textbf{0.93} (0.03) \\
 \textbf{Ours, narrow filter (4)} & 0.92 (0.03) & \textbf{0.95} (0.03) & 0.89 (0.05) \\
 \bottomrule
@@ -415,7 +418,9 @@ This suggests that the year a track was recorded has minimal impact on the level
 
 Finally, we want to compare the levels of ``swing'' demonstrated in \GLS{JTD} with existing open-source datasets of annotated jazz performances. We select \GLS{WJD} for comparison to the \GLS{JTD} piano recordings and FiloBass for comparison to the \GLS{JTD} bass recordings. We scrape all tracks from both databases that meet the tempo and style inclusion criteria for \GLS{JTD}.
 
-For \GLS{WJD}, this means that we include tracks where \texttt{instrument == "piano"}, \texttt{rhythmfeel == "SWING"}, and $100 < \texttt{avgtempo} < 300$, using the metadata provided in the \texttt{solo\_info} table. Likewise, for FiloBass we include tracks that are tagged as \texttt{"Swing"}, have either a 3/4 or 4/4 time signature, and where the provided downbeat annotations suggest a tempo between 100 and 300 BPM. This leaves 6 out of 456 recordings in \GLS{WJD} and 44 out of 48 FiloBass tracks. No tracks are duplicated across the three datasets; however, some of the same performers do appear, including bassists Ron Carter and Ray Drummond in FiloBass and \GLS{JTD}. 
+\begin{sloppypar}
+For \GLS{WJD}, this means that we include tracks where \texttt{instrument == "piano"}, \texttt{rhythmfeel == "SWING"}, and $100 \leq \texttt{avgtempo} \leq 300$, using the metadata provided in the \texttt{solo\_info} table. Likewise, for FiloBass we include tracks that are tagged as \texttt{"Swing"}, have either a 3/4 or 4/4 time signature, and where the provided downbeat annotations suggest a tempo between 100 and 300 BPM. This leaves 6 out of 456 recordings in \GLS{WJD} and 44 out of 48 FiloBass tracks. No tracks are duplicated across the three datasets; however, some of the same performers do appear, including bassists Ron Carter and Ray Drummond in FiloBass and \GLS{JTD}.
+\end{sloppypar}
 
 \begin{sidewaysfigure}[ph!]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_x1}
