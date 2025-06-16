@@ -110,11 +110,11 @@ Four of the 33 bandleaders recorded less than an hour of material in the trio se
 
 \subsubsection{Inclusion Criteria}\label{sec:jtd_inclusion_criteria}
 
-To obtain a consistent set of tracks that our automated pipeline can analyse reliably, we define inclusion criteria to compare against each recording before including it in \GLS{JTD}. A track must have: (1) an approximate tempo between 100 and 300 quarter-note beats-per-minute (BPM), assessed by tapping along to the opening measures of the performance, (2) a clear quarter note pulse, with a time signature of either three or four beats per measure (and with no changes in meter), (3) an identifiable piano solo, accompanied by bass and drums with no interruptions in the ensemble texture (i.e., ``solo breaks''), (4) an uninterrupted ``swing eighths'' rhythmic feel, and (5) a link to the recording on YouTube.
+To obtain a consistent set of tracks that our automated pipeline can analyse reliably, we define inclusion criteria to compare against each recording before including it in \GLS{JTD}. These requirements are set to (1) ensure that all notes have clear onset times, and (2) maximise the acoustic similarity between the recordings in the dataset and the distribution of (mostly pop \& rock) material typically used to train audio source separation models. 
+
+Our inclusion criteria are as follows. A track must have: (1) an approximate tempo between 100 and 300 quarter-note beats-per-minute (BPM), assessed by tapping along to the opening measures of the performance, (2) a clear quarter note pulse, with a time signature of either three or four beats per measure (and with no changes in meter), (3) an identifiable piano solo, accompanied by bass and drums with no interruptions in the ensemble texture (i.e., ``solo breaks''), (4) an uninterrupted ``swing eighths'' rhythmic feel, and (5) a link to the recording on YouTube.
 
 Additional criteria are specified for each instrument in the trio. During their solo, pianists must have played on acoustic instruments (rather than, e.g., synthesiser or Fender ``Rhodes'' piano), and without any external FX (e.g., reverb, distortion). Bassists must also have played on an unmanipulated acoustic instrument using their fingers or a plectrum, not a bow. Drummers must have used a traditional ``traps'' kit (snare and kick drums; multiple cymbals, including hi-hat, ride, and crash; tom-toms), without auxiliary percussion (e.g., shakers, maracas). This must also have been played using sticks, rather than wire brushes or cloth mallets. 
-
-These requirements are set to (1) ensure that all notes have clear onset times, and (2) maximise the acoustic similarity between the recordings in the dataset and the distribution of (mostly pop \& rock) material typically used to train audio source separation models. 
 
 \subsubsection{Metadata Curation}\label{sec:jtd_metadata_curation}
 
@@ -305,7 +305,12 @@ Regardless, we include these MIDI annotations in \GLS{JTD} and make use of them 
 
 \subsubsection{Bass Annotation}\label{sec:jtd_bass_detection}
 
-Considering the results in Table~\ref{tab:jtd_optimization_results}, the higher standard deviation for the bass onset detection results suggests that there may be a subset of onset types that give outlier results, diminishing the overall accuracy of the pipeline. While we cannot investigate every possibility, we can consider three hypotheses: whether bass annotation is negatively affected (1) by if a bass note is ``raked'', (2) by if both bass and drums play simultaneously, and (3) on specific beats of the bar.
+Considering the results in Table~\ref{tab:jtd_optimization_results}, the higher standard deviation for the bass onset detection results suggests that there may be a subset of onset types that give outlier results, diminishing the overall accuracy of the pipeline. While we cannot investigate every possibility, we can consider three hypotheses: 
+\begin{enumerate}
+    \item{Was the bass annotation affected when notes were ``raked''?}
+    \item{Was annotation affected when the bass and drums played simultaneously?}
+    \item{Was annotation worse on specific beats of the bar?}
+\end{enumerate}
 
 For hypothesis (1), we define a ``rake'' as a technique in jazz bass where the finger is dragged from one string to the next lower string, usually with a triplet rhythm. We collect all groups of three bass onsets that are immediately preceded and then followed by a single onset that matched with the quarter-note pulse. Searching all tracks with ground truth annotations, we find 57 occurrences of this pattern, equivalent to 285 onsets. 
 
