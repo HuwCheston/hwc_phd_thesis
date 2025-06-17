@@ -213,23 +213,55 @@ The \texttt{CNNOnsetDetector} function in \texttt{madmom} is used to detect onse
 
 The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect the position of quarter note beats and downbeats in the audio mixture. This algorithm came first in the most recent \texttt{MIREX} beat tracking competition.\footnote{\url{https://nema.lis.illinois.edu/nema_out/mirex2019/results/abt/smc/}} A recurrent neural network (\GLS{RNN}) is applied to frames from an audio spectrogram to distinguish between beats, downbeats, and non-beat classes; a dynamic Bayesian network (\GLS{DBN}) then infers meter from the \GLS{RNN} observations (using the default rate of 100 frames per second). Meter changes cannot be detected by this algorithm, so we incorporate this into our inclusion criteria (see Section~\ref{sec:jtd_inclusion_criteria}).\footnote{\citet{Foscarin2024} have since proposed an end-to-end algorithm that does not require \GLS{DBN} post-processing of an activation function, which alleviates constraints on meter while potentially leading to greater overall precision. This was not available at the time of compiling \GLS{JTD}, however.}
 
-We apply this algorithm multiple times to a single track. First, the default parameters specified by the authors are used, with the tempo allowed to vary between 100 and 300 quarter note beats-per-minute (as specified in the inclusion criteria, Section~\ref{sec:jtd_inclusion_criteria}). This results in frequent tempo changes, due to the lack of constraint in the parameter settings. 
+\begin{algorithm}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) \texttt{#1}}
+\caption[Beat tracking with iterative refinement of minimum and maximum tempi.]{Beat tracking with iterative refinement of minimum and maximum tempi.}
+\label{alg:jtd_beat_track_iteration}
+\begin{algorithmic}[1]
+\Require{$A$ (mixture audio signal), $I$ (number of iterations)}
+\Ensure{$B$ (array of quarter-note beat timestamps)}
+\LineComment{Use the default minimum and maximum tempi for the first iteration}
+\State $T_{min} \gets 100$
+\State $T_{max} \gets 300$
+\For{$i \gets 1$ to $I$}
+    \LineComment{Estimate beat positions using the network}
+    \State $B \gets \texttt{DBNDownBeatTracker}(A, T_{min}, T_{max})$
+    \State $N \gets \text{length}(B) - 1$
+    \LineComment{Compute durations of successive beats}
+    \State Initialize array $D$ of size $N$
+    \For{$n \gets 1$ to $N$}
+        \State{$D[n] \gets B_{n+1} - B_n$}
+    \EndFor
+    \LineComment{Compute quartiles and interquartile range}
+    \State $D_{s} \gets \text{sorted}(D)$
+    \State $Q_{1} \gets D_{s}[\lfloor 0.25 \times N \rfloor]$
+    \State $Q_{3} \gets D_{s}[\lfloor 0.75 \times N \rfloor]$
+    \State $IQR_D \gets Q_3 - Q_1$  
+    \LineComment{Filter beat array based on interquartile range}
+    \State Initialize array $D_{f}$ as \texttt{empty}
+    \For{$d \in D$}
+        \If{$d \geq Q_1 - 1.5 \times IQR_D$ \textbf{and} $d \leq Q_3 + 1.5 \times IQR_D$}
+            \State Append $d$ to $D_{f}$
+        \EndIf
+    \EndFor
+    \If{$D_{f}$ is \texttt{empty}}
+        \State \textbf{break}
+    \Else
+        \LineComment{Compute new minimum and maximum tempi}
+        \State $T_{min} \gets \dfrac{60}{\text{max}(D_f)}$ 
+        \State $T_{max} \gets \dfrac{60}{\text{min}(D_f)}$ 
+        \State \textbf{continue}
+    \EndIf
+\EndFor
+\LineComment{Final estimation}
+\State $B^{'} \gets \texttt{DBNDownBeatTracker}(A, T_{min}, T_{max})$
+\State \Return{$B^{'}$}
+\end{algorithmic}
+\end{algorithm}
 
-To resolve this, we gradually reduce the range of permissible tempo values for the beat tracker over a number of iterations. First, we calculate the durations between successive beats as
-\begin{align}
-d_{i} = b_{i+1} - b_{i}, \ i = 1, 2, \dots, N-1, 
-\end{align}
-where $N$ is the total number of beats in the track. Then, we calculate the interquartile range of beat durations $IQR_d$ as
-\begin{align}
-IQR_d &= Q_3\left( \{d_1, d_2, \dots, d_{N-1}\} \right) - Q_1\left( \{d_1, d_2, \dots, d_{n-1}\} \right),
-\end{align}
-and use this to filter the initial durations $d$, where 
-\begin{align}
-d'_i &= \{ Q_1 - 1.5(IQR_d) \leq d_i \leq Q_3 + 1.5(IQR_d) \}, \ i = 1, 2, \dots, N-1.
-\end{align}
-Finally, we recalculate $Q_1$ and $Q_3$ using only values of $d'$ and set these as the new minimum and maximum tempo for the beat tracker in the next iteration of the process. We optimise the total number of iterations for this process specifically for the recordings in \GLS{JTD} (see Section~\ref{sec:jtd_validation}).
-
-The downbeat classes estimated from the \GLS{RNN} are then combined with the detected beat positions and the time signature for the recording, in order to assign measure numbers to every detected timestamp. 
+We design an algorithm that applies the \texttt{DBNDownBeatTracker} to an audio signal multiple times while iteratively refining the range of tempi used for the tracked quarter-note beats (Algorithm \ref{alg:jtd_beat_track_iteration}). We optimise the total number of iterations this algorithm runs for (input parameter $I$) specifically for the recordings in \GLS{JTD} (see Section~\ref{sec:jtd_validation}). The downbeat classes estimated from the \GLS{RNN} are then combined with the time signature for the recording, in order to assign measure numbers to every timestamp detected with Algorithm \ref{alg:jtd_beat_track_iteration}. 
 
 \subsubsection{Beat-Onset Matching}\label{sec:jtd_beat_onset_matching}
 
@@ -378,7 +410,7 @@ log_2(BUR)=log_2\biggl(\frac{t_{a,b}-t_{a}}{t_{b}-t_{a,b}}\biggr),
 \end{align}
 where $t_a$ is the onset matched with beat $a$, $t_b$ is the onset matched with beat $b$ (i.e., at beat $a + 1$), and $t_{a,b}$ is the single onset between beats $a$ and $b$. For notated ``swung'' eighths, $log_2(BUR) = 1.0$ ($BUR = 2:1$); vice versa, for ``straight'' eighths (i.e., the equal-equal subdivision of the beat), $log_2(BUR) = 0.0$ ($BUR = 1:1$).
 
-We search our database for all discrete groupings of three onsets where the first and last mark the quarter note pulse. The total number of such groupings is 417,278. Following the analysis of the \GLS{WJD} by \citet{Corcoran2021}, we classify ratios above 4:1 ($log_2(BUR) = 2$) and below 1:4 ($log_2(BUR) = -2$) as outliers, which results in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset is 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
+We search our database for all discrete groupings of three onsets, where the first and last mark the quarter note pulse. The total number of such groupings is 417,278. Following the analysis of the \GLS{WJD} by \citet{Corcoran2021}, we classify ratios above 4:1 ($log_2(BUR) = 2$) and below 1:4 ($log_2(BUR) = -2$) as outliers, which results in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset is 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
 
 \subsubsection{Differences in Swing Between Instruments}\label{sec:jtd_differences_in_swing_between_instruments}
 
@@ -435,9 +467,9 @@ For \GLS{WJD}, this means that we include tracks where \texttt{instrument == "pi
 
 We then match onset annotations from both \GLS{WJD} and FiloBass with their nearest annotated quarter-note beats and extract \GLS{BUR}s. Only downbeat annotations are provided for FiloBass, however, so we annotate the remaining beats between successive downbeat timestamps through linear interpolation according to the time signature of the recording. As outlined in Section~\ref{sec:jtd_swing}, we discard \GLS{BUR}s outside the range of $-2 < log_2(BUR) < 2$. We extract 707 \GLS{BUR}s for \GLS{WJD} and 3,218 for FiloBass. We show normalised kernel density and peak estimates for the $log_2(BUR)$ distributions in both datasets in Figure~\ref{fig:jtd_bur_distribution_by_dataset}, following the process outlined in Section~\ref{sec:jtd_differences_in_swing_between_instruments}.
 
-With regards to the piano, the distribution of $log_2(BUR)$s in \GLS{WJD} is broadly equivalent to \GLS{JTD}, with one peak found at $log_2(BUR) = 0.05$ ($1.05:1$). This is considerably lower than the equivalent peak in \GLS{JTD} ($log_2(BUR) = 0.37, 1.44:1$). Inspecting this, we find that the mean tempo of the six piano recordings in \GLS{WJD} (275.63 BPM) is much higher than across \GLS{JTD} (193.92). As we have already shown in Figure~\ref{fig:jtd_bur_vs_tempo}, higher tempi lead to demonstrably ``straighter'' \GLS{BUR} values.
+With regard to the piano, the distribution of $log_2(BUR)$s in \GLS{WJD} is broadly equivalent to \GLS{JTD}, with one peak found at $log_2(BUR) = 0.05$ ($1.05:1$). This is considerably lower than the equivalent peak in \GLS{JTD} ($log_2(BUR) = 0.37, 1.44:1$). Inspecting this, we find that the mean tempo of the six piano recordings in \GLS{WJD} (275.63 BPM) is much higher than across \GLS{JTD} (193.92). As we have already shown in Figure~\ref{fig:jtd_bur_vs_tempo}, higher tempi lead to demonstrably ``straighter'' \GLS{BUR} values.
 
-With regards to the bass, we find two peaks in the distribution of \GLS{BUR}s obtained from FiloBass, at $log_2(BUR) = -0.22$ ($0.80:1$) and $log_2(BUR) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure~\ref{fig:jtd_bur_distribution_by_instrument}). However, we note that the proportion of ``straight'' bass \GLS{BUR}s (where $log_2(BUR)\approx0$) is significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are ``play-along'' backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply increased variance in the data, due to the smaller number of recordings in FiloBass versus \GLS{JTD}.
+With regard to the bass, we find two peaks in the distribution of \GLS{BUR}s obtained from FiloBass, at $log_2(BUR) = -0.22$ ($0.80:1$) and $log_2(BUR) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure~\ref{fig:jtd_bur_distribution_by_instrument}). However, we note that the proportion of ``straight'' bass \GLS{BUR}s (where $log_2(BUR)\approx0$) is significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are ``play-along'' backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply increased variance in the data, due to the smaller number of recordings in FiloBass versus \GLS{JTD}.
 
 \subsection{Synchronisation}\label{sec:jtd_synchrony}
 

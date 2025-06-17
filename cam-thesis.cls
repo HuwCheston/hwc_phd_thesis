@@ -526,6 +526,7 @@ This thesis is submitted for the degree of \\
 
 \listoffigures
 \listoftables
+\listofalgorithms
 
 \ifcam@glossary%
     \cam@printthesisglossary
