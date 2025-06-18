@@ -221,7 +221,7 @@ The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect th
 \label{alg:jtd_beat_track_iteration}
 \begin{algorithmic}[1]
 \Require{$A$ (mixture audio signal), $I$ (number of iterations)}
-\Ensure{$B$ (array of quarter-note beat timestamps)}
+\Ensure{$B'$ (array of quarter-note beat timestamps)}
 \LineComment{Use the default minimum and maximum tempi for the first iteration}
 \State $T_{min} \gets 100$
 \State $T_{max} \gets 300$
@@ -236,13 +236,13 @@ The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect th
     \EndFor
     \LineComment{Compute quartiles and interquartile range}
     \State $D_{s} \gets \text{sorted}(D)$
-    \State $Q_{1} \gets D_{s}[\lfloor 0.25 \times N \rfloor]$
-    \State $Q_{3} \gets D_{s}[\lfloor 0.75 \times N \rfloor]$
+    \State $Q_{1} \gets \text{quartile}(D_{s}, \ 0.25)$
+    \State $Q_{3} \gets \text{quartile}(D_{s}, \ 0.75)$
     \State $IQR_D \gets Q_3 - Q_1$  
     \LineComment{Filter beat array based on interquartile range}
     \State Initialize array $D_{f}$ as \texttt{empty}
     \For{$d \in D$}
-        \If{$d \geq Q_1 - 1.5 \times IQR_D$ \textbf{and} $d \leq Q_3 + 1.5 \times IQR_D$}
+        \If{$d \geq Q_1 - 1.5IQR_D$ \textbf{and} $d \leq Q_3 + 1.5IQR_D$}
             \State Append $d$ to $D_{f}$
         \EndIf
     \EndFor
@@ -261,7 +261,7 @@ The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect th
 \end{algorithmic}
 \end{algorithm}
 
-We design an algorithm that applies the \texttt{DBNDownBeatTracker} to an audio signal multiple times while iteratively refining the range of tempi used for the tracked quarter-note beats (Algorithm \ref{alg:jtd_beat_track_iteration}). We optimise the total number of iterations this algorithm runs for (input parameter $I$) specifically for the recordings in \GLS{JTD} (see Section~\ref{sec:jtd_validation}). The downbeat classes estimated from the \GLS{RNN} are then combined with the time signature for the recording, in order to assign measure numbers to every timestamp detected with Algorithm \ref{alg:jtd_beat_track_iteration}. 
+We design an algorithm that applies the \texttt{DBNDownBeatTracker} to an audio signal multiple times (Algorithm \ref{alg:jtd_beat_track_iteration}). The \texttt{DBNDownBeatTracker} takes as arguments the minimum and maximum allowed tempi for detected beats. We set this initially to 100 and 300 beats-per-minute, respectively, as in our inclusion criteria (Section \ref{sec:jtd_inclusion_criteria}). Over a number of iterations $I$, we then apply the tracker, calculate the instantaneous tempo at every beat, remove tempo values that are outliers, and recalculate the minimum and maximum allowed tempi using the new, filtered, beat timestamps. We optimise $I$ specifically for the recordings in \GLS{JTD} (see Section \ref{sec:jtd_validation}). The downbeat classes estimated from the \GLS{RNN} are then combined with the time signature for the recording, in order to assign measure numbers to every timestamp detected with Algorithm \ref{alg:jtd_beat_track_iteration}. 
 
 \subsubsection{Beat-Onset Matching}\label{sec:jtd_beat_onset_matching}
 
