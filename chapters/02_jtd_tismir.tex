@@ -189,7 +189,7 @@ The \texttt{ZFTurbo} audio source separation model \citep{Solovyev2024} is used 
 
 Before the development of full-spectrum stereophonic panning in the 1970s, audio signals could only be panned to the left or right speaker output, or both (centre channel). For tracks in \GLS{JTD} where at least one instrument in the trio was hard-panned in this manner (39\%), source separation is applied independently to the left and right monaural signals alongside the centre output. The required channel is identified manually for each instrument during the metadata curation process (see Section~\ref{sec:jtd_metadata_curation}).
 
-\subsubsection{Audio Preprocessing}\label{sec:jtd_audio_preprocessing}
+\subsubsection{Audio Pre-processing}\label{sec:jtd_audio_preprocessing}
 
 As the \texttt{ZFTurbo} model was not trained explicitly to separate piano audio, we use the ``other'' source (consisting of the residual audio after removing every other source from the mixed signal) for this instrument. As a result, it is possible that audio from the bass and drums could ``bleed'' into this track, which would affect the performance of our downstream annotation pipeline.
 
@@ -310,7 +310,7 @@ Finally, we consider the temporal difference between equivalent automatic and gr
 
 Next, we compare several alternative onset detection methods, using the piano audio and corresponding ground truth annotations for evaluation. These methods are: (1) an automatic transcription model \citep{Kong2021}, which generates MIDI (incorporating both pitch and rhythmic information) from audio, (2) a naive audio signal processing approach, whereby onsets are identified as local maxima from a normalised spectral flux envelope, using the implementation from the \texttt{librosa} (version \texttt{0.8.1}) Python package \citep{McFee2015}, (3) the current approach, without the audio filtering described in Section~\ref{sec:jtd_audio_preprocessing}, and (4) the current approach, with a quantitatively ``narrower'' band-pass filter (attenuating frequencies outside the range of 110--1760 Hz i.e., $A_2$--$A_6$).
 
-Note that, as method (1) generates multiple MIDI events for what would be regarded perceptually as a single onset (i.e., a chord), near-simultaneous MIDI events within a window of 50 ms are grouped together, with the onset of the earliest event taken as the onset of the whole group. The parameters exposed by methods (1--4) are optimised separately, following the method described in Section~\ref{sec:jtd_validation_results}. The default setting of 100 frames per second is used for method (1). No other post-processing is applied, in order to test the baseline performance of each system.
+Note that, as method (1) generates multiple MIDI events for what would be regarded perceptually as a single onset (i.e., a chord), near-simultaneous MIDI events within a window of 50 ms are grouped together, with the onset of the earliest event taken as the onset of the whole group. The parameters exposed by methods (1--4) are optimised separately, following the approach described in Section~\ref{sec:jtd_validation_results}. The default setting of 100 frames per second is used for method (1). No other post-processing is applied, in order to test the baseline performance of each system.
 
 \begin{table}[H]
 \caption[Onset detection results per method, piano only]{Onset detection results per method, piano only.}
@@ -384,19 +384,19 @@ Rather than working directly with the timestamps estimated from the beat tracker
 
 The mean tempo $\bar{y}$ of a recording in beats-per-minute is calculated as 
 \begin{align}\label{eq:mean_tempo}
-\bar{y} = \dfrac{\sum\limits_{i=1}^N\frac{60}{x_i - x_{i-1}}}{N-1}
+\bar{y} = \dfrac{\sum\limits_{i=1}^N\frac{60}{x_i - x_{i-1}}}{N-1} \ ,
 \end{align}
-where $x_i$ is the mean of all onsets matched to beat $i$, where $i \geq 1$ and is not set to missing. Across \GLS{JTD}, the observed $\text{mean}(\bar{y}) = 193.92 \ \text{BPM}$ ($SD = 46.93$, Figure~\ref{fig:jtd_mean_tempo}); this is comparable to the equivalent result calculated using the timestamps $y'$ estimated from the beat tracking algorithm ($\text{mean}(\bar{y'}) = 193.70, SD = 46.59$). The slowest performance in \GLS{JTD} has a mean tempo of 102.10 BPM (Cedar Walton, ``Ghost of a Chance'', 2010) and the fastest 299.82 BPM (John Hicks, ``Airegin'', 1987). We go on to use the mean tempo of a performance as part of our generative approach in Section \ref{sec:gen_tokenization}.
+where $x_i$ is the mean of all onsets matched to beat $i$ ($i \geq 1$) and neither $x_i$ or $x_{i-1}$ are set to missing. Across \GLS{JTD}, the observed $\text{mean}(\bar{y}) = 193.92 \ \text{BPM}$ ($SD = 46.93$, Figure~\ref{fig:jtd_mean_tempo}); this is comparable to the equivalent result calculated using the timestamps $y'$ estimated from the beat tracking algorithm ($\text{mean}(\bar{y'}) = 193.70, SD = 46.59$). The slowest performance in \GLS{JTD} has a mean tempo of 102.10 BPM (Cedar Walton, ``Ghost of a Chance'', 2010) and the fastest 299.82 BPM (John Hicks, ``Airegin'', 1987).
 
 As a measure of tempo stability, for each track we obtain the standard deviation of the tempo normalised by the mean tempo i.e., the percentage fluctuation about the overall tempo (``tempo fluctuation'', $\delta y$). This can be written simply as
 \begin{align}\label{eq:tempo_fluctuation}
-\delta y = \dfrac{\sqrt{\frac{1}{N-1} \sum\limits_{i=1}^N (y_i - \bar{y})^2}}{\bar{y}},
+\delta y = \dfrac{\sqrt{\frac{1}{N-1} \sum\limits_{i=1}^N (y_i - \bar{y})^2}}{\bar{y}} \ ,
 \end{align}
 where $y_i$ is the tempo value in quarter-note beats-per-minute at beat $i$ (i.e., $y_i = \dfrac{60}{x_i-x_{i-1}}$). We observe $\text{mean}(\delta y) = 5.55\%$ ($SD = 2.70$) for \GLS{JTD} recordings, suggesting that they are generally stable.
 
 We also calculate the slope of a linear regression of instantaneous tempo against beat onset time (``tempo slope'', $\hat{S}$) using the standard least squares formula
 \begin{align}\label{eq:tempo_slope}
-\hat{S} = \frac{\sum\limits_{i=1}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2},
+\hat{S} = \frac{\sum\limits_{i=1}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2} \ ,
 \end{align}
 such that $\hat{S} > 0$ implies acceleration and $\hat{S} < 0$ implies deceleration. We observe $\text{mean}(\hat{S}) = 0.04\ \text{BPM/s}$ ($SD = 0.10$) for \GLS{JTD} recordings, suggesting that they display a very slight tendency towards acceleration (with a predicted increase of 1 BPM every 25 seconds).
 
@@ -406,7 +406,7 @@ There is no correlation between signed tempo slope and unsigned tempo fluctuatio
 
 In jazz, swing refers to the division of the pulse into alternating long and short intervals. Expressed in Western notation, the long interval is typically written as a quarter note triplet, and the short as an eighth note triplet. Empirically, swing can be measured by taking the ratio of these long and short durations --- the swing or ``beat-upbeat ratio'' (\GLS{BUR}), commonly expressed in binary logarithmic form in the literature. This can be written simply as
 \begin{align}\label{eq:jtd_bur}
-log_2(BUR)=log_2\biggl(\frac{t_{a,b}-t_{a}}{t_{b}-t_{a,b}}\biggr),
+log_2(BUR)=log_2\biggl(\frac{t_{a,b}-t_{a}}{t_{b}-t_{a,b}}\biggr) \ ,
 \end{align}
 where $t_a$ is the onset matched with beat $a$, $t_b$ is the onset matched with beat $b$ (i.e., at beat $a + 1$), and $t_{a,b}$ is the single onset between beats $a$ and $b$. For notated ``swung'' eighths, $log_2(BUR) = 1.0$ ($BUR = 2:1$); vice versa, for ``straight'' eighths (i.e., the equal-equal subdivision of the beat), $log_2(BUR) = 0.0$ ($BUR = 1:1$).
 
