@@ -58,7 +58,7 @@ FiloBass \citep{Riley2023} expands FiloSax with transcriptions of the bassist's 
 
 \subsection{PiJAMA}\label{sec:jtd_pijama_description}
 
-Piano Jazz with MIDI Annotations (\GLS{PiJAMA}) consists of 200+ hours of solo jazz piano performances transcribed using a pitch-to-MIDI algorithm \citep{Edwards2023}. The methodology used by the \GLS{PiJAMA} authors has several similarities with our contribution: curated playlists of relevant music were developed by scraping discographic services, and audio was downloaded from YouTube. Although comprehensive, \GLS{PiJAMA} includes solo piano recordings only, while the authors acknowledge that it is far more common for jazz pianists to perform in a trio with bass and drums. 
+Piano Jazz with \added[id=HC]{Automatic} MIDI Annotations (\GLS{PiJAMA}) consists of 200+ hours of solo jazz piano performances transcribed using a pitch-to-MIDI algorithm \citep{Edwards2023}. The methodology used by the \GLS{PiJAMA} authors has several similarities with our contribution: curated playlists of relevant music were developed by scraping discographic services, and audio was downloaded from YouTube. Although comprehensive, \GLS{PiJAMA} includes solo piano recordings only, while the authors acknowledge that it is far more common for jazz pianists to perform in a trio with bass and drums. 
 
 In Chapter~\ref{chap:xai_rsi}, we combine a subset of \GLS{PiJAMA} with \GLS{JTD} to create a large dataset usable in jazz performer identification. In Chapter \ref{chap:conditioned_gen}, we use the entire \GLS{PiJAMA} dataset (alongside the entire \GLS{JTD}, and several other datasets) to create what we believe to be the largest dataset of MIDI transcriptions of solely jazz piano performances (approximately 300 hours of performances, see Table \ref{tab:gen_finetuning_dataset}). We then use this dataset to train a music generation model to produce music conditioned on particular styles of jazz.
 
@@ -171,7 +171,7 @@ Next, we sort each track into one of 30 equally spaced bins; the left edge of th
 \begin{figure}[!ht]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_5}
-  \caption[Histogram grouping number of tracks in \GLS{JTD} by year of recording.]{Histogram grouping number of tracks in \GLS{JTD} by year of recording. Bar colour indicates subset (\GLS{JTD} or \GLS{JTD-300}.}
+  \caption[Histogram grouping number of tracks in \GLS{JTD} by year of recording.]{Histogram grouping number of tracks in \GLS{JTD} by year of recording. Bar colour indicates subset (\GLS{JTD} or \GLS{JTD-300}).}
 \label{fig:jtd_tracks_by_year}
 \end{figure}
 
@@ -183,7 +183,7 @@ The combined duration of the audio in \GLS{JTD-300} is 11.75 hours (26.4\% of th
 
 \subsubsection{Model Selection}
 
-The \texttt{ZFTurbo} audio source separation model \citep{Solovyev2024} is used to separate each track in \GLS{JTD} into four sources; ``bass'', ``drums'', ``vocals'', and ``other''. This model combines three existing source separation models and achieved the first prize in a recent community sound demixing competition \citep{Fabbro2024}. 
+The \texttt{ZFTurbo} audio source separation model \citep{Solovyev2024} is used to separate each track in \GLS{JTD} into four sources; ``bass'', ``drums'', ``vocals'', and ``other''. This model is an ensemble of multiple existing hybrid transformer source separation models \citep{Rouard2022_Hybrid}, with weights for each model obtained by creating synthetic datasets of audio mixtures. In a recent community sound demixing competition, \texttt{ZFTurbo} achieved the first prize \citep{Fabbro2024}.\footnote{Note that the \texttt{SAMI-ByteDance} model \citep{Lu2023_SourceSep} achieved higher numerical scores than \texttt{ZFTurbo} in this competition. However, as this model has not yet been released publicly, it was not awarded a prize and could not be used here.}
 
 \subsubsection{Audio Channel Selection}
 
@@ -310,7 +310,7 @@ Finally, we consider the temporal difference between equivalent automatic and gr
 
 Next, we compare several alternative onset detection methods, using the piano audio and corresponding ground truth annotations for evaluation. These methods are: 
 \begin{enumerate}
-    \item{A high-resolution automatic piano transcription model \citep{Kong2021}, which generates MIDI (incorporating pitch, note and pedal onset and offset times, and velocity) from piano audio using a convolutional recurrent neural network (\GLS{CRNN}),}
+    \item{A high-resolution automatic piano transcription model \citep{Kong2021}, which generates MIDI (incorporating pitch, note and pedal onset and offset times, and velocity) from piano audio using a convolutional recurrent neural network (\GLS{CRNN}),\footnote{At the tine \GLS{JTD} was compiled, the state-of-the-art method for automatic piano transcription incorporating note onset, offset, and velocity information was \citet{Hawthorne2021}. However, the authors of this model report worse performance than the model described by \citet{Kong2021} when considering only note onset information; given that our evaluation only considers onsets, we elected to use the earlier model, instead.}}
     \item{A naive audio signal processing approach, where onsets are identified as local maxima from a normalised spectral flux envelope, using the implementation from the \texttt{librosa} (version \texttt{0.8.1}) Python package \citep{McFee2015},}
     \item{The current approach, without the audio filtering described in Section~\ref{sec:jtd_audio_preprocessing},}
     \item{The current approach, with a quantitatively ``narrower'' band-pass filter (attenuating frequencies outside the range of 110--1760 Hz i.e., $A_2$--$A_6$).}
@@ -373,7 +373,7 @@ On average, the duration of a piano solo in \GLS{JTD} is 2 minutes and 3 seconds
 \label{fig:jtd_mean_track_duration_by_pianist}
 \end{figure}
 
-There is considerable variation in the duration of solos played by different pianists (Figure~\ref{fig:jtd_mean_track_duration_by_pianist}). In particular, the later a pianist's first recording in \GLS{JTD} was made (i.e., the later they began their career), the longer they tended to solo for. For the 9 (out of 27) pianists in \GLS{JTD} with the longest average solo durations, the median year their first recording was made is 1967; for the 9 pianists with the shortest solos on average, the median year is 1956. 
+There is considerable variation in the duration of solos played by different pianists (Figure~\ref{fig:jtd_mean_track_duration_by_pianist}). In particular, the later a pianist's first recording in \GLS{JTD} was made (i.e., the later they began their career), the longer they tended to solo for. For the 9 (out of 27) \replaced[id=HC]{pianist-bandleaders}{pianists} in \GLS{JTD} with the longest average solo durations, the median year their first recording was made is 1967; for the 9 \replaced[id=HC]{pianist-bandleaders}{pianists} with the shortest solos on average, the median year is 1956. 
 
 One possible explanation is that the open-ended formal designs (e.g., modal ``vamps'', ``time, no changes'') that became popular in jazz during the latter half of the twentieth century proved more suitable for extended improvisation, which does not need to follow the harmonic structure of an underlying ``song form'' \citep{Gioia2011}. Changing trends in the music business could provide another explanation; up until the mid-1950s, record companies would often fill albums with multiple shorter recordings rather than longer individual takes, so that individual tracks could be released as singles to be played on jukeboxes and radio stations \citep{Priestley1991}.
 
@@ -496,7 +496,7 @@ This delay between soloist and accompaniment has been observed frequently in the
 
 Increased tempo predicts significantly reduced asynchrony; for every $SD$ increase in tempo, mean pianist-accompaniment asynchrony decreases by $-0.4\%$ of the duration of a quarter note beat ($p < .05$, 95\% CI: $[-0.7, -0.1]$). There is a significant interaction between accompanying instrument and tempo ($\beta = 0.3, p < .01$, 95\% CI: $[0.1, 0.5]$). Faster performances thereby have tighter soloist-accompaniment synchronisation than slower ones, with this effect being stronger for piano-bass synchronisation than piano-drums.\footnote{It is also important to be aware of how, at faster tempo values, the slight variation in onset detection accuracy between instrument classes could also have had an impact on these results. At the mean tempo in \GLS{JTD}, the 1.5 ms difference between bass and piano annotation is equivalent to 0.5\% of the duration of a quarter note.}
 
-The size of this effect is relatively small, however, with less than a 256th note difference (1.56\% of a quarter note beat) in predicted mean asynchrony between pianist and bassist at both the slowest and fastest tempo in the corpus. The amount of variation in the data explained by the fixed effects is only 5.6\%, compared with 29.3\% for fixed and random effects --- suggesting that differences between ensembles could be a more likely source of variation.
+The size of this effect is relatively small, however, with less than a 256th note difference (1.56\% of a quarter note beat) in predicted mean asynchrony between pianist and bassist at both the slowest and fastest tempo in the corpus. The amount of variation in the data explained by the fixed effects is only 5.6\%, compared with 29.3\% for fixed and random effects --- suggesting that differences between ensembles could be a more likely source of variation. \added[id=HC]{We explicitly test this assumption in Chapter \ref{chap:rhythm_rsos}.}
 
 \section{Discussion}
 

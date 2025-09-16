@@ -27,6 +27,8 @@
 
 % Adding packages
 \usepackage{graphicx, booktabs, rotating, svg, subfig, amsmath, placeins, url, minted, amsfonts, float, tabularx, multirow, setspace, algpseudocode, algorithm}
+\usepackage[authormarkup=superscript,]{changes}
+\definechangesauthor[name={HWC},color=red]{HC}
 
 %% Fucking LateX, this shit is cursed
 % remove quotations from article titles
@@ -155,7 +157,7 @@ Jazz Improvisation}
 }
 \newglossaryentry{TSD}{
     name=TSD,
-    description={TimeShift Duration \citep{Fradet2023-impact}}
+    description={TimeShift-Duration \citep{Fradet2023-impact}}
 }
 \newglossaryentry{CNN}{
     name=CNN,
