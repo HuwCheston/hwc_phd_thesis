@@ -4,7 +4,7 @@
 
 Given its lack of notated scores and the freedoms afforded to its performers, improvised jazz is a musical genre that has often resisted computational analysis. Recent advances in automatic music transcription, however, have enabled the creation of several large-scale databases of annotated jazz recordings \citep[e.g.,][]{Edwards2023, Foster2021}. This allows researchers to scale up the analysis of jazz improvisation to a degree that has not previously been possible.
 
-Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project is to develop a database that includes annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronisation. However, we also wish to include automatically extracted pitch and velocity data for instruments where this has seen some previous work \citep[e.g., piano: see][]{Kong2021}.
+Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project is to develop a database that includes annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronisation. However, we also wish to include automatically extracted pitch and velocity data \added[id=HC]{(the latter of which quantifies aspects of musical dynamics and ``touch'')} for instruments where this has seen some previous work \citep[e.g., piano: see][]{Kong2021}.
 		
 To extract data from a mixed ensemble recording, we leverage recent developments in audio source separation and timing annotation. Using deep learning, it has become possible to separate isolated sources from an audio mixture with massively increased fidelity compared to earlier approaches. The quality of separation still depends on the instrument, however, with vocals, bass, piano, and drums separation having seen the majority of work, while the separation of brass and stringed instruments remains at an earlier stage \citep[see, e.g.,][]{Riley2024-omnibook}.
 		
@@ -58,7 +58,7 @@ FiloBass \citep{Riley2023} expands FiloSax with transcriptions of the bassist's 
 
 \subsection{PiJAMA}\label{sec:jtd_pijama_description}
 
-Piano Jazz with \added[id=HC]{Automatic} MIDI Annotations (\GLS{PiJAMA}) consists of 200+ hours of solo jazz piano performances transcribed using a pitch-to-MIDI algorithm \citep{Edwards2023}. The methodology used by the \GLS{PiJAMA} authors has several similarities with our contribution: curated playlists of relevant music were developed by scraping discographic services, and audio was downloaded from YouTube. Although comprehensive, \GLS{PiJAMA} includes solo piano recordings only, while the authors acknowledge that it is far more common for jazz pianists to perform in a trio with bass and drums. 
+\added[id=HC]{The} Piano Jazz with \added[id=HC]{Automatic} MIDI Annotations (\GLS{PiJAMA}) \added[id=HC]{dataset} consists of 200+ hours of solo jazz piano performances transcribed using a pitch-to-MIDI algorithm \citep{Edwards2023}. The methodology used by the \GLS{PiJAMA} authors has several similarities with our contribution: curated playlists of relevant music were developed by scraping discographic services, and audio was downloaded from YouTube. Although comprehensive, \GLS{PiJAMA} includes solo piano recordings only, while the authors acknowledge that it is far more common for jazz pianists to perform in a trio with bass and drums. 
 
 In Chapter~\ref{chap:xai_rsi}, we combine a subset of \GLS{PiJAMA} with \GLS{JTD} to create a large dataset usable in jazz performer identification. In Chapter \ref{chap:conditioned_gen}, we use the entire \GLS{PiJAMA} dataset (alongside the entire \GLS{JTD}, and several other datasets) to create what we believe to be the largest dataset of MIDI transcriptions of solely jazz piano performances (approximately 300 hours of performances, see Table \ref{tab:gen_finetuning_dataset}). We then use this dataset to train a music generation model to produce music conditioned on particular styles of jazz.
 
@@ -70,7 +70,7 @@ Five of the 50 recordings contained in the RWC-Jazz database \citep{Goto2002} fe
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/jtd/figure_1.png}
+  \includegraphics[width=0.9\textwidth]{figures/jtd/figure_1_alt.png}
   \caption[Process followed for constructing \GLS{JTD}.]{Process followed for constructing \GLS{JTD}. Arrow block symbols indicate stages where tracks/artists may be removed.}
 \label{fig:jtd_construction}
 \end{figure}
@@ -94,7 +94,7 @@ We search the Last.fm platform to obtain an overview of jazz listening habits. L
 
 From the resulting list of performers and groups, we select only those with the word ``Trio'' in their name. This leaves 249 unique performers or groups. While the names of many of the ``usual suspects'' feature prominently in this list (e.g., Bill Evans, Keith Jarrett), it also includes several performers who are mainly known in other genres (e.g., Dee Felice, who accompanied soul singer James Brown when he performed jazz standards) or who mostly composed soundtrack or ``stock'' music (e.g., Vince Guaraldi, famous for the soundtrack to ``A Charlie Brown Christmas'': see Figure~\ref{fig:jtd_total_streams}).
 
-We then cross-reference the Last.fm results against two major jazz textbooks, keeping only those artists that receive a mention in the discographies of either Ted Gioia's ``The History of Jazz'' \citeyearpar{Gioia2011} or Mark Levine's ``The Jazz Piano Book'' \citeyearpar{Levine2011}. The intention here is to capture artists regarded highly by jazz experts. We note, however, that the retrospective nature of these textbooks could exclude performers who have become active only in recent years (or, indeed, in the time since their publication). Future revisions of \GLS{JTD} may use subsequent editions of both textbooks. 
+We then cross-reference the Last.fm results against two major jazz textbooks, keeping only those artists that receive a mention in the discographies of either Ted Gioia's ``The History of Jazz'' \citeyearpar{Gioia2011} or Mark Levine's ``The Jazz Piano Book'' (\citeyear{Levine2011-1}a). The intention here is to capture artists regarded highly by jazz experts. We note, however, that the retrospective nature of these textbooks could exclude performers who have become active only in recent years (or, indeed, in the time since their publication). Future revisions of \GLS{JTD} may use subsequent editions of both textbooks. 
 
 This narrows the total number of groups to 33, all of which are named after a single musician (e.g., the Oscar Peterson Trio). This musician would have both led the ensemble and typically would be expected to compose the majority of the compositions they would play. Two bandleaders are bassists (Dave Holland and Ray Brown) and the remainder are pianists; no bandleaders are drummers.
 
@@ -162,7 +162,7 @@ For each of these bandleaders, we sort their tracks in \GLS{JTD} chronologically
 \begin{figure}[!ht]
   \centering
   \includesvg[width=1.0\textwidth]{figures/rsos_rhythm/figure_s1}
-  \caption[Duration of recordings in \GLS{JTD-300}.]{Duration of recordings in \GLS{JTD-300}. Each column shows the total duration of the recordings by every bandleader with recordings in \GLS{JTD-300}, with the green proportion corresponding with those tracks that are included within each subset (shown also as a percentage along the columns).}
+  \caption[Duration of recordings in \GLS{JTD-300}.]{Duration of recordings in \GLS{JTD-300}. Each \replaced[id=HC]{bar}{column} shows the total duration of the recordings by every bandleader with recordings in \GLS{JTD-300}, with the green proportion corresponding with those tracks that are included within each subset (shown also as a percentage along the columns).}
 \label{fig:rsos_bandleader_proportions}
 \end{figure}
 
@@ -187,7 +187,7 @@ The \texttt{ZFTurbo} audio source separation model \citep{Solovyev2024} is used 
 
 \subsubsection{Audio Channel Selection}
 
-Before the development of full-spectrum stereophonic panning in the 1970s, audio signals could only be panned to the left or right speaker output, or both (centre channel). For tracks in \GLS{JTD} where at least one instrument in the trio was hard-panned in this manner (39\%), source separation is applied independently to the left and right monaural signals alongside the centre output. The required channel is identified manually for each instrument during the metadata curation process (see Section~\ref{sec:jtd_metadata_curation}).
+Before the development of full-spectrum stereophonic panning in the 1970s, audio signals could only be panned to the left or right speaker output, or both (centre channel). For tracks in \GLS{JTD} where at least one instrument in the trio was hard-panned in this manner (39\%), source separation is applied independently to the left and right monaural signals alongside the centre output \added[id=HC]{in order to obtain the cleanest result for each instrument \citep{Riley2023}}. The required channel is identified manually for each instrument during the metadata curation process (see Section~\ref{sec:jtd_metadata_curation}).
 
 \subsubsection{Audio Pre-processing}\label{sec:jtd_audio_preprocessing}
 
@@ -238,11 +238,11 @@ The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect th
     \State $D_{s} \gets \text{sorted}(D)$
     \State $Q_{1} \gets \text{quartile}(D_{s}, \ 0.25)$
     \State $Q_{3} \gets \text{quartile}(D_{s}, \ 0.75)$
-    \State $IQR_D \gets Q_3 - Q_1$  
+    \State $R_D \gets Q_3 - Q_1$  
     \LineComment{Filter beat array based on interquartile range}
     \State Initialize array $D_{f}$ as \texttt{empty}
     \For{$d \in D$}
-        \If{$d \geq Q_1 - 1.5IQR_D$ \textbf{and} $d \leq Q_3 + 1.5IQR_D$}
+        \If{$d \geq Q_1 - 1.5R_D$ \textbf{and} $d \leq Q_3 + 1.5R_D$}
             \State Append $d$ to $D_{f}$
         \EndIf
     \EndFor
@@ -261,7 +261,7 @@ The \texttt{DBNDownBeatTracker} function in \texttt{madmom} is used to detect th
 \end{algorithmic}
 \end{algorithm}
 
-We design an algorithm that applies the \texttt{DBNDownBeatTracker} to an audio signal multiple times (Algorithm \ref{alg:jtd_beat_track_iteration}). The \texttt{DBNDownBeatTracker} takes as arguments the minimum and maximum allowed tempi for detected beats. We set this initially to 100 and 300 beats-per-minute, respectively, as in our inclusion criteria (Section \ref{sec:jtd_inclusion_criteria}). Over a number of iterations $I$, we then apply the tracker, calculate the instantaneous tempo at every beat, remove tempo values that are outliers, and recalculate the minimum and maximum allowed tempi using the new, filtered, beat timestamps. We optimise $I$ specifically for the recordings in \GLS{JTD} (see Section \ref{sec:jtd_validation}). The downbeat classes estimated from the \GLS{RNN} are then combined with the time signature for the recording, in order to assign measure numbers to every timestamp detected with Algorithm \ref{alg:jtd_beat_track_iteration}. 
+We design an algorithm that applies the \texttt{DBNDownBeatTracker} to an audio signal multiple times (Algorithm \ref{alg:jtd_beat_track_iteration}). The \texttt{DBNDownBeatTracker} takes as arguments the minimum and maximum allowed tempi for detected beats. We set this initially to 100 and 300 beats-per-minute, respectively, as in our inclusion criteria (Section \ref{sec:jtd_inclusion_criteria}). Over a number of iterations $I$, we then apply the tracker, calculate the instantaneous tempo at every beat, remove tempo values that are outliers, and recalculate the minimum and maximum allowed tempi using the new, filtered, beat timestamps. We \replaced[id=HC]{obtain a single, optimised value of $I$ for all the recordings in \GLS{JTD} using the process described in Section~\ref{sec:jtd_validation}}{optimise $I$ specifically for the recordings in \GLS{JTD} (see Section \ref{sec:jtd_validation})}. The downbeat classes estimated from the \GLS{RNN} are then combined with the time signature for the recording, in order to assign measure numbers to every timestamp detected with Algorithm \ref{alg:jtd_beat_track_iteration}. 
 
 \subsubsection{Beat-Onset Matching}\label{sec:jtd_beat_onset_matching}
 
@@ -281,7 +281,7 @@ The combined duration of the 34 recordings in the subsample is 72 minutes. The m
 
 The performance of the pipeline is determined by considering the proportion of detected annotations that occur within a 50 ms window of a ground truth annotation. For every track in the subsample, separate precision, recall, and $F$-measures are computed for each class: (1--3) the onsets within each unmixed instrumental source, and (4) the quarter note beats and (5) downbeats within the audio mixture. When $F = 1.0$, every onset or beat detected by the pipeline can be matched with a ground truth annotation, with no onsets or beats unmatched. 
 
-We apply the gradient-free, non-linear optimisation algorithm \texttt{subplex} \citep{Rowan1990} implemented in the \texttt{NLopt} (version \texttt{2.7.1}) Python package to set the parameters of the beat and onset detection algorithms separately for each audio source.\footnote{\url{https://github.com/stevengj/nlopt}} In every case, the mean value of $F$ across the entire hand-annotated subsample is treated as the objective function to maximise. Note that, for the beat detection algorithm, only the $F$-measure obtained from evaluating the beat timestamps --- and not the downbeats --- is considered during optimisation.
+We apply the gradient-free, non-linear optimisation algorithm \texttt{subplex} \citep{Rowan1990} implemented in the \texttt{NLopt} (version \texttt{2.7.1}) Python package to set the parameters of the beat and onset detection algorithms separately for each audio source.\footnote{\url{https://github.com/stevengj/nlopt}} In every case, the mean value of $F$ across the entire hand-annotated subsample is treated as the objective function to maximise. Note that, for the beat detection algorithm, only the $F$-measure obtained from evaluating the beat timestamps --- and not the downbeats --- is considered during optimisation. \added[id=HC]{We do not use a separate, held-out validation set here due to both the representative nature of the subsample (which reduces the likelihood of over-fitting, e.g., to an explicit pianist or acoustic condition), and the relatively small number of parameters updated by the optimisation process (compared to explicitly fine-tuning the weights of the models: see Section~\ref{sec:gen_finetuning}).}
 
 \begin{table}[H]
 \centering
@@ -360,7 +360,7 @@ Finally, for hypothesis (3), we collect automatic and manual onset annotations m
 
 \section{Analysis}
 
-Across \GLS{JTD}, there are 2,206,413 onsets (piano: 866,116, bass: 543,693, drums: 796,604) and 512,272 beat timestamps, 130,547 of which are labelled as downbeats. On average, a solo contains 669 piano onsets, 420 bass onsets, 616 drums onsets, 396 beats, and 101 downbeats. 87.4\% of beat timestamps can be matched with a drum onset, and 82.0\% matched with a bass onset; only 71.0\% of beats could be matched with a piano onset, which underlines how keeping time is typically not the primary aim of jazz soloists.
+Across \GLS{JTD}, there are 2,206,413 onsets (piano: 866,116, bass: 543,693, drums: 796,604) and 512,272 beat timestamps, 130,547 of which are labelled as downbeats. On average, a solo contains 669 piano onsets, 420 bass onsets, 616 drum\deleted[id=HC]{s} onsets, 396 beats, and 101 downbeats. 87.4\% of beat timestamps can be matched with a drum onset, and 82.0\% matched with a bass onset; only 71.0\% of beats could be matched with a piano onset, which underlines how keeping time is typically not the primary aim of jazz soloists.
 
 \subsection{Solo Duration}
 
@@ -390,19 +390,19 @@ Rather than working directly with the timestamps estimated from the beat tracker
 
 The mean tempo $\bar{y}$ of a recording in beats-per-minute is calculated as 
 \begin{align}\label{eq:mean_tempo}
-\bar{y} = \dfrac{\sum\limits_{i=1}^N\frac{60}{x_i - x_{i-1}}}{N-1} \ ,
+\bar{y} = \dfrac{\sum\limits_{i=2}^N\frac{60}{x_i - x_{i-1}}}{N-1} \ ,
 \end{align}
 where $x_i$ is the mean of all onsets matched to beat $i$ ($i \geq 1$) and neither $x_i$ or $x_{i-1}$ are set to missing. Across \GLS{JTD}, the observed $\text{mean}(\bar{y}) = 193.92 \ \text{BPM}$ ($SD = 46.93$, Figure~\ref{fig:jtd_mean_tempo}); this is comparable to the equivalent result calculated using the timestamps $y'$ estimated from the beat tracking algorithm ($\text{mean}(\bar{y'}) = 193.70, SD = 46.59$). The slowest performance in \GLS{JTD} has a mean tempo of 102.10 BPM (Cedar Walton, ``Ghost of a Chance'', 2010) and the fastest 299.82 BPM (John Hicks, ``Airegin'', 1987).
 
 As a measure of tempo stability, for each track we obtain the standard deviation of the tempo normalised by the mean tempo i.e., the percentage fluctuation about the overall tempo (``tempo fluctuation'', $\delta y$). This can be written simply as
 \begin{align}\label{eq:tempo_fluctuation}
-\delta y = \dfrac{\sqrt{\frac{1}{N-1} \sum\limits_{i=1}^N (y_i - \bar{y})^2}}{\bar{y}} \ ,
+\delta y = \dfrac{\sqrt{\frac{1}{N-1} \sum\limits_{i=2}^N (y_i - \bar{y})^2}}{\bar{y}} \ ,
 \end{align}
 where $y_i$ is the tempo value in quarter-note beats-per-minute at beat $i$ (i.e., $y_i = \dfrac{60}{x_i-x_{i-1}}$). We observe $\text{mean}(\delta y) = 5.55\%$ ($SD = 2.70$) for \GLS{JTD} recordings, suggesting that they are generally stable.
 
 We also calculate the slope of a linear regression of instantaneous tempo against beat onset time (``tempo slope'', $\hat{S}$) using the standard least squares formula
 \begin{align}\label{eq:tempo_slope}
-\hat{S} = \frac{\sum\limits_{i=1}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2} \ ,
+\hat{S} = \frac{\sum\limits_{i=2}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2} \ ,
 \end{align}
 such that $\hat{S} > 0$ implies acceleration and $\hat{S} < 0$ implies deceleration. We observe $\text{mean}(\hat{S}) = 0.04\ \text{BPM/s}$ ($SD = 0.10$) for \GLS{JTD} recordings, suggesting that they display a very slight tendency towards acceleration (with a predicted increase of 1 BPM every 25 seconds).
 
@@ -410,13 +410,13 @@ There is no correlation between signed tempo slope and unsigned tempo fluctuatio
 
 \subsection{Swing}\label{sec:jtd_swing}
 
-In jazz, swing refers to the division of the pulse into alternating long and short intervals. Expressed in Western notation, the long interval is typically written as a quarter note triplet, and the short as an eighth note triplet. Empirically, swing can be measured by taking the ratio of these long and short durations --- the swing or ``beat-upbeat ratio'' (\GLS{BUR}), commonly expressed in binary logarithmic form in the literature. This can be written simply as
+In jazz, swing refers to the division of the pulse into alternating long and short intervals. Expressed in Western notation, the long interval is typically written as a quarter note triplet, and the short as an eighth note triplet. Empirically, swing can be measured by taking the ratio of these long and short durations --- the swing or ``beat-upbeat ratio'' (\textit{\GLS{BUR}}), commonly expressed in binary logarithmic form in the literature. This can be written simply as
 \begin{align}\label{eq:jtd_bur}
-log_2(BUR)=log_2\biggl(\frac{t_{a,b}-t_{a}}{t_{b}-t_{a,b}}\biggr) \ ,
+log_2(\mathit{BUR})=log_2\biggl(\frac{t_{a,b}-t_{a}}{t_{b}-t_{a,b}}\biggr) \ ,
 \end{align}
-where $t_a$ is the onset matched with beat $a$, $t_b$ is the onset matched with beat $b$ (i.e., at beat $a + 1$), and $t_{a,b}$ is the single onset between beats $a$ and $b$. For notated ``swung'' eighths, $log_2(BUR) = 1.0$ ($BUR = 2:1$); vice versa, for ``straight'' eighths (i.e., the equal-equal subdivision of the beat), $log_2(BUR) = 0.0$ ($BUR = 1:1$).
+where $t_a$ is the onset matched with beat $a$, $t_b$ is the onset matched with beat $b$ (i.e., at beat $a + 1$), and $t_{a,b}$ is the single onset between beats $a$ and $b$. For notated ``swung'' eighths, $log_2(\mathit{BUR}) = 1.0$ ($\mathit{BUR} = 2:1$); vice versa, for ``straight'' eighths (i.e., the equal-equal subdivision of the beat), $log_2(\mathit{BUR}) = 0.0$ ($\mathit{BUR} = 1:1$).
 
-We search our database for all discrete groupings of three onsets, where the first and last mark the quarter note pulse. The total number of such groupings is 417,278. Following the analysis of \GLS{WJD} by \citet{Corcoran2021}, we classify ratios above 4:1 ($log_2(BUR) = 2$) and below 1:4 ($log_2(BUR) = -2$) as outliers, which results in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset is 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
+We search our database for all discrete groupings of three onsets, where the first and last mark the quarter note pulse. The total number of such groupings is 417,278. Following the analysis of \GLS{WJD} by \citet{Corcoran2021}, we classify ratios above 4:1 ($log_2(\mathit{BUR}) = 2$) and below 1:4 ($log_2(\mathit{BUR}) = -2$) as outliers, which results in the exclusion of 2.10\% of these groupings. The final number of beat-upbeat ratios in the dataset is 408,506 (piano: 151,640, bass: 47,115, drums: 209,751).
 
 \subsubsection{Differences in Swing Between Instruments}\label{sec:jtd_differences_in_swing_between_instruments}
 
@@ -424,13 +424,13 @@ To evaluate the differences in swing ratio between the instruments in the trio, 
 
 \begin{sidewaysfigure}[ph!]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_8}
-  \caption[Distribution of $log_2(BUR)$s between instruments across \GLS{JTD}]{Distribution of $log_2(BUR)$s between instruments across \GLS{JTD}, normalised such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
+  \caption[Distribution of $log_2(\mathit{BUR})$s between instruments across \GLS{JTD}]{Distribution of $log_2(\mathit{BUR})$s between instruments across \GLS{JTD}, normalised such that the height of the largest bar in each panel is 1. Dotted vertical lines show peaks of the density estimates; straight lines correspond with the musical notation given along the top of the panel.}
 \label{fig:jtd_bur_distribution_by_instrument}
 \end{sidewaysfigure}
 
-For the piano, we find one peak in the density estimate, corresponding with $log_2(BUR)$ of 0.37 ($BUR = 1.44:1$, 95\% CI: $[0.15, 0.43]$). For the bass, we find two peaks, corresponding with $log_2(BURs)$ of 0.06 ($1.06:1$, $[0.03, 0.13]$) and 1.23 ($3.41:1$, $[1.15, 1.27]$). For the drums, we also find two peaks, at $log_2(BUR) = -0.91$ ($0.40:1$, $[-1.15, -0.70]$) and 1.18 ($3.25:1$, $[1.13, 1.23]$). These density estimates and the corresponding peaks are shown in Figure~\ref{fig:jtd_bur_distribution_by_instrument}.
+For the piano, we find one peak in the density estimate, corresponding with $log_2(\mathit{BUR})$ of 0.37 ($\mathit{BUR} = 1.44:1$, 95\% CI: $[0.15, 0.43]$). For the bass, we find two peaks, corresponding with $log_2(\mathit{BURs})$ of 0.06 ($1.06:1$, $[0.03, 0.13]$) and 1.23 ($3.41:1$, $[1.15, 1.27]$). For the drums, we also find two peaks, at $log_2(\mathit{BUR}) = -0.91$ ($0.40:1$, $[-1.15, -0.70]$) and 1.18 ($3.25:1$, $[1.13, 1.23]$). These density estimates and the corresponding peaks are shown in Figure~\ref{fig:jtd_bur_distribution_by_instrument}.
 
-This analysis suggests that (1) all instrument classes primarily target long-short divisions of the beat, with the percentage of total $log_2(BURs) > 0.0 = 88.6\%$ (piano: 81.9\%, bass: 89.1\%, drums: 93.4\%); (2) pianist beat-upbeat ratios are closer to notated ``straight'' than ``swung'' eighths, judging by the peak of their density estimate; (3) in contrast, the larger of the two peaks in the bass and drums density estimates suggest that both instruments tend towards higher beat-upbeat ratios than would be implied by notated swing eighths alone. 
+This analysis suggests that (1) all instrument classes primarily target long-short divisions of the beat, with the percentage of total $log_2(\mathit{BURs}) > 0.0 = 88.6\%$ (piano: 81.9\%, bass: 89.1\%, drums: 93.4\%); (2) pianist beat-upbeat ratios are closer to notated ``straight'' than ``swung'' eighths, judging by the peak of their density estimate; (3) in contrast, the larger of the two peaks in the bass and drum\deleted[id=HC]{s} density estimates suggest that both instruments tend towards higher beat-upbeat ratios than would be implied by notated swing eighths alone. 
 
 The fact that soloists tend to swing less than the expected $2:1$ ratio --- while accompanists swing ``more'' than this --- has been well documented. \citet{Butterfield2011} has, for instance, suggested that relatively ``straight'' eighth notes help to maintain forward momentum in a soloist's improvisation, while the more ``swung'' eighth notes of the accompaniment help to facilitate hierarchical beat perception.
 
@@ -438,48 +438,48 @@ We also note that the mean beat-upbeat ratio for piano soloists in \GLS{JTD} ($1
 
 \subsubsection{Effect of Tempo on Swing}\label{sec:jtd_effect_of_tempo_on_swing}
 
-Next, we consider the relationship between swing and the tempo of a performance. We fit a linear mixed effects model using the implementation in the \texttt{statsmodels} (version \texttt{0.13.1}) Python library \citep{Seabold2010}. We predict a performer's mean $log_2(BUR)$ using the mean tempo of the recording (standardised through $z$-transformation), their instrument, and the interaction between tempo and instrument as fixed effects (with piano as the reference category). Bandleader is used as a random effect (slopes and intercepts). An individual musician's performance is excluded if 15 ratios could not be obtained, which results in 471 individual performances out of 3,865 being excluded (piano: 30, bass: 401, drums: 40).
+Next, we consider the relationship between swing and the tempo of a performance. We fit a linear mixed effects model using the implementation in the \texttt{statsmodels} (version \texttt{0.13.1}) Python library \citep{Seabold2010}. We predict a performer's mean $log_2(\mathit{BUR})$ using the mean tempo of the recording (standardised through $z$-transformation), their instrument, and the interaction between tempo and instrument as fixed effects (with piano as the reference category). Bandleader is used as a random effect (slopes and intercepts). An individual musician's performance is excluded if 15 ratios could not be obtained, which results in 471 individual performances out of 3,865 being excluded (piano: 30, bass: 401, drums: 40).
 
 \begin{figure}[!ht]
   \centering
   \includesvg[width=0.75\textwidth]{figures/jtd/figure_9}
-  \caption[Mean $log_2(BUR)$ and tempo for an individual recording and instrument in \GLS{JTD}.]{Mean $log_2(BUR)$ and tempo for an individual recording and instrument in \GLS{JTD}. Solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
+  \caption[Mean $log_2(\mathit{BUR})$ and tempo for an individual recording and instrument in \GLS{JTD}.]{Mean $log_2(\mathit{BUR})$ and tempo for an individual recording and instrument in \GLS{JTD}. Solid lines show predictions (without random effects), shaded areas show 95\% confidence intervals (obtained via bootstrapping over data from different pianists, $N = 10,000$)}
 \label{fig:jtd_bur_vs_tempo}
 \end{figure}
 
-An increase in mean tempo is a significant predictor of a decrease in mean beat-upbeat ratio for a recording (Figure~\ref{fig:jtd_bur_vs_tempo}), with a one $SD$ change in BPM associated with a decrease of -0.14 mean $log_2(BUR)$ ($p < .001$, 95\% CI: $[-0.16, -0.12]$). This suggests that it becomes harder for musicians to articulate long-short subdivisions of the quarter note as its duration decreases. This ``straightening'' effect has also been observed in analyses of both \GLS{WJD} \citep{Corcoran2021} and FiloSax \citep{Foster2021}.
+An increase in mean tempo is a significant predictor of a decrease in mean beat-upbeat ratio for a recording (Figure~\ref{fig:jtd_bur_vs_tempo}), with a one $SD$ change in BPM associated with a decrease of -0.14 mean $log_2(\mathit{BUR})$ ($p < .001$, 95\% CI: $[-0.16, -0.12]$). This suggests that it becomes harder for musicians to articulate long-short subdivisions of the quarter note as its duration decreases. This ``straightening'' effect has also been observed in analyses of both \GLS{WJD} \citep{Corcoran2021} and FiloSax \citep{Foster2021}.
 
 There are significant interactions between instrument and tempo for both the bassist ($\beta= -0.06, p < .001$, 95\% CI: $[-0.09, -0.04]$) and drummer ($\beta= -0.10, p < .001$, 95\% CI: $[-0.12, -0.08]$). Put differently, the ``straightening'' effect is more severe for accompanying (rather than soloist) roles. The amount of variance in the data explained by both the fixed and random effects of the model is 58.8\%, compared with 61.9\% for the fixed effects only. This suggests only minimal differences in the effect of tempo on swing between ensembles.
 
 \subsubsection{Effect of Recording Year on Swing}
 
-We fit the model described in Section~\ref{sec:jtd_effect_of_tempo_on_swing} with an additional fixed effect of recording year (standardised via $z$-transformation) and the interaction between year and tempo. Increases in recording year have no significant main effect on mean $log_2(BUR)$ ($\beta = 0.01, p = 0.44$, 95\% CI: $[-0.02, 0.05]$), and there is no significant interaction between year and tempo ($\beta < 0.01, p = 0.79$, 95\% CI: $[-0.01, 0.01]$). Including the year of recording in the model also results in minimal change to the amount of variance it explains (conditional $R_2 = 62.8\%$, marginal $R_2 = 59.3\%$).
+We fit the model described in Section~\ref{sec:jtd_effect_of_tempo_on_swing} with an additional fixed effect of recording year (standardised via $z$-transformation) and the interaction between year and tempo. Increases in recording year have no significant main effect on mean $log_2(\mathit{BUR})$ ($\beta = 0.01, p = 0.44$, 95\% CI: $[-0.02, 0.05]$), and there is no significant interaction between year and tempo ($\beta < 0.01, p = 0.79$, 95\% CI: $[-0.01, 0.01]$). Including the year of recording in the model also results in minimal change to the amount of variance it explains (conditional $R_2 = 62.8\%$, marginal $R_2 = 59.3\%$).
 
 This suggests that the year a track was recorded has minimal impact on the levels of swing displayed by the musicians. These results should not be taken as indicative of global trends in swing timing, however, as the recordings in \GLS{JTD} are mostly representative of the ``straight ahead'' jazz style, as practised throughout the last century. Prior analysis of \GLS{WJD} has demonstrated tangible differences in swing between jazz styles \citep{Corcoran2021}.
 
 \subsubsection{Comparison with Existing Datasets}\label{sec:jtd_dataset_comparison}
 
-Finally, we want to compare the levels of ``swing'' demonstrated in \GLS{JTD} with existing open-source datasets of annotated jazz performances. We select \GLS{WJD} for comparison to \GLS{JTD} piano recordings and FiloBass for comparison to \GLS{JTD} bass recordings. We scrape all tracks from both databases that meet the tempo and style inclusion criteria for \GLS{JTD}.
+Finally, we want to compare the levels of ``swing'' demonstrated in \GLS{JTD} with existing open-source datasets of annotated jazz performances. We select \GLS{WJD} for comparison to \GLS{JTD} piano recordings and FiloBass for comparison to \GLS{JTD} bass recordings. 
 
 \begin{sloppypar}
-For \GLS{WJD}, this means that we include tracks where \texttt{instrument == "piano"}, \texttt{rhythmfeel == "SWING"}, and $100 \leq \texttt{avgtempo} \leq 300$, using the metadata provided in the \texttt{solo\_info} table. Likewise, for FiloBass we include tracks that are tagged as \texttt{"Swing"}, have either a 3/4 or 4/4 time signature, and where the provided downbeat annotations suggest a tempo between 100 and 300 BPM. This leaves 6 out of 456 recordings in \GLS{WJD} and 44 out of 48 FiloBass tracks. No tracks are duplicated across the three datasets; however, some of the same performers do appear, including bassists Ron Carter and Ray Drummond in both FiloBass and \GLS{JTD}.
+We scrape all tracks from \replaced[id=HC]{\GLS{WJD}}{both databases} that meet the tempo and style inclusion criteria for \GLS{JTD}; \added[id=HC]{this means that we include tracks where \texttt{instrument == "piano"}, \texttt{rhythmfeel == "SWING"}, and $100 \leq \texttt{avgtempo} \leq 300$, using the metadata provided in the \texttt{solo\_info} table. This leaves 6 out of 456 recordings. For FiloBass, as all tracks have a 4/4 time signature, a tempo between 111 and 226 BPM, and a consistent ``swing'' feel \citep{Foster2021}, we can compare the entirety of this database (48 tracks) with \GLS{JTD}.} No tracks are duplicated across the three datasets; however, some of the same performers do appear, including bassists Ron Carter and Ray Drummond in both FiloBass and \GLS{JTD}.
 \end{sloppypar}
 
 \begin{sidewaysfigure}[ph!]
   \includesvg[width=1.0\textwidth]{figures/jtd/figure_x1}
-  \caption[Distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass]{Distribution of $log_2(BUR)$s for recordings in \GLS{WJD} and FiloBass, following the format in Figure~\ref{fig:jtd_bur_distribution_by_instrument}.}
+  \caption[Distribution of $log_2(\mathit{BUR})$s for recordings in \GLS{WJD} and FiloBass]{Distribution of $log_2(\mathit{BUR})$s for recordings in \GLS{WJD} and FiloBass, following the format in Figure~\ref{fig:jtd_bur_distribution_by_instrument}.}
 \label{fig:jtd_bur_distribution_by_dataset}
 \end{sidewaysfigure}
 
-We then match onset annotations from both \GLS{WJD} and FiloBass with their nearest annotated quarter-note beats and extract \GLS{BUR}s. Only downbeat annotations are provided for FiloBass, however, so we annotate the remaining beats between successive downbeat timestamps through linear interpolation according to the time signature of the recording. As outlined in Section~\ref{sec:jtd_swing}, we discard \GLS{BUR}s outside the range of $-2 < log_2(BUR) < 2$. We extract 707 \GLS{BUR}s for \GLS{WJD} and 3,218 for FiloBass. We show normalised kernel density and peak estimates for the $log_2(BUR)$ distributions in both datasets in Figure~\ref{fig:jtd_bur_distribution_by_dataset}, following the process outlined in Section~\ref{sec:jtd_differences_in_swing_between_instruments}.
+We then match onset annotations from both \GLS{WJD} and FiloBass with their nearest annotated quarter-note beats and extract \textit{\GLS{BUR}s}. Only downbeat annotations are provided for FiloBass, however, so we annotate the remaining beats between successive downbeat timestamps through linear interpolation \replaced[id=HC]{, assuming a 4/4 time signature}{according to the time signature of the recording}. As outlined in Section~\ref{sec:jtd_swing}, we discard \textit{\GLS{BUR}s} outside the range of $-2 < log_2(\mathit{BUR}) < 2$. We extract 707 \textit{\GLS{BUR}s} for \GLS{WJD} and \replaced[id=HC]{}{3,218} for FiloBass. We show normalised kernel density and peak estimates for the $log_2(\mathit{BUR})$ distributions in both datasets in Figure~\ref{fig:jtd_bur_distribution_by_dataset}, following the process outlined in Section~\ref{sec:jtd_differences_in_swing_between_instruments}.
 
-With regard to the piano, the distribution of $log_2(BUR)$s in \GLS{WJD} is broadly equivalent to \GLS{JTD}, with one peak found at $log_2(BUR) = 0.05$ ($1.05:1$). This is considerably lower than the equivalent peak in \GLS{JTD} ($log_2(BUR) = 0.37, 1.44:1$). Inspecting this, we find that the mean tempo of the six piano recordings in \GLS{WJD} (275.63 BPM) is much higher than across \GLS{JTD} (193.92). As we have already shown in Figure~\ref{fig:jtd_bur_vs_tempo}, higher tempi lead to demonstrably ``straighter'' \GLS{BUR} values.
+With regard to the piano, the distribution of $log_2(\mathit{BUR})$s in \GLS{WJD} is broadly equivalent to \GLS{JTD}, with one peak found at $log_2(\mathit{BUR}) = 0.05$ ($1.05:1$). This is considerably lower than the equivalent peak in \GLS{JTD} ($log_2(\mathit{BUR}) = 0.37, 1.44:1$). Inspecting this, we find that the mean tempo of the six piano recordings in \GLS{WJD} (275.63 BPM) is much higher than across \GLS{JTD} (193.92). As we have already shown in Figure~\ref{fig:jtd_bur_vs_tempo}, higher tempi lead to demonstrably ``straighter'' \textit{\GLS{BUR}} values.
 
-With regard to the bass, we find two peaks in the distribution of \GLS{BUR}s obtained from FiloBass, at $log_2(BUR) = -0.22$ ($0.80:1$) and $log_2(BUR) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure~\ref{fig:jtd_bur_distribution_by_instrument}). However, we note that the proportion of ``straight'' bass \GLS{BUR}s (where $log_2(BUR)\approx0$) is significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are ``play-along'' backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply increased variance in the data, due to the smaller number of recordings in FiloBass versus \GLS{JTD}.
+With regard to the bass, we find two peaks in the distribution of \textit{\GLS{BUR}s} obtained from FiloBass, at $log_2(\mathit{BUR}) = -0.22$ ($0.80:1$) and $log_2(\mathit{BUR}) = 1.23$ ($3.41:1$). These are broadly similar to the two peaks found in \GLS{JTD} (see Figure~\ref{fig:jtd_bur_distribution_by_instrument}). However, we note that the proportion of ``straight'' bass \textit{\GLS{BUR}s} (where $log_2(\mathit{BUR})\approx0$) is significantly higher in FiloBass than in \GLS{JTD}. One possibility is that the recordings in FiloBass are ``play-along'' backing tracks (as opposed to commercial recordings), meaning that there was no soloist actually improvising during the recording session. Another possibility is simply increased variance in the data, due to the smaller number of recordings in FiloBass versus \GLS{JTD}.
 
 \subsection{Synchronisation}\label{sec:jtd_synchrony}
 
-Synchrony can be defined as the difference between onsets that demarcate the same musical event (e.g., a quarter note beat). While it can be expressed in absolute or ``raw'' units (milliseconds, frames), we express synchrony in relative terms instead, as a percentage of the duration of a single quarter note at the tempo of a track. This allows for comparison across performances made at different tempi. For example, a value of $+25\%$ implies that one musician plays a sixteenth note later than another. 
+\replaced[id=HC]{Synchrony can be quantified by considering the precise alignment of}{Synchrony can be defined as the difference between} onsets that mark the same musical event, such as a quarter note beat. While it can be expressed in absolute or ``raw'' units (milliseconds, frames), we express synchrony in relative terms instead, as a percentage of the duration of a single quarter note at the tempo of a track. This allows for comparison across performances made at different tempi. For example, a value of $+25\%$ implies that one musician plays a sixteenth note later than another. 
 
 \begin{figure}[!ht]
   \centering
