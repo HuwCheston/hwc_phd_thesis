@@ -144,26 +144,47 @@ Figure~\ref{fig:rsos_feature_correlations} shows the correlation between pairwis
 
 \subsection{Rhythmic Features Predict Jazz Performer Identity}\label{sec:rsos_rhythmic_features_predict_identity}
 
-We fit a random forest (\GLS{RF}) classification model to predict the identity of the pianist in a recording with our bag of 19 features, using the implementation in the \texttt{scikit-learn} (version \texttt{1.3.0}) Python library \citep{Pedregosa2011}. The \GLS{RF} classifier is a supervised machine learning algorithm that fits multiple decision trees to bootstrapped subsamples of data, with each tree ``voting'' on a given class and the majority vote taken as the predicted label of the whole ensemble. The \GLS{RF} is robust both to large numbers of predictors and to non-linear relationships between them, and has been used widely in prior work on authorship attribution \citep{Lydzbakopczynska2021, Ramirez2010}. The \GLS{RF} is also the backbone of the ``StyleRank'' system described by \citet{Ens2020}.
+\added[id=HC]{We train the three classical supervised-learning architectures described in Section~\ref{sec:rsi_handcrafted_methods} to predict the identity of the pianist in a recording with our bag of 19 features. To recap, these are: (1) a random forest (\GLS{RF}), (2) a support vector machine with linear kernel (\GLS{SVM}), and (3) a regularised multinomial logistic regression (\GLS{LR}). As before, all are implemented in the \texttt{scikit-learn} (version \texttt{1.3.0}) Python library \citep{Pedregosa2011}.}
 
-\begin{sidewaystable}[]
-\centering
-\caption[Performer identification model using rhythmic features, optimised parameters.]{Performer identification model using rhythmic features, optimised parameters. These parameters are obtained from the hyperparameter optimisation of the \GLS{RF} classification model, over a two-dimensional space with $N = 10,000$ iterations. All other parameters are set to their defaults: refer to the documentation of \texttt{scikit-learn} (version \texttt{1.3.0}) for further information.}
-\label{tab:rsos_rf_optimization}
-\begin{tabular}{l l c}
-\toprule
-\textbf{Parameter}         & \textbf{Description}                                              & \textbf{Value}   \\ \midrule
-\texttt{n\_estimators}           & The number of decision trees to grow                              & 114              \\
-\texttt{max\_features}           & The fraction of total features considered when splitting a node  & $log_2$            \\
-\texttt{max\_depth}              & The maximum number of nodes created per decision tree            & 86               \\
-\texttt{min\_samples\_split}     & The minimum number of samples required to split a node          & 5                \\
-\texttt{min\_samples\_leaf}      & The minimum number of samples required to be at a leaf node     & 1                \\
-\texttt{bootstrap}              & Whether to use bootstrap database samples when growing trees     & \texttt{True}             \\
-\bottomrule
-\end{tabular}
-\end{sidewaystable}
+\begin{table}[!ht]
+    \centering
+    \caption[Results for models trained on rhythmic features.]{Results for models trained on rhythmic features, averaged across all folds. Note that scores for the \GLS{SVM} below top-1 accuracy cannot be provided due to limitations in the \texttt{scikit-learn} implementation of this model.}
+    \label{tab:rsos_rhythm_results}
+    \begin{tabular}{l c c c c}
+        \toprule
+        \textbf{Architecture} & \multicolumn{4}{c}{\textbf{Accuracy (track)} $\uparrow$} \\ \cmidrule{2-5}
+         & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-5} \\ \midrule
+        Random Forest (\GLS{RF}) & \textbf{0.590} & \textbf{0.713} & 0.800 & \textbf{0.937} \\
+        Support Vector Machine (\GLS{SVM}) & 0.423 & -- & -- & -- \\
+        Logistic Regression (\GLS{LR}) & 0.493 & 0.693 & \textbf{0.830} & 0.933 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-We perform a randomised search over a two-dimensional parameter space ($N = 10,000$ iterations: see the description in Section~\ref{sec:rsi_handcrafted_training}) and find that a forest size of 114 decision trees (each with a maximum depth of 86 nodes) achieves ceiling accuracy for our dataset. Splits within every individual tree are performed considering a randomised subsample of $floor(log_2(f))$ total features, where $f$ is the total number of features in the bag. Thus, the values obtained from four individual features, sampled at random, are considered at each split. We show the full parameter settings after optimisation in Table~\ref{tab:rsos_rf_optimization}.
+\begin{table}[!ht]
+    \centering
+    \caption[Performer identification model using rhythmic features, optimised parameters.]{Performer identification model using rhythmic features, optimised parameters. These parameters are obtained following a randomised search over a two-dimensional space with $N = 10,000$ iterations ($2,000$ iterations per fold). Refer to Tables~\ref{tab:rsi_sm_rf_optimised_parameters}--\ref{tab:rsi_sm_lr_optimised_parameters} for the range of values tested for each parameter and their descriptions.}
+    \label{tab:rsos_rf_optimization}
+    \begin{tabular}{l l c}
+    \toprule
+    \textbf{Architecture} & \textbf{Parameter} & \textbf{Result}  \\ \midrule
+    Random Forest (\GLS{RF}) & \texttt{n\_estimators} & 114 \\
+    & \texttt{max\_depth} & 86 \\
+    & \texttt{max\_features} & $log_2$ \\
+    & \texttt{bootstrap} & False \\
+    & \texttt{min\_samples\_leaf} & 1 \\
+    & \texttt{min\_samples\_split} & 5 \\ \midrule
+    Support Vector Machine (\GLS{SVM}) & \texttt{C} & 3.736 \\
+    & \texttt{class\_weight} & None \\ \midrule
+    Logistic Regression (\GLS{LR}) & \texttt{C} & 482.170 \\
+    & \texttt{class\_weight} & balanced \\
+    & \texttt{penalty} & $\text{L}_2$ \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+\added[id=HC]{The optimisation process is similar to Section~\ref{sec:rsi_handcrafted_training}. However, given the reduced size of our dataset, we use $k$-fold cross-validation here ($k = 5$, $4:1$ train-test split), rather than an explicit train-validation-test split. The folds are stratified to maintain the balance of tracks by each pianist within the training and testing sets (i.e., 24 tracks per pianist in every training set). For every fold, we generate a two-dimensional hyperparameter space with the range of parameters shown in Tables~\ref{tab:rsi_sm_rf_optimised_parameters}--\ref{tab:rsi_sm_lr_optimised_parameters} ($N=2,000$ iterations per fold). We fit the model to the training split of that fold and measure the accuracy when predicting class labels for the testing split. We then treat the hyperparameter configuration that resulted in the highest mean test accuracy across every fold as the optimised configuration, and report this value in Table~\ref{tab:rsos_rhythm_results}. We show these optimised configurations in Table~\ref{tab:rsos_rf_optimization}.}
+
+\added[id=HC]{For our current data and feature set, we obtain the best classification accuracy using the \GLS{RF} architecture. This model fits multiple decision trees to bootstrapped subsamples of data, with each tree ``voting'' on a given class and the majority vote taken as the predicted label of the whole ensemble. The \GLS{RF} is robust both to large numbers of predictors and to non-linear relationships between them, and has been used widely in prior work on authorship attribution \citep{Lydzbakopczynska2021, Ramirez2010}. The \GLS{RF} is also the backbone of the ``StyleRank'' system described by \citet{Ens2020}.}
 
 \begin{figure}[t!]
   \centering
@@ -172,13 +193,17 @@ We perform a randomised search over a two-dimensional parameter space ($N = 10,0
 \label{fig:rsos_confusion_matrix}
 \end{figure}
 
-We fit the model using $k$-fold cross-validation ($k = 5$, $4:1$ train-test split), stratified to maintain the balance of tracks by each pianist within the training and testing sets of each fold (i.e., 24 tracks per pianist in every training set). Averaged across all folds, the combined accuracy of the model is 59\%, suggesting approximately a three-fifths probability that the pianist in a recording can be identified solely based on the rhythmic qualities of their playing. This is six times higher than chance performance (10\%). The accuracy of predictions for individual pianists is shown as a confusion matrix in Figure~\ref{fig:rsos_confusion_matrix}. The top-3 accuracy of the model is 80\% --- meaning that, for four-fifths of the recordings in \GLS{JTD-300}, the actual pianist is within the three classes with the highest predictive probability estimated by the model.
+Averaged across all folds, the combined accuracy of the \added[id=HC]{best-performing \GLS{RF}} model is 59\%, suggesting approximately a three-fifths probability that the pianist in a recording can be identified solely based on the rhythmic qualities of their playing. This is six times higher than chance performance (10\%). The accuracy of predictions for individual pianists is shown as a confusion matrix in Figure~\ref{fig:rsos_confusion_matrix}. The top-3 accuracy of the model is 80\% --- meaning that, for four-fifths of the recordings in \GLS{JTD-300}, the actual pianist is within the three classes with the highest predictive probability estimated by the model.
 
-To better visualise the predictions made by the model, we have created an interactive web application.\footnote{\url{https://huwcheston.github.io/Jazz-Trio-Database/_static/prediction-app.html}\label{ref:rsos_tsne_webapp}} \replaced[id=HC]{We repeatedly fit the model to the dataset in a ``leave-one-recording-out'' fashion to compute the probabilities for every pianist playing on each track, creating a matrix with shape $\biggl(N(\text{recordings}), N(\text{classes})\biggr)$.}{We take the probabilities estimated by the model for every pianist playing on each track in the dataset, in order to create a matrix with shape $\biggl(N(\text{recordings}), N(\text{classes})\biggr)$.} We apply the dimensionality reduction algorithm t-Distributed Stochastic Neighbor Embedding (\GLS{t-SNE}) to this matrix (with $\text{perplexity} = 25$) to reduce the probabilities for each recording to a single pair of coordinates within a two-dimensional space. The implementation of \GLS{t-SNE} is also from \texttt{scikit-learn}. On this web application, individual points correspond with particular songs in \GLS{JTD-300}, and can be clicked to load the corresponding section of audio within the browser. The confidence of the model predictions are then indicated by the proximity of each point to images of the corresponding pianist.
+To better visualise the predictions made by the \GLS{RF} model, we have created an interactive web application.\footnote{\url{https://huwcheston.github.io/Jazz-Trio-Database/_static/prediction-app.html}\label{ref:rsos_tsne_webapp}} \replaced[id=HC]{We repeatedly fit the model to the dataset in a ``leave-one-recording-out'' fashion to compute the probabilities for every pianist playing on each track, creating a matrix with shape $\biggl(N(\text{recordings}), N(\text{classes})\biggr)$.}{We take the probabilities estimated by the model for every pianist playing on each track in the dataset, in order to create a matrix with shape $\biggl(N(\text{recordings}), N(\text{classes})\biggr)$.} We apply the dimensionality reduction algorithm t-Distributed Stochastic Neighbor Embedding (\GLS{t-SNE}) to this matrix (with $\text{perplexity} = 25$) to reduce the probabilities for each recording to a single pair of coordinates within a two-dimensional space. The implementation of \GLS{t-SNE} is also from \texttt{scikit-learn}. On this web application, individual points correspond with particular songs in \GLS{JTD-300}, and can be clicked to load the corresponding section of audio within the browser. The confidence of the model predictions are then indicated by the proximity of each point to images of the corresponding pianist.
 
 Both this web application and Figure~\ref{fig:rsos_confusion_matrix} demonstrate that the model finds it substantially easier to classify some pianists than others. It is worth considering why this is the case. Of particular note, here, is that the most accurate classifications are not necessarily obtained for recordings made by the most prolific artists. For instance, Keith Jarrett (accuracy: 23\%) has recorded many hours of piano trio material, with his discography the second largest out of all the pianists sampled in \GLS{JTD} (see Figure~\ref{fig:jtd_solo_durations}) --- but the model is substantially worse at identifying his recordings than those by any other pianist.
 
 There could be several reasons for this. First, our handcrafted feature set may not adequately capture Jarrett's use of rhythm; for instance, our multi-input model described in the previous chapter performs significantly better at identifying Jarrett using rhythm only (see Figure~\ref{fig:rsi_class_accuracy_per_domain}). Second, the ``breadth and depth of ... influences'' on Jarrett and ``his ability to blend these various sources of inspiration together'' \citep[p. 339]{Gioia2011} could make him a stylistic ``chameleon'' --- able to imitate the styles of other performers in a way that precludes the easy classification of ``his'' sound. Indeed, the web application makes it clear how Keith Jarrett's recordings are frequently mistaken for those by other pianists, especially Kenny Barron. Finally, an audio signal alone might not identifiably reflect the ``physicality'' and visual aspects of Jarrett's performance style, which involves idiosyncratic performance mannerisms, vocalisations, and an extreme degree of bodily movement \citep{Gioia2011, Carr1988}.
+
+\added[id=HC]{
+Additionally, we also note that the performers distinguished most accurately using our \GLS{RF} model differ from those identified by the rhythm subnetwork of the multi-input model described earlier in Section~\ref{sec:rsi_factorised_architecture} (see Figure \ref{fig:rsi_sm_factorised_heatmap}). There are nine performers in common between the datasets used in both this chapter and Chapter~\ref{chap:xai_rsi}. Ranking the accuracy of classifications for these performers and then correlating the ranks demonstrates little correlation between the results ($r = -0.296$). One possibility is that our current model averages features across an entire recording to produce a global value, while our earlier multi-input model may instead have learned to pick up on more local rhythmic features within a recording.
+}
 
 \subsection{``Feel'' and ``Complexity'' Features Best Predict Identity}\label{sec:rsos_feature_importance}
 
@@ -189,7 +214,7 @@ There could be several reasons for this. First, our handcrafted feature set may 
 \label{fig:rsos_feature_importance}
 \end{figure}
 
-Next, we turn our attention to the relative importance of the features used by the model. Following \citet{Breiman2001}, we compute the importance of a feature (or category of features) as the mean decrease in predictive accuracy of the \GLS{RF} in predictions of the held-out test data within each fold, when values of the given feature (or all the features in a category) are randomly permuted. 200 permutations are completed for each fold and the importance measures are averaged over all repetitions and all folds (i.e., $N = 1,000$ total replicates). Feature importance scores are shown for individual features and feature categories in Figure~\ref{fig:rsos_feature_importance}.
+Next, we turn our attention to the relative importance of the features used by the \added[id=HC]{best-performing \GLS{RF}} model. Following \citet{Breiman2001}, we compute the importance of a feature (or category of features) as the mean decrease in predictive accuracy of the \GLS{RF} in predictions of the held-out test data within each fold, when values of the given feature (or all the features in a category) are randomly permuted. 200 permutations are completed for each fold and the importance measures are averaged over all repetitions and all folds (i.e., $N = 1,000$ total replicates). Feature importance scores are shown for individual features and feature categories in Figure~\ref{fig:rsos_feature_importance}.
 
 \begin{figure}[htbp]
   \centering
@@ -249,7 +274,7 @@ We show this dendrogram above the heatmap in Figure~\ref{fig:rsos_confusion_matr
 
 \begin{figure}[htbp]
   \centering
-  \includesvg[width=0.75\textwidth]{figures/rsos_rhythm/figure_s3}
+  \includesvg[width=0.6\textwidth]{figures/rsos_rhythm/figure_s3}
   \caption[Receiver operating characteristic curve when predicting the cluster assigned to a pianist]{Receiver operating characteristic curve, obtained from the binary \GLS{LR} model predicting the cluster assigned to a pianist in Figure~\ref{fig:rsos_confusion_matrix}. The solid line shows the performance of the regression model, and the dotted line the baseline model (i.e. random guesses).}
 \label{fig:rsos_roc_curve}
 \end{figure}
