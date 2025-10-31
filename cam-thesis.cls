@@ -450,25 +450,6 @@ This thesis is submitted for the degree of \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% Abstract
-%%
-%%%%%
-
-\ifcam@techreport%
-    \setcounter{page}{3}
-\fi
-
-% \ifcam@firstyr
-% % First yr report doesn't need a standalone abstract
-% \else
-
-% \chapter*{Abstract}
-% \thispagestyle{empty}
-% \@abstract{}
-% \fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
 %% Declaration
 %%
 %%%%%
@@ -489,6 +470,43 @@ This thesis is submitted for the degree of \\
 
 \fi}
 \fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Abstract
+%%
+%%%%%
+
+% \ifcam@techreport%
+%     \setcounter{page}{3}
+% \fi
+
+% ABSTRACT (moved here to follow TOC and glossary)
+\ifcam@firstyr
+% First yr report doesn't need a standalone abstract
+\else
+\chapter*{Abstract}
+\thispagestyle{empty}
+\@abstract{}
+\fi
+
+% \ifcam@firstyr
+% % First yr report doesn't need a standalone abstract
+% \else
+
+% \chapter*{Abstract}
+% \thispagestyle{empty}
+% \@abstract{}
+% \fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Contributions
+%%
+%%%%%
+
+\input{contributions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -533,16 +551,6 @@ This thesis is submitted for the degree of \\
 \fi
 
 \cleardoublepage
-
-% ABSTRACT (moved here to follow TOC and glossary)
-\ifcam@firstyr
-% First yr report doesn't need a standalone abstract
-\else
-\chapter*{Abstract}
-\thispagestyle{empty}
-\@abstract{}
-\fi
-
 \pagestyle{plain}
 }
 
