@@ -4,7 +4,7 @@
 
 Given its lack of notated scores and the freedoms afforded to its performers, improvised jazz is a musical genre that has often resisted computational analysis. Recent advances in automatic music transcription, however, have enabled the creation of several large-scale databases of annotated jazz recordings \citep[e.g.,][]{Edwards2023, Foster2021}. This allows researchers to scale up the analysis of jazz improvisation to a degree that has not previously been possible.
 
-Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project is to develop a database that includes annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronisation. However, we also wish to include automatically extracted pitch and velocity data \added[id=HC]{(the latter of which quantifies aspects of musical dynamics and ``touch'')} for instruments where this has seen some previous work \citep[e.g., piano: see][]{Kong2021}.
+Previous research has tended to focus on individual soloists and the annotation of accompanying musicians has tended to be incomplete or partial (only some members of the ensemble, for instance). Our goal in this project is to develop a database that includes annotations for every musician in an improvising jazz ensemble. We focus primarily on timing, as this enables the analysis of interesting group-level musical features, such as interaction and synchronisation. However, we also wish to include automatically extracted pitch and velocity data \added[id=HC]{(quantifying aspects of musical dynamics and ``touch'')} for instruments where this has seen some previous work \citep[e.g., piano: see][]{Kong2021}.
 		
 To extract data from a mixed ensemble recording, we leverage recent developments in audio source separation and timing annotation. Using deep learning, it has become possible to separate isolated sources from an audio mixture with massively increased fidelity compared to earlier approaches. The quality of separation still depends on the instrument, however, with vocals, bass, piano, and drums separation having seen the majority of work, while the separation of brass and stringed instruments remains at an earlier stage \citep[see, e.g.,][]{Riley2024-omnibook}.
 		
@@ -411,7 +411,7 @@ where $y_i$ is the tempo value in quarter-note beats-per-minute at beat $i$ (i.e
 
 We also calculate the slope of a linear regression of instantaneous tempo against beat onset time (``tempo slope'', $\hat{S}$) using the standard least squares formula
 \begin{align}\label{eq:tempo_slope}
-\hat{S} = \frac{\sum\limits_{i=2}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=1}^N (x_i - \bar{x})^2} \ ,
+\hat{S} = \frac{\sum\limits_{i=2}^N (x_i - \bar{x}) (y_i - \bar{y})}{\sum\limits_{i=2}^N (x_i - \bar{x})^2} \ ,
 \end{align}
 such that $\hat{S} > 0$ implies acceleration and $\hat{S} < 0$ implies deceleration. We observe $\text{mean}(\hat{S}) = 0.04\ \text{BPM/s}$ ($SD = 0.10$) for \GLS{JTD} recordings, suggesting that they display a very slight tendency towards acceleration (with a predicted increase of 1 BPM every 25 seconds).
 
